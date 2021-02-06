@@ -1,88 +1,115 @@
-import React, {useState} from "react";
-import {ChevronDown, ChevronRight, Circle, CircleFill, PlusCircle} from "react-bootstrap-icons";
-import {noteSelected} from "../../features/slices/notesSlice";
-import {connect} from "react-redux";
+import React, { useEffect, useState } from "react";
+import {
+  ChevronDown,
+  ChevronRight,
+  CircleFill,
+  Plus,
+} from "react-bootstrap-icons";
+import { noteSelected } from "../../features/slices/notesSlice";
+import { connect } from "react-redux";
 import NoteNavigationList from "./NoteNavigationList";
 
 const LEVEL_PADDING_PX = 24;
-const DISPLAY_BLOCK_STYLE = {visibility: 'visible'}
-const DISPLAY_NONE_STYLE = {visibility: 'hidden'}
 
 function NoteNavigationItem(props) {
-    const { level, note, selectedNoteId, noteSelected } = props
-    const [ plusButtonStyle, setPlusButtonStyle ] = useState(DISPLAY_NONE_STYLE)
-    const [ isExpanded, setIsExpanded ] = useState(false)
+  const { level, note, selectedNoteId, noteSelected } = props;
 
-    const divStyle = {paddingLeft: 20 + LEVEL_PADDING_PX * level}
+  const [isPlusVisible, setIsPlusVisible] = useState(false);
+  const [isMouseOnItem, setIsMouseOnItem] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-    function hidePlus() {
-        setPlusButtonStyle(DISPLAY_NONE_STYLE)
+  useEffect(() => {
+    if (isMouseOnItem) {
+      let timeoutId = setTimeout(() => {
+        setIsPlusVisible(true);
+      }, 240);
+      return () => clearTimeout(timeoutId);
     }
+  }, [isMouseOnItem]);
 
-    function showPlus() {
-        setPlusButtonStyle(DISPLAY_BLOCK_STYLE)
+  const navigationItemStyle = { paddingLeft: 20 + LEVEL_PADDING_PX * level };
+
+  function handleMouseLeave() {
+    setIsPlusVisible(false);
+    setIsMouseOnItem(false);
+  }
+
+  function handleMouseEnter() {
+    setIsMouseOnItem(true);
+  }
+
+  function handleExpandClick() {
+    setIsExpanded(true);
+  }
+
+  function handleCollapseClick() {
+    setIsExpanded(false);
+  }
+
+  function handleSelectNote() {
+    noteSelected(note);
+  }
+
+  function hasSubNotes(note) {
+    return note.childPageIds && note.childPageIds.length > 0;
+  }
+
+  function getTitleClass() {
+    return "title" + (note.id === selectedNoteId ? " active" : "");
+  }
+
+  function getIcon() {
+    if (hasSubNotes(note)) {
+      return isExpanded ? (
+        <ChevronDown className="list-icon" onClick={handleCollapseClick} />
+      ) : (
+        <ChevronRight className="list-icon" onClick={handleExpandClick} />
+      );
+    } else {
+      return <CircleFill className="hidden-icon" />;
     }
+  }
 
-    function hasSubNotes(note) {
-        return note.childPageIds && note.childPageIds.length > 0
-    }
-
-    function expand() {
-        setIsExpanded(true)
-    }
-
-    function collapse() {
-        setIsExpanded(false)
-    }
-
-    function selectNote() {
-        noteSelected(note)
-    }
-
-    function getTitleClass() {
-        return "title" + (note.id === selectedNoteId ? " active" : "");
-    }
-
-    function getIcon() {
-        if (hasSubNotes(note)) {
-            return isExpanded ?
-                <ChevronDown className="list-icon" onClick={collapse}/> :
-                <ChevronRight className="list-icon" onClick={expand}/>
-        } else {
-            // return <CircleFill className="list-icon-small"/>
-            return <CircleFill className="hidden-icon"/>
-        }
-    }
-
-    return (
-        <>
-            <div className="navigation-item"
-                 onMouseOver={showPlus}
-                 onMouseOut={hidePlus}
-                 style={divStyle}>
-
-                <div className="icon-container">{getIcon()}&nbsp;</div>
-                <div className="plus-container" style={plusButtonStyle}><PlusCircle className="plus"/></div>
-                <div className="title-container">
-                    <span className={getTitleClass()}
-                          onClick={selectNote}>
-                        {note.title}
-                    </span>
-                </div>
-            </div>
-            { isExpanded && <NoteNavigationList noteIds={note.childPageIds} level={level +1}/> }
-        </>
-
-
-    )
+  return (
+    <>
+      <div
+        className="navigation-item"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        style={navigationItemStyle}
+      >
+        <div className="icon-container">{getIcon()}</div>
+        <div className="title-container">
+          <span className={getTitleClass()} onClick={handleSelectNote}>
+            {note.title}
+          </span>
+        </div>
+        <div
+          className="plus-container"
+          style={{ visibility: isPlusVisible ? "visible" : "hidden" }}
+        >
+          <div className="plus-button">
+            <Plus className="plus" />
+          </div>
+        </div>
+      </div>
+      {isExpanded && (
+        <NoteNavigationList
+          noteIds={note.childPageIds}
+          level={level + 1}
+          key={note.id}
+        />
+      )}
+    </>
+  );
 }
 
 const mapDispatchToProps = {
-    noteSelected
-}
+  noteSelected,
+};
 const mapStateToProps = (state) => {
-    return {
-        selectedNoteId : state.notes.selectedNoteId
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(NoteNavigationItem)
+  return {
+    selectedNoteId: state.notes.selectedNoteId,
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(NoteNavigationItem);

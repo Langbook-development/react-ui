@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -12,18 +12,52 @@ body {
   padding-left: 0;
 }
 
+/* NoteNavigationItem styles */
 .note-navigation .navigation-item {
   padding-bottom: 4px;
   padding-right: 20px;
+  width: 100%;
+  display: table;
 }
 
-.note-navigation .navigation-item .title:hover{
+.note-navigation .navigation-item .icon-container {
+  display: table-cell;
+  width: 21px;
+}
+
+.note-navigation .navigation-item .title-container {
+  display: table-cell;
+}
+
+.note-navigation .navigation-item .plus-container {
+  display: table-cell;
+  width: 24px;
+  height: 24px;
+}
+
+.note-navigation .navigation-item .plus-button {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+.note-navigation .navigation-item .plus-button:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.note-navigation .navigation-item .title:hover {
   color: #0056b3;
   text-decoration: underline;
 }
 
-.note-navigation .navigation-item .title.active{
+.note-navigation .navigation-item .title.active {
   color: #0056b3;
+}
+
+.note-navigation .navigation-item .plus {
+  height: 22px;
+  width: 22px;
+  padding-bottom: 3px;
 }
 
 .note-navigation .navigation-item .list-icon {
@@ -36,20 +70,8 @@ body {
   height: 0.35em;
 }
 
-
 .note-navigation .navigation-item .hidden-icon {
   float: right;
   height: 0;
 }
-
-.note-navigation .navigation-item .icon-container {
-  float: left;
-}
-
-.note-navigation .navigation-item .title-container{
-}
-
-
-.note-navigation .navigation-item .plus-container {
-  float: right;
-}
+/* NoteNavigationItem styles end */
