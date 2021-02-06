@@ -7,7 +7,49 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.note-navigation .card-body {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.note-navigation .navigation-item {
+  padding-bottom: 4px;
+  padding-right: 20px;
+}
+
+.note-navigation .navigation-item .title:hover{
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.note-navigation .navigation-item .title.active{
+  color: #0056b3;
+}
+
+.note-navigation .navigation-item .list-icon {
+  padding-bottom: 2px;
+  height: 0.95em;
+}
+
+.note-navigation .navigation-item .list-icon-small {
+  padding-bottom: 2px;
+  height: 0.35em;
+}
+
+
+.note-navigation .navigation-item .hidden-icon {
+  float: right;
+  height: 0;
+}
+
+.note-navigation .navigation-item .icon-container {
+  float: left;
+}
+
+.note-navigation .navigation-item .title-container{
+}
+
+
+.note-navigation .navigation-item .plus-container {
+  float: right;
 }
