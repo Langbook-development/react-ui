@@ -1,20 +1,20 @@
 export const INITIAL_STATE = {
-  categories: {
-    byId: {
-      1: {
-        id: 1,
-        name: "English",
-        childPageIds: [1, 4],
-      },
-      2: {
-        id: 2,
-        name: "Russian",
-        childPageIds: [5],
-      },
-    },
-    allIds: [1, 2],
-  },
   notes: {
+    categories: {
+      byId: {
+        1: {
+          id: 1,
+          name: "English",
+          childPageIds: [1, 4],
+        },
+        2: {
+          id: 2,
+          name: "Russian",
+          childPageIds: [5],
+        },
+      },
+      allIds: [1, 2],
+    },
     selectedNoteId: 1,
     byId: {
       1: {
@@ -23,6 +23,9 @@ export const INITIAL_STATE = {
         content: "This is some placeholder content!",
         categoryId: 1,
         childPageIds: [2, 3],
+        isExpanded: false,
+        isTitleFresh: false,
+        isContentFresh: false,
       },
       2: {
         id: 2,
@@ -30,6 +33,10 @@ export const INITIAL_STATE = {
         content: "Try to add some more text if you want to play with it",
         parentId: 1,
         categoryId: 1,
+        childPageIds: [],
+        isExpanded: false,
+        isTitleFresh: false,
+        isContentFresh: false,
       },
       3: {
         id: 3,
@@ -37,19 +44,28 @@ export const INITIAL_STATE = {
         parentId: 1,
         categoryId: 1,
         childPageIds: [6, 7],
+        isExpanded: false,
+        isTitleFresh: false,
+        isContentFresh: false,
       },
       4: {
         id: 4,
         title: "Vocabulary",
         categoryId: 1,
         childPageIds: [8],
+        isExpanded: false,
+        isTitleFresh: false,
+        isContentFresh: false,
       },
       5: {
         id: 5,
         title: "Basic grammar",
-        content:
-          "In russian there is no basic grammar. All grammar is complicated!",
+        content: "In russian there is no basic grammar!",
         categoryId: 2,
+        childPageIds: [],
+        isExpanded: false,
+        isTitleFresh: false,
+        isContentFresh: false,
       },
       6: {
         id: 6,
@@ -58,6 +74,9 @@ export const INITIAL_STATE = {
         parentId: 3,
         categoryId: 1,
         childPageIds: [9],
+        isExpanded: false,
+        isTitleFresh: false,
+        isContentFresh: false,
       },
       7: {
         id: 7,
@@ -65,6 +84,10 @@ export const INITIAL_STATE = {
         content: "Some exercises",
         parentId: 3,
         categoryId: 1,
+        childPageIds: [],
+        isExpanded: false,
+        isTitleFresh: false,
+        isContentFresh: false,
       },
       8: {
         id: 8,
@@ -72,6 +95,10 @@ export const INITIAL_STATE = {
         content: "Words",
         parentId: 4,
         categoryId: 2,
+        childPageIds: [],
+        isExpanded: false,
+        isTitleFresh: false,
+        isContentFresh: false,
       },
       9: {
         id: 9,
@@ -80,6 +107,9 @@ export const INITIAL_STATE = {
         parentId: 6,
         categoryId: 1,
         childPageIds: [10],
+        isExpanded: false,
+        isTitleFresh: false,
+        isContentFresh: false,
       },
       10: {
         id: 10,
@@ -87,8 +117,12 @@ export const INITIAL_STATE = {
         content: "Words",
         parentId: 9,
         categoryId: 1,
+        childPageIds: [],
+        isExpanded: false,
+        isTitleFresh: false,
+        isContentFresh: false,
       },
     },
-    allIds: [1, 2, 3, 4, 5],
+    allIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
   },
 };

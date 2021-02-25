@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Accordion, Button, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import NoteNavigationList from "./NoteNavigationList";
-import { noteSelected } from "../../features/slices/notesSlice";
+import NoteNavigationCategory from "./NoteNavigationCategory";
 
 function NoteNavigation(props) {
   const { categories } = props;
@@ -10,7 +10,9 @@ function NoteNavigation(props) {
     <aside className="note-navigation">
       {categories.map((category) => (
         <Card key={category.id}>
-          <Card.Header>{category.name}</Card.Header>
+          <Card.Header>
+            <NoteNavigationCategory categoryId={category.id} />
+          </Card.Header>
           <Card.Body>
             <NoteNavigationList noteIds={category.childPageIds} level={0} />
           </Card.Body>
@@ -35,10 +37,9 @@ function NoteNavigation(props) {
   );
 }
 
-const mapDispatchToProps = {};
 const mapStateToProps = (state) => {
   return {
-    categories: Object.values(state.categories.byId),
+    categories: Object.values(state.notes.categories.byId),
   };
 };
 export default connect(mapStateToProps)(NoteNavigation);

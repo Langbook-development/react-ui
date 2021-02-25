@@ -5,24 +5,29 @@ import {
   CircleFill,
   Plus,
 } from "react-bootstrap-icons";
-import { noteSelected } from "../../features/slices/notesSlice";
+import {
+  noteSelected,
+  noteCreated,
+  noteExpanded,
+  noteCollapsed,
+} from "../../features/slices/notesSlice";
 import { connect } from "react-redux";
 import NoteNavigationList from "./NoteNavigationList";
 
 const LEVEL_PADDING_PX = 24;
 
 function NoteNavigationItem(props) {
-  const { level, note, selectedNoteId, noteSelected } = props;
+  const { level, note, selectedNoteId } = props;
+  const { noteSelected, noteCreated, noteExpanded, noteCollapsed } = props;
 
   const [isPlusVisible, setIsPlusVisible] = useState(false);
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     if (isMouseOnItem) {
       let timeoutId = setTimeout(() => {
         setIsPlusVisible(true);
-      }, 240);
+      }, 280);
       return () => clearTimeout(timeoutId);
     }
   }, [isMouseOnItem]);
@@ -39,11 +44,15 @@ function NoteNavigationItem(props) {
   }
 
   function handleExpandClick() {
-    setIsExpanded(true);
+    noteExpanded(note.id);
   }
 
   function handleCollapseClick() {
-    setIsExpanded(false);
+    noteCollapsed(note.id);
+  }
+
+  function handlePlusButtonClick() {
+    noteCreated({ categoryId: note.categoryId, parentId: note.id });
   }
 
   function handleSelectNote() {
@@ -60,11 +69,15 @@ function NoteNavigationItem(props) {
 
   function getIcon() {
     if (hasSubNotes(note)) {
-      return isExpanded ? (
-        <ChevronDown className="list-icon" onClick={handleCollapseClick} />
-      ) : (
-        <ChevronRight className="list-icon" onClick={handleExpandClick} />
-      );
+      if (note.isExpanded) {
+        return (
+          <ChevronDown className="list-icon" onClick={handleCollapseClick} />
+        );
+      } else {
+        return (
+          <ChevronRight className="list-icon" onClick={handleExpandClick} />
+        );
+      }
     } else {
       return <CircleFill className="hidden-icon" />;
     }
@@ -85,6 +98,7 @@ function NoteNavigationItem(props) {
           </span>
         </div>
         <div
+          onClick={handlePlusButtonClick}
           className="plus-container"
           style={{ visibility: isPlusVisible ? "visible" : "hidden" }}
         >
@@ -93,7 +107,7 @@ function NoteNavigationItem(props) {
           </div>
         </div>
       </div>
-      {isExpanded && (
+      {note.isExpanded && (
         <NoteNavigationList
           noteIds={note.childPageIds}
           level={level + 1}
@@ -106,10 +120,14 @@ function NoteNavigationItem(props) {
 
 const mapDispatchToProps = {
   noteSelected,
+  noteCreated,
+  noteExpanded,
+  noteCollapsed,
 };
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
     selectedNoteId: state.notes.selectedNoteId,
+    note: state.notes.byId[ownProps.noteId],
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(NoteNavigationItem);

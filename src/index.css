@@ -12,7 +12,54 @@ body {
   padding-left: 0;
 }
 
-/* NoteNavigationItem styles */
+/* NoteNavigation Category styles */
+.note-navigation .card-header {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.note-navigation .category {
+  width: 100%;
+  display: table;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.note-navigation .category .title-container {
+  display: table-cell;
+}
+
+.note-navigation .category .plus-container {
+  display: table-cell;
+  width: 24px;
+  height: 24px;
+}
+
+.note-navigation .category .plus-button {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+.note-navigation .category .plus-button:hover {
+  background-color: rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+}
+
+.note-navigation .category .plus {
+  height: 22px;
+  width: 22px;
+  padding-bottom: 3px;
+}
+
+.note-navigation .category .title:hover {
+  color: #0056b3;
+  text-decoration: underline;
+  cursor: pointer;
+}
+/* NoteNavigation Category styles end*/
+
+/* NoteNavigation Item styles */
 .note-navigation .navigation-item {
   padding-bottom: 4px;
   padding-right: 20px;
@@ -42,12 +89,14 @@ body {
 }
 
 .note-navigation .navigation-item .plus-button:hover {
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgba(0, 0, 0, 0.07);
+  cursor: pointer;
 }
 
 .note-navigation .navigation-item .title:hover {
   color: #0056b3;
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .note-navigation .navigation-item .title.active {
@@ -63,6 +112,7 @@ body {
 .note-navigation .navigation-item .list-icon {
   padding-bottom: 2px;
   height: 0.95em;
+  cursor: pointer;
 }
 
 .note-navigation .navigation-item .list-icon-small {
@@ -74,4 +124,60 @@ body {
   float: right;
   height: 0;
 }
-/* NoteNavigationItem styles end */
+/* NoteNavigation Item styles end*/
+
+.note-section .content .text-area{
+  border: 0;
+  height:auto;
+  width: 100%;
+  resize: none;
+  outline: none;
+  overflow: hidden;
+  padding: 0;
+}
+
+.note-section .content .title-area{
+  font-size: 1.25rem;
+  padding: 0;
+  font-weight: 500;
+  line-height: 1.2;
+  border: 0;
+  width: 100%;
+  resize: none;
+  overflow: hidden;
+  outline: none;
+}
+
+.note-section .category-header {
+  display: table;
+}
+
+.note-section .category-header .category-container {
+  display: table-cell;
+}
+
+.note-section .category-header .button-container {
+  display: table-cell;
+  width: 56px;
+  height: 24px;
+}
+
+
+.note-section .category-header .button {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  margin-right: 3px;
+}
+
+.note-section .category-header .button:hover {
+  background-color: rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+}
+
+.note-section .category-header .button svg{
+    height: 22px;
+    width: 22px;
+    padding-bottom: 5px;
+}
