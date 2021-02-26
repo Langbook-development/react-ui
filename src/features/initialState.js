@@ -4,14 +4,14 @@ export const INITIAL_STATE = {
       byId: {
         1: {
           id: 1,
-          name: "English",
+          name: "Table of contents",
           childPageIds: [1, 4],
         },
-        2: {
-          id: 2,
-          name: "Russian",
-          childPageIds: [5],
-        },
+        // 2: {
+        //   id: 2,
+        //   name: "Russian",
+        //   childPageIds: [5],
+        // },
       },
       allIds: [1, 2],
     },

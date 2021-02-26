@@ -1,14 +1,20 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
-import { noteUpdated } from "../../features/slices/notesSlice";
+import { noteUpdated, noteDeleted } from "../../features/slices/notesSlice";
 import TextareaAutosize from "react-textarea-autosize";
-import NoteHeader from "./NoteHeader";
+import { Gear, Trash } from "react-bootstrap-icons";
+import { Button, Modal } from "react-bootstrap";
 
 function NoteSection(props) {
   const { note, category } = props;
-  const { noteUpdated } = props;
+  const { noteUpdated, noteDeleted } = props;
   const titleTextArea = useRef(null);
   const contentTextArea = useRef(null);
+
+  const [show, setShow] = useState(false);
+
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
 
   useEffect(() => {
     if (note.isTitleFresh) {
@@ -24,6 +30,11 @@ function NoteSection(props) {
     if (note.isTitleFresh) {
       target.select();
     }
+  }
+
+  function handleDeleteButtonClick() {
+    setShow(false);
+    noteDeleted(note);
   }
 
   function handleContentClick({ target }) {
@@ -43,18 +54,30 @@ function NoteSection(props) {
   return (
     <section className="note-section">
       <div className="card">
-        <NoteHeader />
-
         <div className="card-body">
           <div className="content">
-            <TextareaAutosize
-              ref={titleTextArea}
-              className="title-area"
-              value={note.title}
-              onFocus={handleTitleClick}
-              onChange={handleTitleChange}
-            />
+            <div className="title-container">
+              <div className="title-area-container">
+                <TextareaAutosize
+                  ref={titleTextArea}
+                  className="title-area"
+                  value={note.title}
+                  onFocus={handleTitleClick}
+                  onChange={handleTitleChange}
+                />
+              </div>
 
+              <div className="button-container">
+                <div className="button">
+                  <Gear />
+                </div>
+                <div className="button">
+                  <Trash onClick={handleShow} />
+                </div>
+              </div>
+            </div>
+
+            <hr />
             <TextareaAutosize
               ref={contentTextArea}
               className="text-area"
@@ -65,12 +88,27 @@ function NoteSection(props) {
           </div>
         </div>
       </div>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{note.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete his page?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={handleDeleteButtonClick}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </section>
   );
 }
 
 const mapDispatchToProps = {
   noteUpdated,
+  noteDeleted,
 };
 const mapStateToProps = (state) => {
   const note = state.notes.byId[state.notes.selectedNoteId];

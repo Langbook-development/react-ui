@@ -148,36 +148,35 @@ body {
   outline: none;
 }
 
-.note-section .category-header {
+.note-section .title-container {
   display: table;
+  width: 100%;
 }
 
-.note-section .category-header .category-container {
+.note-section .title-area-container {
   display: table-cell;
 }
 
-.note-section .category-header .button-container {
+.note-section .button-container {
   display: table-cell;
-  width: 56px;
-  height: 24px;
+  width: 60px;
+  vertical-align: top;
 }
 
-
-.note-section .category-header .button {
+.note-section .button-container .button{
   display: inline-block;
   width: 24px;
   height: 24px;
   border-radius: 4px;
-  margin-right: 3px;
+  margin-right: 6px;
 }
 
-.note-section .category-header .button:hover {
+.note-section .button-container .button:hover{
   background-color: rgba(0, 0, 0, 0.07);
-  cursor: pointer;
 }
 
-.note-section .category-header .button svg{
-    height: 22px;
-    width: 22px;
-    padding-bottom: 5px;
+.note-section .button-container .button svg{
+  height: 22px;
+  width: 22px;
+  padding-bottom: 5px;
 }
