@@ -1,45 +1,76 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Card } from "react-bootstrap";
 import NoteNavigationList from "./NoteNavigationList";
-import NoteNavigationCategory from "./NoteNavigationCategory";
+import { noteCreated } from "../../features/slices/notesSlice";
+import { Plus } from "react-bootstrap-icons";
 
 function NoteNavigation(props) {
-  const { categories } = props;
+  const { noteIds } = props;
+  const { noteCreated } = props;
+  const [isMouseOnItem, setIsMouseOnItem] = useState(false);
+  const [isPlusVisible, setIsPlusVisible] = useState(false);
+
+  useEffect(() => {
+    if (isMouseOnItem) {
+      let timeoutId = setTimeout(() => {
+        setIsPlusVisible(true);
+      }, 200);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isMouseOnItem]);
+
+  function handleMouseEnter() {
+    setIsMouseOnItem(true);
+  }
+
+  function handleMouseLeave() {
+    setIsPlusVisible(false);
+    setIsMouseOnItem(false);
+  }
+
+  function handlePlusButtonClick() {
+    noteCreated({});
+  }
+
   return (
     <aside className="note-navigation">
-      {categories.map((category) => (
-        <Card key={category.id}>
-          <Card.Header>
-            <NoteNavigationCategory categoryId={category.id} />
-          </Card.Header>
-          <Card.Body>
-            <NoteNavigationList noteIds={category.childPageIds} level={0} />
-          </Card.Body>
-        </Card>
-      ))}
-
-      {/*{ categories.map(category =>*/}
-      {/*    <Accordion defaultActiveKey="0" key={category.id}>*/}
-      {/*        <Card>*/}
-      {/*            <Card.Header>*/}
-      {/*                <Accordion.Toggle as={Button} variant="link" eventKey="0">*/}
-      {/*                    { category.name }*/}
-      {/*                </Accordion.Toggle>*/}
-      {/*            </Card.Header>*/}
-      {/*            <Accordion.Collapse eventKey="0" className="note-collapse-list">*/}
-      {/*                <NoteGroup noteIds={ category.childPageIds }/>*/}
-      {/*            </Accordion.Collapse>*/}
-      {/*        </Card>*/}
-      {/*    </Accordion>*/}
-      {/*)}*/}
+      <Card>
+        <Card.Header>
+          <div
+            className="category"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className="title-container">
+              <span className="title">Table of contents</span>
+            </div>
+            <div
+              className="plus-container"
+              style={{ visibility: isPlusVisible ? "visible" : "hidden" }}
+            >
+              <div className="plus-button" onClick={handlePlusButtonClick}>
+                <Plus className="plus" />
+              </div>
+            </div>
+          </div>
+        </Card.Header>
+        <Card.Body>
+          <NoteNavigationList noteIds={noteIds} level={0} />
+        </Card.Body>
+      </Card>
     </aside>
   );
 }
 
+const mapDispatchToProps = {
+  noteCreated,
+};
 const mapStateToProps = (state) => {
   return {
-    categories: Object.values(state.notes.categories.byId),
+    noteIds: Object.values(state.notes.byId)
+      .filter((it) => !it.parentId)
+      .map((it) => it.id),
   };
 };
-export default connect(mapStateToProps)(NoteNavigation);
+export default connect(mapStateToProps, mapDispatchToProps)(NoteNavigation);

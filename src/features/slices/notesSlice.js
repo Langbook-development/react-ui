@@ -23,7 +23,6 @@ const notesSlice = createSlice({
         title: "Enter title here",
         content: "Enter text here",
         childPageIds: [],
-        categoryId: action.payload.categoryId,
         parentId: action.payload.parentId,
         isTitleFresh: true,
         isContentFresh: true,
@@ -33,10 +32,7 @@ const notesSlice = createSlice({
       notes.selectedNoteId = id;
       if (newNote.parentId) {
         notes.byId[newNote.parentId].childPageIds.push(id);
-      } else {
-        notes.categories.byId[newNote.categoryId].childPageIds.push(id);
       }
-
       let noteToExpandId = newNote.parentId;
       while (noteToExpandId) {
         const noteToExpand = notes.byId[noteToExpandId];
@@ -47,21 +43,15 @@ const notesSlice = createSlice({
 
     noteDeleted(notes, action) {
       const note = notes.byId[action.payload.id];
+      notes.allIds = notes.allIds.filter((it) => it !== note.id);
       if (note.parentId) {
         notes.byId[note.parentId].childPageIds = notes.byId[
           note.parentId
         ].childPageIds.filter((it) => it !== note.id);
         notes.selectedNoteId = note.parentId;
       } else {
-        notes.categories.byId[
-          note.categoryId
-        ].childPageIds = notes.categories.byId[
-          note.categoryId
-        ].childPageIds.filter((it) => it !== note.id);
-        notes.selectedNoteId =
-          notes.categories.byId[note.categoryId].childPageIds[0];
+        notes.selectedNoteId = notes.allIds[0];
       }
-      notes.allIds = notes.allIds.filter((it) => it !== note.id);
       delete notes.byId[note.id];
     },
 

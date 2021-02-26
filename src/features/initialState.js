@@ -1,27 +1,11 @@
 export const INITIAL_STATE = {
   notes: {
-    categories: {
-      byId: {
-        1: {
-          id: 1,
-          name: "Table of contents",
-          childPageIds: [1, 4],
-        },
-        // 2: {
-        //   id: 2,
-        //   name: "Russian",
-        //   childPageIds: [5],
-        // },
-      },
-      allIds: [1, 2],
-    },
     selectedNoteId: 1,
     byId: {
       1: {
         id: 1,
         title: "Basic grammar",
         content: "This is some placeholder content!",
-        categoryId: 1,
         childPageIds: [2, 3],
         isExpanded: false,
         isTitleFresh: false,
@@ -32,7 +16,6 @@ export const INITIAL_STATE = {
         title: "Present simple",
         content: "Try to add some more text if you want to play with it",
         parentId: 1,
-        categoryId: 1,
         childPageIds: [],
         isExpanded: false,
         isTitleFresh: false,
@@ -42,7 +25,6 @@ export const INITIAL_STATE = {
         id: 3,
         title: "Present continuous",
         parentId: 1,
-        categoryId: 1,
         childPageIds: [6, 7],
         isExpanded: false,
         isTitleFresh: false,
@@ -51,7 +33,6 @@ export const INITIAL_STATE = {
       4: {
         id: 4,
         title: "Vocabulary",
-        categoryId: 1,
         childPageIds: [8],
         isExpanded: false,
         isTitleFresh: false,
@@ -72,7 +53,6 @@ export const INITIAL_STATE = {
         title: "Examples",
         content: "Some examples",
         parentId: 3,
-        categoryId: 1,
         childPageIds: [9],
         isExpanded: false,
         isTitleFresh: false,
@@ -83,7 +63,6 @@ export const INITIAL_STATE = {
         title: "Exercises",
         content: "Some exercises",
         parentId: 3,
-        categoryId: 1,
         childPageIds: [],
         isExpanded: false,
         isTitleFresh: false,
@@ -105,7 +84,6 @@ export const INITIAL_STATE = {
         title: "Long explanatory exaple caption",
         content: "Words",
         parentId: 6,
-        categoryId: 1,
         childPageIds: [10],
         isExpanded: false,
         isTitleFresh: false,
@@ -116,7 +94,6 @@ export const INITIAL_STATE = {
         title: "Long explanatory exaple caption 2",
         content: "Words",
         parentId: 9,
-        categoryId: 1,
         childPageIds: [],
         isExpanded: false,
         isTitleFresh: false,

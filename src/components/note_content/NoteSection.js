@@ -6,7 +6,7 @@ import { Gear, Trash } from "react-bootstrap-icons";
 import { Button, Modal } from "react-bootstrap";
 
 function NoteSection(props) {
-  const { note, category } = props;
+  const { note } = props;
   const { noteUpdated, noteDeleted } = props;
   const titleTextArea = useRef(null);
   const contentTextArea = useRef(null);
@@ -112,7 +112,6 @@ const mapDispatchToProps = {
 };
 const mapStateToProps = (state) => {
   const note = state.notes.byId[state.notes.selectedNoteId];
-  const category = state.notes.categories.byId[note.categoryId];
-  return { note, category };
+  return { note };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(NoteSection);

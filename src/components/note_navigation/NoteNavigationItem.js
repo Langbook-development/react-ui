@@ -27,7 +27,7 @@ function NoteNavigationItem(props) {
     if (isMouseOnItem) {
       let timeoutId = setTimeout(() => {
         setIsPlusVisible(true);
-      }, 280);
+      }, 200);
       return () => clearTimeout(timeoutId);
     }
   }, [isMouseOnItem]);
