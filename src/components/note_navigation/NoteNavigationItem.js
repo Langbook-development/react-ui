@@ -72,13 +72,13 @@ function NoteNavigationItem(props) {
       if (note.isExpanded) {
         return (
           <button className="chevron-button" onClick={handleCollapseClick}>
-            <span className="fa fa-chevron-down" aria-hidden="true" />
+            <ChevronDown className="icon" />
           </button>
         );
       } else {
         return (
           <button className="chevron-button" onClick={handleExpandClick}>
-            <span className="fa fa-chevron-right" aria-hidden="true" />
+            <ChevronRight className="icon" />
           </button>
         );
       }
@@ -104,7 +104,7 @@ function NoteNavigationItem(props) {
           onClick={handlePlusButtonClick}
           style={{ visibility: isPlusVisible ? "visible" : "hidden" }}
         >
-          <span className="fa fa-plus" aria-hidden="true" />
+          <Plus className="icon" />
         </button>
       </div>
       {note.isExpanded && (
