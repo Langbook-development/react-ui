@@ -1,142 +1,107 @@
-body {
+@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+
+body, html, .App {
+  height: 100%;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-.note-navigation .card-body {
-  padding-right: 0;
-  padding-left: 0;
+.App {
+  display: grid;
+  grid-template-rows: 50px auto 50px;
+  grid-gap: 25px;
 }
 
-/* NoteNavigation Category styles */
-.note-navigation .card-header {
-  padding-right: 0;
-  padding-left: 0;
+main.note-page {
+  display: grid;
+  grid-template-columns: minmax(290px, 20%) minmax(500px, calc(45% - 35px));
+  justify-content: center;
+  grid-column-gap: 25px;
 }
 
-.note-navigation .category {
-  width: 100%;
-  display: table;
-  padding-right: 20px;
-  padding-left: 20px;
+aside.note-navigation .navigation-item {
+  display: grid;
+  grid-template-columns: fit-content(25px) calc(100% - 50px) fit-content(25px);
+  grid-template-rows: fit-content(25px);
+  grid-column-gap: 5px;
 }
 
-.note-navigation .category .title-container {
-  display: table-cell;
-}
-
-.note-navigation .category .plus-container {
-  display: table-cell;
-  width: 24px;
-  height: 24px;
-}
-
-.note-navigation .category .plus-button {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-}
-
-.note-navigation .category .plus-button:hover {
-  background-color: rgba(0, 0, 0, 0.07);
-  cursor: pointer;
-}
-
-.note-navigation .category .plus {
-  height: 22px;
-  width: 22px;
-  padding-bottom: 3px;
-}
-
-.note-navigation .category .title:hover {
+aside.note-navigation .navigation-item .title.active {
   color: #0056b3;
-  text-decoration: underline;
-  cursor: pointer;
-}
-/* NoteNavigation Category styles end*/
-
-/* NoteNavigation Item styles */
-.note-navigation .navigation-item {
-  padding-bottom: 4px;
-  padding-right: 20px;
-  width: 100%;
-  display: table;
 }
 
-.note-navigation .navigation-item .icon-container {
-  display: table-cell;
-  width: 21px;
-}
-
-.note-navigation .navigation-item .title-container {
-  display: table-cell;
-}
-
-.note-navigation .navigation-item .plus-container {
-  display: table-cell;
-  width: 24px;
-  height: 24px;
-}
-
-.note-navigation .navigation-item .plus-button {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-}
-
-.note-navigation .navigation-item .plus-button:hover {
-  background-color: rgba(0, 0, 0, 0.07);
-  cursor: pointer;
-}
-
-.note-navigation .navigation-item .title:hover {
+aside.note-navigation .navigation-item .title:hover {
   color: #0056b3;
   text-decoration: underline;
   cursor: pointer;
 }
 
-.note-navigation .navigation-item .title.active {
-  color: #0056b3;
-}
-
-.note-navigation .navigation-item .plus {
-  height: 22px;
-  width: 22px;
-  padding-bottom: 3px;
-}
-
-.note-navigation .navigation-item .list-icon {
-  padding-bottom: 2px;
-  height: 0.95em;
-  cursor: pointer;
-}
-
-.note-navigation .navigation-item .list-icon-small {
-  padding-bottom: 2px;
-  height: 0.35em;
-}
-
-.note-navigation .navigation-item .hidden-icon {
-  float: right;
-  height: 0;
-}
-/* NoteNavigation Item styles end*/
-
-.note-section .content .text-area{
+aside.note-navigation .navigation-item .chevron-button{
+  width: 25px;
+  height: 25px;
   border: 0;
-  height:auto;
-  width: 100%;
-  resize: none;
-  outline: none;
-  overflow: hidden;
-  padding: 0;
+  border-radius: 50%;
+  font-size: 10px;
+  background-color: transparent;
 }
 
-.note-section .content .title-area{
+aside.note-navigation .navigation-item .chevron-button-placeholder{
+  width: 25px;
+  height: 25px;
+}
+
+aside.note-navigation .navigation-item .action-button:hover{
+  background-color: rgba(0,0,0,.03);
+}
+
+aside.note-navigation .navigation-item .chevron-button:hover{
+  background-color: rgba(0,0,0,.03);
+}
+
+aside.note-navigation .navigation-item .action-button, aside.note-navigation .header .action-button{
+  width: 25px;
+  height: 25px;
+  background-color: transparent;
+  font-size: 9px;
+  border-radius: 6px;
+  border: 0;
+}
+
+aside.note-navigation .header {
+  display: grid;
+  grid-template-columns: auto fit-content(25px);
+}
+
+aside.note-navigation .header .action-button:hover {
+  background-color: rgba(0,0,0,.07);
+}
+
+
+section.note-content .header {
+  display: grid;
+  grid-template-columns: auto fit-content(25px);
+}
+
+section.note-content .header .title{
+  margin-right: 15px;
+}
+
+section.note-content .header .action-button{
+  width: 28px;
+  height: 28px;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 0;
+}
+
+section.note-content .header:last-child {
+  margin-right: 5px;
+}
+
+section.note-content .header .action-button:hover{
+  background-color: rgba(0,0,0,.03);
+}
+
+section.note-content .header .title-area {
   font-size: 1.25rem;
   padding: 0;
   font-weight: 500;
@@ -148,37 +113,12 @@ body {
   outline: none;
 }
 
-.note-section .title-container {
-  display: table;
+section.note-content .text-area {
+  border: 0;
+  height:auto;
   width: 100%;
-}
-
-.note-section .title-area-container {
-  display: table-cell;
-}
-
-.note-section .button-container {
-  display: table-cell;
-  width: 70px;
-  vertical-align: top;
-}
-
-.note-section .button-container .button{
-  display: inline-block;
-  width: 26px;
-  height: 26px;
-  border-radius: 4px;
-  margin-right: 6px;
-  text-align: center;
-}
-
-.note-section .button-container .button:hover{
-  background-color: rgba(0, 0, 0, 0.07);
-  cursor: pointer;
-}
-
-.note-section .button-container .button svg{
-  height: 22px;
-  width: 22px;
-  padding-bottom: 4px;
+  resize: none;
+  outline: none;
+  overflow: hidden;
+  padding: 0;
 }

@@ -40,7 +40,7 @@ export const INITIAL_STATE = {
       },
       5: {
         id: 5,
-        title: "Basic grammar",
+        title: "Russian Basic grammar",
         content: "In russian there is no basic grammar!",
         categoryId: 2,
         childPageIds: [],

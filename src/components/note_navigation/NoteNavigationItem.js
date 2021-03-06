@@ -32,7 +32,7 @@ function NoteNavigationItem(props) {
     }
   }, [isMouseOnItem]);
 
-  const navigationItemStyle = { paddingLeft: 20 + LEVEL_PADDING_PX * level };
+  const navigationItemStyle = { paddingLeft: LEVEL_PADDING_PX * level };
 
   function handleMouseLeave() {
     setIsPlusVisible(false);
@@ -71,15 +71,19 @@ function NoteNavigationItem(props) {
     if (hasSubNotes(note)) {
       if (note.isExpanded) {
         return (
-          <ChevronDown className="list-icon" onClick={handleCollapseClick} />
+          <button className="chevron-button" onClick={handleCollapseClick}>
+            <span className="fa fa-chevron-down" aria-hidden="true" />
+          </button>
         );
       } else {
         return (
-          <ChevronRight className="list-icon" onClick={handleExpandClick} />
+          <button className="chevron-button" onClick={handleExpandClick}>
+            <span className="fa fa-chevron-right" aria-hidden="true" />
+          </button>
         );
       }
     } else {
-      return <CircleFill className="hidden-icon" />;
+      return <div className="chevron-button-placeholder" />;
     }
   }
 
@@ -87,25 +91,21 @@ function NoteNavigationItem(props) {
     <>
       <div
         className="navigation-item"
+        style={navigationItemStyle}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        style={navigationItemStyle}
       >
-        <div className="icon-container">{getIcon()}</div>
-        <div className="title-container">
-          <span className={getTitleClass()} onClick={handleSelectNote}>
-            {note.title}
-          </span>
-        </div>
-        <div
+        {getIcon()}
+        <span className={getTitleClass()} onClick={handleSelectNote}>
+          {note.title}
+        </span>
+        <button
+          className="action-button"
           onClick={handlePlusButtonClick}
-          className="plus-container"
           style={{ visibility: isPlusVisible ? "visible" : "hidden" }}
         >
-          <div className="plus-button">
-            <Plus className="plus" />
-          </div>
-        </div>
+          <span className="fa fa-plus" aria-hidden="true" />
+        </button>
       </div>
       {note.isExpanded && (
         <NoteNavigationList

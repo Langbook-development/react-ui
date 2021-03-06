@@ -61,8 +61,11 @@ const notesSlice = createSlice({
     },
 
     noteCollapsed(notes, action) {
-      const noteId = action.payload;
-      notes.byId[noteId].isExpanded = false;
+      function collapseNote(id, notes) {
+        notes.byId[id].isExpanded = false;
+        notes.byId[id].childPageIds.forEach((it) => collapseNote(it, notes));
+      }
+      collapseNote(action.payload, notes);
     },
   },
 });

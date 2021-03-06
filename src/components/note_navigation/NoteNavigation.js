@@ -36,24 +36,19 @@ function NoteNavigation(props) {
   return (
     <aside className="note-navigation">
       <Card>
-        <Card.Header>
-          <div
-            className="category"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+        <Card.Header
+          className="header"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <span>Table of contents</span>
+          <button
+            onClick={handlePlusButtonClick}
+            className="action-button"
+            style={{ visibility: isPlusVisible ? "visible" : "hidden" }}
           >
-            <div className="title-container">
-              <span className="title">Table of contents</span>
-            </div>
-            <div
-              className="plus-container"
-              style={{ visibility: isPlusVisible ? "visible" : "hidden" }}
-            >
-              <div className="plus-button" onClick={handlePlusButtonClick}>
-                <Plus className="plus" />
-              </div>
-            </div>
-          </div>
+            <span className="fa fa-plus" aria-hidden="true" />
+          </button>
         </Card.Header>
         <Card.Body>
           <NoteNavigationList noteIds={noteIds} level={0} />

@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { noteUpdated, noteDeleted } from "../../features/slices/notesSlice";
 import TextareaAutosize from "react-textarea-autosize";
-import { Gear, Trash } from "react-bootstrap-icons";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Card, Modal } from "react-bootstrap";
 
 function NoteSection(props) {
   const { note } = props;
@@ -13,7 +12,7 @@ function NoteSection(props) {
 
   const [show, setShow] = useState(false);
 
-  const handleShow = () => setShow(true);
+  const handleTrashButtonClick = () => setShow(true);
   const handleClose = () => setShow(false);
 
   useEffect(() => {
@@ -52,42 +51,33 @@ function NoteSection(props) {
   }
 
   return (
-    <section className="note-section">
-      <div className="card">
-        <div className="card-body">
-          <div className="content">
-            <div className="title-container">
-              <div className="title-area-container">
-                <TextareaAutosize
-                  ref={titleTextArea}
-                  className="title-area"
-                  value={note.title}
-                  onFocus={handleTitleClick}
-                  onChange={handleTitleChange}
-                />
-              </div>
-
-              <div className="button-container">
-                <div className="button">
-                  <Gear />
-                </div>
-                <div className="button">
-                  <Trash onClick={handleShow} />
-                </div>
-              </div>
-            </div>
-
-            <hr />
+    <section className="note-content">
+      <Card>
+        <Card.Body>
+          <div className="header">
             <TextareaAutosize
-              ref={contentTextArea}
-              className="text-area"
-              value={note.content}
-              onFocus={handleContentClick}
-              onChange={handleContentChange}
+              tabIndex="1"
+              ref={titleTextArea}
+              className="title-area"
+              value={note.title}
+              onFocus={handleTitleClick}
+              onChange={handleTitleChange}
             />
+            <button className="action-button" onClick={handleTrashButtonClick}>
+              <span className="fa fa-trash" aria-hidden="true" />
+            </button>
           </div>
-        </div>
-      </div>
+          <hr />
+          <TextareaAutosize
+            tabIndex="2"
+            ref={contentTextArea}
+            className="text-area"
+            value={note.content}
+            onFocus={handleContentClick}
+            onChange={handleContentChange}
+          />
+        </Card.Body>
+      </Card>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{note.title}</Modal.Title>

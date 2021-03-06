@@ -4,16 +4,10 @@ import NoteSection from "./note_content/NoteSection";
 
 function NotePage() {
   return (
-    <>
-      <div className="row">
-        <div className="col-4">
-          <NoteNavigation />
-        </div>
-        <div className="col-8">
-          <NoteSection />
-        </div>
-      </div>
-    </>
+    <main className="note-page">
+      <NoteNavigation />
+      <NoteSection />
+    </main>
   );
 }
 

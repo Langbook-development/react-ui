@@ -4,10 +4,10 @@ import NotePage from "./components/NotePage";
 function App() {
   return (
     <div className="App">
-      <nav className="navbar mb-5" />
-      <main className="container">
+      <header />
+      <div className="page">
         <NotePage />
-      </main>
+      </div>
     </div>
   );
 }
