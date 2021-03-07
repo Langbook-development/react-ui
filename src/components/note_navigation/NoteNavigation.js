@@ -5,6 +5,7 @@ import NoteNavigationList from "./NoteNavigationList";
 import { upsertNote } from "../../features/slices/notesSlice";
 import { useHistory } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { Plus } from "react-bootstrap-icons";
 
 function NoteNavigation(props) {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
@@ -57,7 +58,7 @@ function NoteNavigation(props) {
             className="action-button"
             style={{ visibility: isPlusVisible ? "visible" : "hidden" }}
           >
-            <span className="fa fa-plus" aria-hidden="true" />
+            <Plus className="icon" />
           </button>
         </Card.Header>
         <Card.Body>

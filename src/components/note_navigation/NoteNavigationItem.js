@@ -26,7 +26,7 @@ function NoteNavigationItem(props) {
     if (isMouseOnItem) {
       let timeoutId = setTimeout(() => {
         setIsPlusVisible(true);
-      }, 200);
+      }, 280);
       return () => clearTimeout(timeoutId);
     }
   }, [isMouseOnItem]);
@@ -63,7 +63,7 @@ function NoteNavigationItem(props) {
   }
 
   function getTitleClass() {
-    return "title" + (note.id === selectedNoteId ? " active" : "");
+    return "title" + (note.id.toString() === selectedNoteId ? " active" : "");
   }
 
   function getIcon() {
