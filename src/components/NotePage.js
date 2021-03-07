@@ -7,7 +7,9 @@ import Switch from "react-bootstrap/Switch";
 import { Redirect } from "react-router-dom";
 
 function NotePage() {
-  const firstNoteId = useSelector((state) => Math.min(...state.notes.allIds));
+  const fallbackNoteId = useSelector((state) =>
+    Math.min(...state.notes.allIds)
+  );
 
   return (
     <Switch>
@@ -16,7 +18,7 @@ function NotePage() {
           <NoteNavigation />
           <NoteSection />
         </Route>
-        <Redirect to={"/notes/" + firstNoteId} />
+        <Redirect to={"/notes/" + fallbackNoteId} />
       </main>
     </Switch>
   );

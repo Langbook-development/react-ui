@@ -12,7 +12,9 @@ function NoteSection() {
   const history = useHistory();
   const dispatch = useDispatch();
   const note = useSelector((state) => state.notes.byId[selectedNoteId]);
-  const firstNoteId = useSelector((state) => Math.min(...state.notes.allIds));
+  const fallbackNoteId = useSelector((state) =>
+    Math.min(...state.notes.allIds)
+  );
 
   const titleTextArea = useRef(null);
   const contentTextArea = useRef(null);
@@ -42,7 +44,7 @@ function NoteSection() {
     if (note.parentId) {
       history.push("/notes/" + note.parentId);
     } else {
-      history.push("/notes/" + firstNoteId);
+      history.push("/notes/" + fallbackNoteId);
     }
     dispatch(deleteNote(note));
   }
