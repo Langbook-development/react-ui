@@ -5,9 +5,11 @@ function NoteNavigationList(props) {
   const { noteIds, level } = props;
   return (
     <>
-      {noteIds.map((noteId) => (
-        <NoteNavigationItem noteId={noteId} level={level} key={noteId} />
-      ))}
+      {[...noteIds]
+        .sort((a, b) => a.sortId - b.sortId)
+        .map((noteId) => (
+          <NoteNavigationItem noteId={noteId} level={level} key={noteId} />
+        ))}
     </>
   );
 }

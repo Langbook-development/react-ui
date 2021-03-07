@@ -52,7 +52,7 @@ aside.note-navigation .navigation-item .chevron-button-placeholder{
 }
 
 aside.note-navigation .navigation-item .action-button:hover{
-  background-color: rgba(0,0,0,.03);
+  background-color: rgba(0,0,0,.07);
 }
 
 aside.note-navigation .navigation-item .chevron-button:hover{
@@ -67,6 +67,10 @@ aside.note-navigation .navigation-item .action-button, aside.note-navigation .he
   border-radius: 6px;
   border: 0;
   padding: 4px;
+}
+
+aside.note-navigation .navigation-item .action-button {
+  background-color: rgba(0,0,0,.03);
 }
 
 aside.note-navigation .header {

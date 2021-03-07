@@ -38,6 +38,7 @@ function NoteSection() {
 
   function handleDeleteButtonClick() {
     setShow(false);
+
     if (note.parentId) {
       history.push("/notes/" + note.parentId);
     } else {

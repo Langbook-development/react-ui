@@ -3,6 +3,7 @@ export const INITIAL_STATE = {
     byId: {
       1: {
         id: 1,
+        sortId: 1,
         title: "Basic grammar",
         content: "This is some placeholder content!",
         childPageIds: [2, 3],
@@ -12,6 +13,7 @@ export const INITIAL_STATE = {
       },
       2: {
         id: 2,
+        sortId: 1,
         title: "Present simple",
         content: "Try to add some more text if you want to play with it",
         parentId: 1,
@@ -22,6 +24,7 @@ export const INITIAL_STATE = {
       },
       3: {
         id: 3,
+        sortId: 2,
         title: "Present continuous",
         parentId: 1,
         childPageIds: [6, 7],
@@ -31,6 +34,7 @@ export const INITIAL_STATE = {
       },
       4: {
         id: 4,
+        sortId: 2,
         title: "Vocabulary",
         childPageIds: [8],
         isExpanded: false,
@@ -39,6 +43,7 @@ export const INITIAL_STATE = {
       },
       5: {
         id: 5,
+        sortId: 3,
         title: "Russian Basic grammar",
         content: "In russian there is no basic grammar!",
         childPageIds: [],
@@ -48,6 +53,7 @@ export const INITIAL_STATE = {
       },
       6: {
         id: 6,
+        sortId: 1,
         title: "Examples",
         content: "Some examples",
         parentId: 3,
@@ -58,6 +64,7 @@ export const INITIAL_STATE = {
       },
       7: {
         id: 7,
+        sortId: 2,
         title: "Exercises",
         content: "Some exercises",
         parentId: 3,
@@ -68,6 +75,7 @@ export const INITIAL_STATE = {
       },
       8: {
         id: 8,
+        sortId: 1,
         title: "Nice to know words",
         content: "Words",
         parentId: 4,
@@ -78,6 +86,7 @@ export const INITIAL_STATE = {
       },
       9: {
         id: 9,
+        sortId: 1,
         title: "Long explanatory exaple caption",
         content: "Words",
         parentId: 6,
@@ -88,6 +97,7 @@ export const INITIAL_STATE = {
       },
       10: {
         id: 10,
+        sortId: 1,
         title: "Long explanatory exaple caption 2",
         content: "Words",
         parentId: 9,
