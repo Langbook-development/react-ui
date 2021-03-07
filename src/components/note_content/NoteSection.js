@@ -1,16 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { noteUpdated, noteDeleted } from "../../features/slices/notesSlice";
 import TextareaAutosize from "react-textarea-autosize";
 import { Button, Card, Modal } from "react-bootstrap";
+import { Trash } from "react-bootstrap-icons";
+import { useParams } from "react-router-dom";
 
 function NoteSection(props) {
-  const { note } = props;
-  const { noteUpdated, noteDeleted } = props;
+  const { selectedNoteId } = useParams();
+  const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
+  const note = useSelector((state) => state.notes.byId[selectedNoteId]);
+
   const titleTextArea = useRef(null);
   const contentTextArea = useRef(null);
-
-  const [show, setShow] = useState(false);
 
   const handleTrashButtonClick = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -43,11 +46,15 @@ function NoteSection(props) {
   }
 
   function handleContentChange({ target }) {
-    noteUpdated({ ...note, content: target.value, isContentFresh: false });
+    dispatch(
+      noteUpdated({ ...note, content: target.value, isContentFresh: false })
+    );
   }
 
   function handleTitleChange({ target }) {
-    noteUpdated({ ...note, title: target.value, isTitleFresh: false });
+    dispatch(
+      noteUpdated({ ...note, title: target.value, isTitleFresh: false })
+    );
   }
 
   return (
@@ -64,7 +71,7 @@ function NoteSection(props) {
               onChange={handleTitleChange}
             />
             <button className="action-button" onClick={handleTrashButtonClick}>
-              <span className="fa fa-trash" aria-hidden="true" />
+              <Trash className="icon" />
             </button>
           </div>
           <hr />
@@ -96,12 +103,4 @@ function NoteSection(props) {
   );
 }
 
-const mapDispatchToProps = {
-  noteUpdated,
-  noteDeleted,
-};
-const mapStateToProps = (state) => {
-  const note = state.notes.byId[state.notes.selectedNoteId];
-  return { note };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(NoteSection);
+export default NoteSection;

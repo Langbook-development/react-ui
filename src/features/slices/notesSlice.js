@@ -7,10 +7,6 @@ const notesSlice = createSlice({
   name: "notes",
   initialState,
   reducers: {
-    noteSelected(notes, action) {
-      notes.selectedNoteId = action.payload.id;
-    },
-
     noteUpdated(notes, action) {
       const noteUpdated = action.payload;
       notes.byId[noteUpdated.id] = noteUpdated;
@@ -29,7 +25,6 @@ const notesSlice = createSlice({
       };
       notes.allIds.push(id);
       notes.byId[id] = newNote;
-      notes.selectedNoteId = id;
       if (newNote.parentId) {
         notes.byId[newNote.parentId].childPageIds.push(id);
       }
@@ -48,9 +43,6 @@ const notesSlice = createSlice({
         notes.byId[note.parentId].childPageIds = notes.byId[
           note.parentId
         ].childPageIds.filter((it) => it !== note.id);
-        notes.selectedNoteId = note.parentId;
-      } else {
-        notes.selectedNoteId = notes.allIds[0];
       }
       delete notes.byId[note.id];
     },
@@ -71,7 +63,6 @@ const notesSlice = createSlice({
 });
 
 export const {
-  noteSelected,
   noteUpdated,
   noteCreated,
   noteExpanded,

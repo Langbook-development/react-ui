@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { ChevronDown, ChevronRight, Plus } from "react-bootstrap-icons";
 import {
-  ChevronDown,
-  ChevronRight,
-  CircleFill,
-  Plus,
-} from "react-bootstrap-icons";
-import {
-  noteSelected,
   noteCreated,
   noteExpanded,
   noteCollapsed,
 } from "../../features/slices/notesSlice";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NoteNavigationList from "./NoteNavigationList";
 
 const LEVEL_PADDING_PX = 24;
 
 function NoteNavigationItem(props) {
-  const { level, note, selectedNoteId } = props;
-  const { noteSelected, noteCreated, noteExpanded, noteCollapsed } = props;
+  const { selectedNoteId } = useParams();
+  const { level, noteId } = props;
+
+  const dispatch = useDispatch();
+  const note = useSelector((state) => state.notes.byId[noteId]);
 
   const [isPlusVisible, setIsPlusVisible] = useState(false);
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
@@ -44,19 +42,15 @@ function NoteNavigationItem(props) {
   }
 
   function handleExpandClick() {
-    noteExpanded(note.id);
+    dispatch(noteExpanded(note.id));
   }
 
   function handleCollapseClick() {
-    noteCollapsed(note.id);
+    dispatch(noteCollapsed(note.id));
   }
 
   function handlePlusButtonClick() {
-    noteCreated({ categoryId: note.categoryId, parentId: note.id });
-  }
-
-  function handleSelectNote() {
-    noteSelected(note);
+    dispatch(noteCreated({ categoryId: note.categoryId, parentId: note.id }));
   }
 
   function hasSubNotes(note) {
@@ -96,9 +90,9 @@ function NoteNavigationItem(props) {
         onMouseLeave={handleMouseLeave}
       >
         {getIcon()}
-        <span className={getTitleClass()} onClick={handleSelectNote}>
+        <Link className={getTitleClass()} to={"/notes/" + note.id}>
           {note.title}
-        </span>
+        </Link>
         <button
           className="action-button"
           onClick={handlePlusButtonClick}
@@ -118,16 +112,4 @@ function NoteNavigationItem(props) {
   );
 }
 
-const mapDispatchToProps = {
-  noteSelected,
-  noteCreated,
-  noteExpanded,
-  noteCollapsed,
-};
-const mapStateToProps = (state, ownProps) => {
-  return {
-    selectedNoteId: state.notes.selectedNoteId,
-    note: state.notes.byId[ownProps.noteId],
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(NoteNavigationItem);
+export default NoteNavigationItem;

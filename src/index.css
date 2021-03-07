@@ -23,6 +23,10 @@ aside.note-navigation .navigation-item {
   grid-column-gap: 5px;
 }
 
+aside.note-navigation .navigation-item .title {
+  color: black;
+}
+
 aside.note-navigation .navigation-item .title.active {
   color: #0056b3;
 }

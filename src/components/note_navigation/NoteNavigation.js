@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
 import NoteNavigationList from "./NoteNavigationList";
 import { noteCreated } from "../../features/slices/notesSlice";
-import { Plus } from "react-bootstrap-icons";
 
 function NoteNavigation(props) {
-  const { noteIds } = props;
-  const { noteCreated } = props;
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
   const [isPlusVisible, setIsPlusVisible] = useState(false);
+  const dispatch = useDispatch();
+  const noteIds = useSelector((state) =>
+    Object.values(state.notes.byId)
+      .filter((it) => !it.parentId)
+      .map((it) => it.id)
+  );
 
   useEffect(() => {
     if (isMouseOnItem) {
@@ -30,7 +33,7 @@ function NoteNavigation(props) {
   }
 
   function handlePlusButtonClick() {
-    noteCreated({});
+    dispatch(noteCreated({}));
   }
 
   return (
@@ -58,14 +61,4 @@ function NoteNavigation(props) {
   );
 }
 
-const mapDispatchToProps = {
-  noteCreated,
-};
-const mapStateToProps = (state) => {
-  return {
-    noteIds: Object.values(state.notes.byId)
-      .filter((it) => !it.parentId)
-      .map((it) => it.id),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(NoteNavigation);
+export default NoteNavigation;

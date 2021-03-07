@@ -1,14 +1,17 @@
 import React from "react";
 import NotePage from "./components/NotePage";
+import { BrowserRouter as Router } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header />
-      <div className="page">
-        <NotePage />
+    <Router>
+      <div className="App">
+        <header />
+        <div className="page">
+          <NotePage />
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 

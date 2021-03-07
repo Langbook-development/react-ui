@@ -1,6 +1,5 @@
 export const INITIAL_STATE = {
   notes: {
-    selectedNoteId: 1,
     byId: {
       1: {
         id: 1,
