@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { noteUpdated, noteDeleted } from "../../features/slices/notesSlice";
+import { deleteNote, upsertNote } from "../../features/slices/notesSlice";
 import TextareaAutosize from "react-textarea-autosize";
 import { Button, Card, Modal } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
-function NoteSection(props) {
+function NoteSection() {
   const { selectedNoteId } = useParams();
   const [show, setShow] = useState(false);
+  const history = useHistory();
   const dispatch = useDispatch();
   const note = useSelector((state) => state.notes.byId[selectedNoteId]);
+  const firstNoteId = useSelector((state) => Math.min(...state.notes.allIds));
 
   const titleTextArea = useRef(null);
   const contentTextArea = useRef(null);
@@ -36,7 +38,12 @@ function NoteSection(props) {
 
   function handleDeleteButtonClick() {
     setShow(false);
-    noteDeleted(note);
+    if (note.parentId) {
+      history.push("/notes/" + note.parentId);
+    } else {
+      history.push("/notes/" + firstNoteId);
+    }
+    dispatch(deleteNote(note));
   }
 
   function handleContentClick({ target }) {
@@ -47,14 +54,12 @@ function NoteSection(props) {
 
   function handleContentChange({ target }) {
     dispatch(
-      noteUpdated({ ...note, content: target.value, isContentFresh: false })
+      upsertNote({ ...note, content: target.value, isContentFresh: false })
     );
   }
 
   function handleTitleChange({ target }) {
-    dispatch(
-      noteUpdated({ ...note, title: target.value, isTitleFresh: false })
-    );
+    dispatch(upsertNote({ ...note, title: target.value, isTitleFresh: false }));
   }
 
   return (

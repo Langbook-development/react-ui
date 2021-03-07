@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { ChevronDown, ChevronRight, Plus } from "react-bootstrap-icons";
 import {
-  noteCreated,
   noteExpanded,
   noteCollapsed,
+  upsertNote,
 } from "../../features/slices/notesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import NoteNavigationList from "./NoteNavigationList";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const LEVEL_PADDING_PX = 24;
 
 function NoteNavigationItem(props) {
   const { selectedNoteId } = useParams();
   const { level, noteId } = props;
-
+  const history = useHistory();
   const dispatch = useDispatch();
   const note = useSelector((state) => state.notes.byId[noteId]);
 
@@ -50,7 +51,11 @@ function NoteNavigationItem(props) {
   }
 
   function handlePlusButtonClick() {
-    dispatch(noteCreated({ categoryId: note.categoryId, parentId: note.id }));
+    dispatch(upsertNote({ parentId: note.id }))
+      .then(unwrapResult)
+      .then((note) => {
+        history.push("/notes/" + note.id);
+      });
   }
 
   function hasSubNotes(note) {

@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
 import NoteNavigationList from "./NoteNavigationList";
-import { noteCreated } from "../../features/slices/notesSlice";
+import { upsertNote } from "../../features/slices/notesSlice";
+import { useHistory } from "react-router-dom";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 function NoteNavigation(props) {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
   const [isPlusVisible, setIsPlusVisible] = useState(false);
+  const history = useHistory();
   const dispatch = useDispatch();
   const noteIds = useSelector((state) =>
     Object.values(state.notes.byId)
@@ -33,7 +36,11 @@ function NoteNavigation(props) {
   }
 
   function handlePlusButtonClick() {
-    dispatch(noteCreated({}));
+    dispatch(upsertNote({}))
+      .then(unwrapResult)
+      .then((note) => {
+        history.push("/notes/" + note.id);
+      });
   }
 
   return (
