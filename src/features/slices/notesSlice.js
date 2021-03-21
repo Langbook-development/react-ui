@@ -10,12 +10,18 @@ export const upsertNote = createAsyncThunk(
       return note;
     } else {
       const state = thunkAPI.getState();
+      const nextId =
+        state.notes.allIds.length > 0 ? Math.max(...state.notes.allIds) + 1 : 1;
+      const deepness = note.parentId
+        ? state.notes.byId[note.parentId].deepness + 1
+        : 1;
       return {
-        id: Math.max(...state.notes.allIds) + 1,
+        id: nextId,
         title: "Enter title here",
         content: "Enter text here",
         childPageIds: [],
         parentId: note.parentId,
+        deepness: deepness,
         isTitleFresh: true,
         isContentFresh: true,
       };
@@ -69,14 +75,22 @@ const notesSlice = createSlice({
     },
 
     [deleteNote.fulfilled]: (notes, action) => {
+      function deleteChildNote(note) {
+        notes.allIds = notes.allIds.filter((it) => it !== note.id);
+        note.childPageIds.forEach((childNoteId) =>
+          deleteChildNote(notes.byId[childNoteId])
+        );
+        delete notes.byId[note.id];
+      }
+
       const note = notes.byId[action.payload.id];
-      notes.allIds = notes.allIds.filter((it) => it !== note.id);
       if (note.parentId) {
         notes.byId[note.parentId].childPageIds = notes.byId[
           note.parentId
         ].childPageIds.filter((it) => it !== note.id);
       }
-      delete notes.byId[note.id];
+      deleteChildNote(note);
+      console.log("11");
     },
   },
 });

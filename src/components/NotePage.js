@@ -1,26 +1,21 @@
 import React from "react";
 import NoteNavigation from "./note_navigation/NoteNavigation";
 import NoteSection from "./note_content/NoteSection";
-import { Route } from "react-router";
 import { useSelector } from "react-redux";
-import Switch from "react-bootstrap/Switch";
-import { Redirect } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 
 function NotePage() {
-  const fallbackNoteId = useSelector((state) =>
-    Math.min(...state.notes.allIds)
-  );
+  const { selectedNoteId } = useParams();
+  const note = useSelector((state) => state.notes.byId[selectedNoteId]);
 
+  if (!note) {
+    return <Redirect to="/" />;
+  }
   return (
-    <Switch>
-      <main className="note-page">
-        <Route path="/notes/:selectedNoteId">
-          <NoteNavigation />
-          <NoteSection />
-        </Route>
-        <Redirect to={"/notes/" + fallbackNoteId} />
-      </main>
-    </Switch>
+    <main className="note-page">
+      <NoteNavigation />
+      <NoteSection />
+    </main>
   );
 }
 

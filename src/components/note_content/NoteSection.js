@@ -12,9 +12,23 @@ function NoteSection() {
   const history = useHistory();
   const dispatch = useDispatch();
   const note = useSelector((state) => state.notes.byId[selectedNoteId]);
-  const fallbackNoteId = useSelector((state) =>
-    Math.min(...state.notes.allIds)
-  );
+  const fallbackNoteId = useSelector((state) => {
+    const sameDeepnessLestSortId = Object.values(state.notes.byId)
+      .filter(
+        (it) => it.deepness === note.deepness && it.parentId === note.parentId
+      )
+      .filter((it) => it.id !== note.id)
+      .reduce((prev, curr) => (prev.sortId < curr.sortId ? prev : curr), {}).id;
+    if (sameDeepnessLestSortId) {
+      return sameDeepnessLestSortId;
+    } else {
+      if (note.parentId) {
+        return note.parentId;
+      } else {
+        return undefined;
+      }
+    }
+  });
 
   const titleTextArea = useRef(null);
   const contentTextArea = useRef(null);
@@ -40,13 +54,12 @@ function NoteSection() {
 
   function handleDeleteButtonClick() {
     setShow(false);
-
-    if (note.parentId) {
-      history.push("/notes/" + note.parentId);
-    } else {
-      history.push("/notes/" + fallbackNoteId);
-    }
     dispatch(deleteNote(note));
+    if (fallbackNoteId) {
+      history.push("/notes/" + fallbackNoteId);
+    } else {
+      history.push("/");
+    }
   }
 
   function handleContentClick({ target }) {
