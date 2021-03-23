@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteNote, upsertNote } from "../../features/slices/notesSlice";
+import { deleteNote, upsertNote } from "../../features/slices/thunks";
 import TextareaAutosize from "react-textarea-autosize";
 import { Button, Card, Modal } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
@@ -69,13 +69,11 @@ function NoteSection() {
   }
 
   function handleContentChange({ target }) {
-    dispatch(
-      upsertNote({ ...note, content: target.value, isContentFresh: false })
-    );
+    dispatch(upsertNote({ ...note, content: target.value }));
   }
 
   function handleTitleChange({ target }) {
-    dispatch(upsertNote({ ...note, title: target.value, isTitleFresh: false }));
+    dispatch(upsertNote({ ...note, title: target.value }));
   }
 
   return (

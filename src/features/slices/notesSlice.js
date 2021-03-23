@@ -1,40 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { INITIAL_STATE } from "../initialState";
+import { createSlice } from "@reduxjs/toolkit";
+import { INITIAL_STATE_EMPTY } from "../initialState";
+import { deleteNote, getNotes, upsertNote } from "./thunks";
 
-const initialState = INITIAL_STATE.notes;
-
-export const upsertNote = createAsyncThunk(
-  "notes/upsert",
-  async (note, thunkAPI) => {
-    if (note.id) {
-      return note;
-    } else {
-      const state = thunkAPI.getState();
-      const nextId =
-        state.notes.allIds.length > 0 ? Math.max(...state.notes.allIds) + 1 : 1;
-      const deepness = note.parentId
-        ? state.notes.byId[note.parentId].deepness + 1
-        : 1;
-      return {
-        id: nextId,
-        title: "Enter title here",
-        content: "Enter text here",
-        childPageIds: [],
-        parentId: note.parentId,
-        deepness: deepness,
-        isTitleFresh: true,
-        isContentFresh: true,
-      };
-    }
-  }
-);
-
-export const deleteNote = createAsyncThunk(
-  "notes/delete",
-  async (note, thunkAPI) => {
-    return note;
-  }
-);
+const initialState = INITIAL_STATE_EMPTY.notes;
 
 const notesSlice = createSlice({
   name: "notes",
@@ -54,14 +22,25 @@ const notesSlice = createSlice({
       collapseNote(action.payload, notes);
     },
   },
+
   extraReducers: {
     [upsertNote.fulfilled]: (notes, action) => {
       const note = action.payload;
       if (notes.allIds.includes(note.id)) {
-        notes.byId[note.id] = note;
+        const noteOld = notes.byId[note.id];
+        notes.byId[note.id] = {
+          ...note,
+          isTitleFresh: noteOld.isTitleFresh && note.title === noteOld.title,
+          isContentFresh:
+            noteOld.isContentFresh && note.content === noteOld.content,
+        };
       } else {
         notes.allIds.push(note.id);
-        notes.byId[note.id] = note;
+        notes.byId[note.id] = {
+          ...note,
+          isTitleFresh: true,
+          isContentFresh: true,
+        };
         if (note.parentId) {
           notes.byId[note.parentId].childPageIds.push(note.id);
         }
@@ -72,6 +51,18 @@ const notesSlice = createSlice({
           noteToExpandId = noteToExpand.parentId;
         }
       }
+    },
+
+    [getNotes.fulfilled]: (notes, action) => {
+      action.payload.forEach((note) => {
+        notes.byId[note.id] = {
+          ...note,
+          isExpanded: false,
+          isTitleFresh: false,
+          isContentFresh: false,
+        };
+        notes.allIds.push(note.id);
+      });
     },
 
     [deleteNote.fulfilled]: (notes, action) => {

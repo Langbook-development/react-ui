@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
 import NoteNavigationList from "./NoteNavigationList";
-import { upsertNote } from "../../features/slices/notesSlice";
+import { upsertNote } from "../../features/slices/thunks";
 import { useHistory } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Plus } from "react-bootstrap-icons";

@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { ChevronDown, ChevronRight, Plus } from "react-bootstrap-icons";
-import {
-  noteExpanded,
-  noteCollapsed,
-  upsertNote,
-} from "../../features/slices/notesSlice";
+import { noteExpanded, noteCollapsed } from "../../features/slices/notesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import NoteNavigationList from "./NoteNavigationList";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { upsertNote } from "../../features/slices/thunks";
 
 const LEVEL_PADDING_PX = 24;
 
@@ -51,7 +48,13 @@ function NoteNavigationItem(props) {
   }
 
   function handlePlusButtonClick() {
-    dispatch(upsertNote({ parentId: note.id }))
+    dispatch(
+      upsertNote({
+        parentId: note.id,
+        title: "Enter title here",
+        content: "Enter text here",
+      })
+    )
       .then(unwrapResult)
       .then((note) => {
         history.push("/notes/" + note.id);

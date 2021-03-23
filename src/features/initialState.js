@@ -1,3 +1,10 @@
+export const INITIAL_STATE_EMPTY = {
+  notes: {
+    byId: {},
+    allIds: [],
+  },
+};
+
 export const INITIAL_STATE = {
   notes: {
     byId: {
