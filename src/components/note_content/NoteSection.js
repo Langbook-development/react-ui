@@ -2,16 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteNote, synchronizeNote } from "../../features/slices/thunks";
 import TextareaAutosize from "react-textarea-autosize";
-import { Button, Card, Modal } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
 import { useParams, useHistory } from "react-router-dom";
 import { updateNote } from "../../features/slices/notesSlice";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import useConstant from "use-constant";
+import NoteModal from "./NoteModal";
 
 function NoteSection() {
   const { selectedNoteId } = useParams();
-  const [show, setShow] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
   const note = useSelector((state) => state.notes.byId[selectedNoteId]);
@@ -36,8 +37,8 @@ function NoteSection() {
   const titleTextArea = useRef(null);
   const contentTextArea = useRef(null);
 
-  const handleTrashButtonClick = () => setShow(true);
-  const handleClose = () => setShow(false);
+  const handleTrashButtonClick = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
 
   useEffect(() => {
     if (note.isTitleFresh) {
@@ -62,8 +63,8 @@ function NoteSection() {
     }
   }
 
-  function handleDeleteButtonClick() {
-    setShow(false);
+  function handleDelete() {
+    setShowModal(false);
     dispatch(deleteNote(note));
     if (fallbackNoteId) {
       history.push("/notes/" + fallbackNoteId);
@@ -118,20 +119,12 @@ function NoteSection() {
           />
         </Card.Body>
       </Card>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{note.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to delete his page?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="danger" onClick={handleDeleteButtonClick}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <NoteModal
+        shouldShow={showModal}
+        title={note.title}
+        onClose={handleClose}
+        onDelete={handleDelete}
+      />
     </section>
   );
 }
