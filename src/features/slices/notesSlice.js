@@ -36,7 +36,6 @@ const notesSlice = createSlice({
 
   extraReducers: {
     [createNote.fulfilled]: (notes, action) => {
-      debugger;
       const note = action.payload;
       notes.allIds.push(note.id);
       notes.byId[note.id] = {
@@ -83,7 +82,6 @@ const notesSlice = createSlice({
         ].childPageIds.filter((it) => it !== note.id);
       }
       deleteChildNote(note);
-      console.log("11");
     },
   },
 });
