@@ -16,6 +16,10 @@ main.note-page {
   grid-column-gap: 25px;
 }
 
+aside.note-navigation .navigation-no-item {
+  color: rgba(0,0,0,.4);
+}
+
 aside.note-navigation .navigation-item {
   display: grid;
   grid-template-columns: fit-content(25px) calc(100% - 50px) fit-content(25px);

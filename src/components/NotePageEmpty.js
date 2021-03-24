@@ -4,9 +4,7 @@ import { Redirect } from "react-router-dom";
 import NoteNavigation from "./note_navigation/NoteNavigation";
 
 function NotePageEmpty() {
-  const hasNotes = useSelector((state) => {
-    return state.notes.allIds.length > 0;
-  });
+  const hasNotes = useSelector((state) => state.notes.allIds.length > 0);
   const firstToShowNoteId = useSelector((state) => {
     return Object.values(state.notes.byId)
       .filter((it) => it.deepness === 1)

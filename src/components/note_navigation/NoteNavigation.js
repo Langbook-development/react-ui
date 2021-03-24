@@ -12,6 +12,7 @@ function NoteNavigation(props) {
   const [isPlusVisible, setIsPlusVisible] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
+  const hasNoNotes = useSelector((state) => state.notes.allIds.length === 0);
   const noteIds = useSelector((state) =>
     Object.values(state.notes.byId)
       .filter((it) => !it.parentId)
@@ -56,13 +57,21 @@ function NoteNavigation(props) {
           <button
             onClick={handlePlusButtonClick}
             className="action-button"
-            style={{ visibility: isPlusVisible ? "visible" : "hidden" }}
+            style={{
+              visibility: isPlusVisible || hasNoNotes ? "visible" : "hidden",
+            }}
           >
             <Plus className="icon" />
           </button>
         </Card.Header>
         <Card.Body>
-          <NoteNavigationList noteIds={noteIds} level={0} />
+          {hasNoNotes ? (
+            <div className="navigation-no-item">
+              There are no pages to show. Try adding some!
+            </div>
+          ) : (
+            <NoteNavigationList noteIds={noteIds} level={0} />
+          )}
         </Card.Body>
       </Card>
     </aside>
