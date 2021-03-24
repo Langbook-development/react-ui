@@ -5,7 +5,7 @@ import { noteExpanded, noteCollapsed } from "../../features/slices/notesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import NoteNavigationList from "./NoteNavigationList";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { upsertNote } from "../../features/slices/thunks";
+import { createNote } from "../../features/slices/thunks";
 
 const LEVEL_PADDING_PX = 24;
 
@@ -48,13 +48,7 @@ function NoteNavigationItem(props) {
   }
 
   function handlePlusButtonClick() {
-    dispatch(
-      upsertNote({
-        parentId: note.id,
-        title: "Enter title here",
-        content: "Enter text here",
-      })
-    )
+    dispatch(createNote({ parentId: note.id }))
       .then(unwrapResult)
       .then((note) => {
         history.push("/notes/" + note.id);

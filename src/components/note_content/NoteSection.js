@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteNote, upsertNote } from "../../features/slices/thunks";
+import { deleteNote, synchronizeNote } from "../../features/slices/thunks";
 import TextareaAutosize from "react-textarea-autosize";
 import { Button, Card, Modal } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
 import { useParams, useHistory } from "react-router-dom";
+import { updateNote } from "../../features/slices/notesSlice";
+import AwesomeDebouncePromise from "awesome-debounce-promise";
+import useConstant from "use-constant";
 
 function NoteSection() {
   const { selectedNoteId } = useParams();
@@ -46,6 +49,13 @@ function NoteSection() {
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [note.id]);
 
+  const triggerSynchronizeNoteDebounced = useConstant(() =>
+    AwesomeDebouncePromise(
+      (noteToSync) => dispatch(synchronizeNote(noteToSync)),
+      1000
+    )
+  );
+
   function handleTitleClick({ target }) {
     if (note.isTitleFresh) {
       target.select();
@@ -69,11 +79,15 @@ function NoteSection() {
   }
 
   function handleContentChange({ target }) {
-    dispatch(upsertNote({ ...note, content: target.value }));
+    const nextNote = { ...note, content: target.value };
+    dispatch(updateNote(nextNote));
+    triggerSynchronizeNoteDebounced(nextNote);
   }
 
   function handleTitleChange({ target }) {
-    dispatch(upsertNote({ ...note, title: target.value }));
+    const nextNote = { ...note, title: target.value };
+    dispatch(updateNote(nextNote));
+    triggerSynchronizeNoteDebounced(nextNote);
   }
 
   return (

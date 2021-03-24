@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
 import NoteNavigationList from "./NoteNavigationList";
-import { upsertNote } from "../../features/slices/thunks";
+import { createNote } from "../../features/slices/thunks";
 import { useHistory } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Plus } from "react-bootstrap-icons";
@@ -37,7 +37,7 @@ function NoteNavigation(props) {
   }
 
   function handlePlusButtonClick() {
-    dispatch(upsertNote({}))
+    dispatch(createNote({}))
       .then(unwrapResult)
       .then((note) => {
         history.push("/notes/" + note.id);

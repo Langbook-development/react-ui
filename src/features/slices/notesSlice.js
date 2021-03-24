@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { INITIAL_STATE_EMPTY } from "../initialState";
-import { deleteNote, getNotes, upsertNote } from "./thunks";
+import { createNote, deleteNote, getNotes } from "./thunks";
 
 const initialState = INITIAL_STATE_EMPTY.notes;
 
@@ -21,35 +21,37 @@ const notesSlice = createSlice({
 
       collapseNote(action.payload, notes);
     },
+
+    updateNote(notes, action) {
+      const note = action.payload;
+      const noteOld = notes.byId[note.id];
+      notes.byId[note.id] = {
+        ...note,
+        isTitleFresh: noteOld.isTitleFresh && note.title === noteOld.title,
+        isContentFresh:
+          noteOld.isContentFresh && note.content === noteOld.content,
+      };
+    },
   },
 
   extraReducers: {
-    [upsertNote.fulfilled]: (notes, action) => {
+    [createNote.fulfilled]: (notes, action) => {
+      debugger;
       const note = action.payload;
-      if (notes.allIds.includes(note.id)) {
-        const noteOld = notes.byId[note.id];
-        notes.byId[note.id] = {
-          ...note,
-          isTitleFresh: noteOld.isTitleFresh && note.title === noteOld.title,
-          isContentFresh:
-            noteOld.isContentFresh && note.content === noteOld.content,
-        };
-      } else {
-        notes.allIds.push(note.id);
-        notes.byId[note.id] = {
-          ...note,
-          isTitleFresh: true,
-          isContentFresh: true,
-        };
-        if (note.parentId) {
-          notes.byId[note.parentId].childPageIds.push(note.id);
-        }
-        let noteToExpandId = note.parentId;
-        while (noteToExpandId) {
-          const noteToExpand = notes.byId[noteToExpandId];
-          noteToExpand.isExpanded = true;
-          noteToExpandId = noteToExpand.parentId;
-        }
+      notes.allIds.push(note.id);
+      notes.byId[note.id] = {
+        ...note,
+        isTitleFresh: true,
+        isContentFresh: true,
+      };
+      if (note.parentId) {
+        notes.byId[note.parentId].childPageIds.push(note.id);
+      }
+      let noteToExpandId = note.parentId;
+      while (noteToExpandId) {
+        const noteToExpand = notes.byId[noteToExpandId];
+        noteToExpand.isExpanded = true;
+        noteToExpandId = noteToExpand.parentId;
       }
     },
 
@@ -86,6 +88,6 @@ const notesSlice = createSlice({
   },
 });
 
-export const { noteExpanded, noteCollapsed } = notesSlice.actions;
+export const { noteExpanded, noteCollapsed, updateNote } = notesSlice.actions;
 
 export default notesSlice.reducer;
