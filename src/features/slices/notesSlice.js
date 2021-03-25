@@ -67,21 +67,18 @@ const notesSlice = createSlice({
     },
 
     [deleteNote.fulfilled]: (notes, action) => {
-      function deleteChildNote(note) {
-        notes.allIds = notes.allIds.filter((it) => it !== note.id);
-        note.childPageIds.forEach((childNoteId) =>
-          deleteChildNote(notes.byId[childNoteId])
-        );
-        delete notes.byId[note.id];
-      }
+      const note = notes.byId[action.payload.note.id];
+      const deletedIds = action.payload.deletedIds;
 
-      const note = notes.byId[action.payload.id];
-      if (note.parentId) {
-        notes.byId[note.parentId].childPageIds = notes.byId[
-          note.parentId
+      notes.allIds = notes.allIds.filter((id) => !deletedIds.includes(id));
+      deletedIds.forEach((id) => delete notes.byId[id]);
+
+      const parentId = note.parentId;
+      if (parentId) {
+        notes.byId[parentId].childPageIds = notes.byId[
+          parentId
         ].childPageIds.filter((it) => it !== note.id);
       }
-      deleteChildNote(note);
     },
   },
 });
