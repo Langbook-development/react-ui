@@ -58,8 +58,7 @@ function NoteNavigationItem(props) {
 
   const navigationItemStyle = {
     paddingLeft: LEVEL_PADDING_PX * level,
-    opacity: opacity,
-    ...props.additionalStyles,
+    opacity: opacity
   };
 
   function handleMouseLeave() {
