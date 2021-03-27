@@ -140,7 +140,7 @@ section.note-content .text-area {
   height: 100%;
 }
 
-.custom-drag-layer .navigation-item {
+.navigation-item-draggable {
   background-color: white;
   border-radius: 4px;
   border: 1px solid rgba(0,0,0,.1);
