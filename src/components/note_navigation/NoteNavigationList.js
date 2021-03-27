@@ -3,6 +3,7 @@ import NoteNavigationItem from "./NoteNavigationItem";
 
 function NoteNavigationList(props) {
   const { noteIds, level } = props;
+
   return (
     <>
       {[...noteIds]

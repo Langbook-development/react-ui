@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import NoteNavigationList from "./NoteNavigationList";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { createNote } from "../../features/slices/thunks";
+import { useDrag } from "react-dnd";
+import { getEmptyImage } from "react-dnd-html5-backend";
 
 const LEVEL_PADDING_PX = 24;
 
@@ -19,6 +21,32 @@ function NoteNavigationItem(props) {
   const [isPlusVisible, setIsPlusVisible] = useState(false);
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
 
+  const [{ opacity, isDragging }, dragRef, preview] = useDrag(
+    () => ({
+      type: "NOTE",
+      item: {
+        note,
+        level,
+        selectedNoteId,
+      },
+      collect: (monitor) => ({
+        opacity: monitor.isDragging() ? 0 : 1,
+        isDragging: monitor.isDragging(),
+      }),
+    }),
+    []
+  );
+
+  useEffect(() => {
+    if (isDragging && note.isExpanded) {
+      dispatch(noteCollapsed(note.id));
+    }
+  }, [isDragging, note, dispatch]);
+
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
+
   useEffect(() => {
     if (isMouseOnItem) {
       let timeoutId = setTimeout(() => {
@@ -28,7 +56,11 @@ function NoteNavigationItem(props) {
     }
   }, [isMouseOnItem]);
 
-  const navigationItemStyle = { paddingLeft: LEVEL_PADDING_PX * level };
+  const navigationItemStyle = {
+    paddingLeft: LEVEL_PADDING_PX * level,
+    opacity: opacity,
+    ...props.additionalStyles,
+  };
 
   function handleMouseLeave() {
     setIsPlusVisible(false);
@@ -86,6 +118,7 @@ function NoteNavigationItem(props) {
   return (
     <>
       <div
+        ref={dragRef}
         className="navigation-item"
         style={navigationItemStyle}
         onMouseEnter={handleMouseEnter}

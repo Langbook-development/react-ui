@@ -20,28 +20,29 @@ aside.note-navigation .navigation-no-item {
   color: rgba(0,0,0,.4);
 }
 
-aside.note-navigation .navigation-item {
+.navigation-item {
   display: grid;
-  grid-template-columns: fit-content(25px) calc(100% - 50px) fit-content(25px);
+  width: 100%;
+  grid-template-columns: fit-content(25px) calc(100% - 60px) fit-content(25px);
   grid-template-rows: fit-content(25px);
   grid-column-gap: 5px;
 }
 
-aside.note-navigation .navigation-item .title {
+.navigation-item .title {
   color: black;
 }
 
-aside.note-navigation .navigation-item .title.active {
+.navigation-item .title.active {
   color: #0056b3;
 }
 
-aside.note-navigation .navigation-item .title:hover {
+.navigation-item .title:hover {
   color: #0056b3;
   text-decoration: underline;
   cursor: pointer;
 }
 
-aside.note-navigation .navigation-item .chevron-button{
+.navigation-item .chevron-button{
   width: 25px;
   height: 25px;
   border: 0;
@@ -50,20 +51,20 @@ aside.note-navigation .navigation-item .chevron-button{
   background-color: transparent;
 }
 
-aside.note-navigation .navigation-item .chevron-button-placeholder{
+.navigation-item .chevron-button-placeholder{
   width: 25px;
   height: 25px;
 }
 
-aside.note-navigation .navigation-item .action-button:hover{
+.navigation-item .action-button:hover{
   background-color: rgba(0,0,0,.07);
 }
 
-aside.note-navigation .navigation-item .chevron-button:hover{
+.navigation-item .chevron-button:hover{
   background-color: rgba(0,0,0,.03);
 }
 
-aside.note-navigation .navigation-item .action-button, aside.note-navigation .header .action-button{
+.navigation-item .action-button, aside.note-navigation .header .action-button{
   width: 25px;
   height: 25px;
   background-color: transparent;
@@ -73,7 +74,7 @@ aside.note-navigation .navigation-item .action-button, aside.note-navigation .he
   padding: 4px;
 }
 
-aside.note-navigation .navigation-item .action-button {
+.navigation-item .action-button {
   background-color: rgba(0,0,0,.03);
 }
 
@@ -137,4 +138,13 @@ section.note-content .text-area {
 .icon {
   width: 100%;
   height: 100%;
+}
+
+.custom-drag-layer .navigation-item {
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,.1);
+  /* Shift right, Shift down, Spread, Blur, Opacity */
+  -webkit-box-shadow: -3px 3px 6px -8px rgba(0,0,0,0.2);
+  box-shadow: -3px 3px 6px -5px rgba(0,0,0,0.2);
 }
