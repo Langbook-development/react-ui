@@ -21,32 +21,6 @@ function NoteNavigationItem(props) {
   const [isPlusVisible, setIsPlusVisible] = useState(false);
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
 
-  const [{ opacity, isDragging }, dragRef, preview] = useDrag(
-    () => ({
-      type: "NOTE",
-      item: {
-        note,
-        level,
-        selectedNoteId,
-      },
-      collect: (monitor) => ({
-        opacity: monitor.isDragging() ? 0 : 1,
-        isDragging: monitor.isDragging(),
-      }),
-    }),
-    []
-  );
-
-  useEffect(() => {
-    if (isDragging && note.isExpanded) {
-      dispatch(noteCollapsed(note.id));
-    }
-  }, [isDragging, note, dispatch]);
-
-  useEffect(() => {
-    preview(getEmptyImage(), { captureDraggingState: true });
-  }, [preview]);
-
   useEffect(() => {
     if (isMouseOnItem) {
       let timeoutId = setTimeout(() => {
@@ -58,7 +32,6 @@ function NoteNavigationItem(props) {
 
   const navigationItemStyle = {
     paddingLeft: LEVEL_PADDING_PX * level,
-    opacity: opacity,
   };
 
   function handleMouseLeave() {
@@ -117,7 +90,6 @@ function NoteNavigationItem(props) {
   return (
     <>
       <div
-        ref={dragRef}
         className="navigation-item"
         style={navigationItemStyle}
         onMouseEnter={handleMouseEnter}
