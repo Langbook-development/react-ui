@@ -28,6 +28,10 @@ aside.note-navigation .navigation-no-item {
   grid-column-gap: 5px;
 }
 
+.navigation-item .title-area {
+  cursor: grab;
+}
+
 .navigation-item .title {
   color: black;
 }

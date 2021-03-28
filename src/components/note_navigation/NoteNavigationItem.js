@@ -58,7 +58,7 @@ function NoteNavigationItem(props) {
 
   const navigationItemStyle = {
     paddingLeft: LEVEL_PADDING_PX * level,
-    opacity: opacity
+    opacity: opacity,
   };
 
   function handleMouseLeave() {
@@ -124,9 +124,11 @@ function NoteNavigationItem(props) {
         onMouseLeave={handleMouseLeave}
       >
         {getIcon()}
-        <Link className={getTitleClass()} to={"/notes/" + note.id}>
-          {note.title}
-        </Link>
+        <div className="title-area">
+          <Link className={getTitleClass()} to={"/notes/" + note.id}>
+            {note.title}
+          </Link>
+        </div>
         <button
           className="action-button"
           onClick={handlePlusButtonClick}
