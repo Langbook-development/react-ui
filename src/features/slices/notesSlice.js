@@ -35,52 +35,62 @@ const notesSlice = createSlice({
 
     moveNote(notes, action) {
       const { noteId, destination } = action.payload;
-      const { destinationParentId, destinationSortId } = destination;
+      const noteMoved = notes.byId[noteId];
 
-      const note = notes.byId[noteId];
-
-      // Remove note from it's parent
-      if (note.parentId) {
-        notes.byId[note.parentId].childPageIds.forEach((noteIdSameParent) => {
-          if (notes.byId[noteIdSameParent].sortId > note.sortId) {
-            notes.byId[noteIdSameParent].sortId =
-              notes.byId[noteIdSameParent].sortId - 1;
-          }
-        });
-        notes.byId[note.parentId].childPageIds = notes.byId[
-          note.parentId
-        ].childPageIds.filter((it) => it !== noteId);
-      } else {
-        notes.rootNoteIds.forEach((noteIdSameParent) => {
-          if (notes.byId[noteIdSameParent].sortId > note.sortId) {
-            notes.byId[noteIdSameParent].sortId =
-              notes.byId[noteIdSameParent].sortId - 1;
-          }
-        });
-        notes.rootNoteIds = notes.rootNoteIds.filter((id) => id !== noteId);
-      }
-      // Add note to new parent
-      if (destinationParentId) {
-        notes.byId[destinationParentId].childPageIds.forEach(
-          (noteIdSameParent) => {
-            if (notes.byId[noteIdSameParent].sortId >= destinationSortId) {
-              notes.byId[noteIdSameParent].sortId =
-                notes.byId[noteIdSameParent].sortId + 1;
-            }
-          }
+      function pullFromParentNotes() {
+        const noteParent = notes.byId[noteMoved.parentId];
+        pullFromNotes(noteParent.childPageIds);
+        noteParent.childPageIds = noteParent.childPageIds.filter(
+          (it) => it !== noteMoved.id
         );
-        notes.byId[destinationParentId].childPageIds.push(note.id);
-      } else {
-        notes.rootNoteIds.forEach((noteIdSameParent) => {
-          if (notes.byId[noteIdSameParent].sortId >= destinationSortId) {
-            notes.byId[noteIdSameParent].sortId =
-              notes.byId[noteIdSameParent].sortId + 1;
-          }
-        });
-        notes.rootNoteIds.push(noteId);
       }
-      notes.byId[note.id].sortId = destinationSortId;
-      notes.byId[note.id].parentId = destinationParentId;
+
+      function pullFromRootNotes() {
+        pullFromNotes(notes.rootNoteIds);
+        notes.rootNoteIds = notes.rootNoteIds.filter(
+          (id) => id !== noteMoved.id
+        );
+      }
+
+      function pullFromNotes(noteIds) {
+        noteIds.forEach((id) => {
+          let note = notes.byId[id];
+          note.sortId =
+            note.sortId > noteMoved.sortId ? note.sortId - 1 : note.sortId;
+        });
+      }
+
+      function pushParentNotes() {
+        const noteParentNew = notes.byId[destination.parentId];
+        noteParentNew.childPageIds.forEach((id) => {
+          let note = notes.byId[id];
+          note.sortId =
+            note.sortId >= destination.sortId ? note.sortId + 1 : note.sortId;
+        });
+        noteParentNew.childPageIds.push(noteMoved.id);
+      }
+
+      function pushRootNotes() {
+        notes.rootNoteIds.forEach((id) => {
+          let note = notes.byId[id];
+          note.sortId =
+            note.sortId >= destination.sortId ? note.sortId + 1 : note.sortId;
+        });
+        notes.rootNoteIds.push(noteMoved.id);
+      }
+
+      if (noteMoved.parentId) {
+        pullFromParentNotes();
+      } else {
+        pullFromRootNotes();
+      }
+      if (destination.parentId) {
+        pushParentNotes();
+      } else {
+        pushRootNotes();
+      }
+      notes.byId[noteMoved.id].sortId = destination.sortId;
+      notes.byId[noteMoved.id].parentId = destination.parentId;
     },
   },
 

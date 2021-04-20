@@ -61,8 +61,8 @@ function NoteNavigationItem(props) {
           moveNote({
             noteId: item.noteDragged.id,
             destination: {
-              destinationParentId: note.parentId,
-              destinationSortId: note.sortId,
+              parentId: note.parentId,
+              sortId: note.sortId,
             },
           })
         );
