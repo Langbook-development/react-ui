@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { ChevronDown, ChevronRight, Plus } from "react-bootstrap-icons";
-import { noteExpanded, noteCollapsed } from "../../features/slices/notesSlice";
+import {
+  noteExpanded,
+  noteCollapsed,
+  moveNote,
+} from "../../features/slices/notesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import NoteNavigationList from "./NoteNavigationList";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { createNote } from "../../features/slices/thunks";
-import { useDrag } from "react-dnd";
-import { getEmptyImage } from "react-dnd-html5-backend";
+import { useDrag, useDrop } from "react-dnd";
 
 const LEVEL_PADDING_PX = 24;
 
@@ -30,8 +33,53 @@ function NoteNavigationItem(props) {
     }
   }, [isMouseOnItem]);
 
+  const ref = useRef(null);
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "CARD",
+    item: {
+      noteDragged: { ...note },
+      noteInitial: { ...note },
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+      handlerId: monitor.getHandlerId(),
+    }),
+  }));
+  const [{ handlerId }, drop] = useDrop(
+    () => ({
+      accept: "CARD",
+      collect(monitor) {
+        return {
+          handlerId: monitor.getHandlerId(),
+        };
+      },
+      hover(item, monitor) {
+        if (item.noteDragged.id === note.id) {
+          return;
+        }
+        dispatch(
+          moveNote({
+            noteId: item.noteDragged.id,
+            destination: {
+              destinationParentId: note.parentId,
+              destinationSortId: note.sortId,
+            },
+          })
+        );
+        item.noteDragged.parentId = note.parentId;
+        item.noteDragged.sortId = note.sortId;
+      },
+    }),
+    [note]
+  );
+
+  if (note.isExpanded && isDragging) {
+    dispatch(noteCollapsed(note.id));
+  }
+
   const navigationItemStyle = {
     paddingLeft: LEVEL_PADDING_PX * level,
+    opacity: isDragging ? 0 : 1,
   };
 
   function handleMouseLeave() {
@@ -90,6 +138,8 @@ function NoteNavigationItem(props) {
   return (
     <>
       <div
+        ref={drag(drop(ref))}
+        data-handler-id={handlerId}
         className="navigation-item"
         style={navigationItemStyle}
         onMouseEnter={handleMouseEnter}

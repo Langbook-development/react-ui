@@ -32,6 +32,56 @@ const notesSlice = createSlice({
           noteOld.isContentFresh && note.content === noteOld.content,
       };
     },
+
+    moveNote(notes, action) {
+      const { noteId, destination } = action.payload;
+      const { destinationParentId, destinationSortId } = destination;
+
+      const note = notes.byId[noteId];
+
+      // Remove note from it's parent
+      if (note.parentId) {
+        notes.byId[note.parentId].childPageIds.forEach((noteIdSameParent) => {
+          if (notes.byId[noteIdSameParent].sortId > note.sortId) {
+            notes.byId[noteIdSameParent].sortId =
+              notes.byId[noteIdSameParent].sortId - 1;
+          }
+        });
+        notes.byId[note.parentId].childPageIds = notes.byId[
+          note.parentId
+        ].childPageIds.filter((it) => it !== noteId);
+      } else {
+        notes.rootNoteIds.forEach((noteIdSameParent) => {
+          if (notes.byId[noteIdSameParent].sortId > note.sortId) {
+            notes.byId[noteIdSameParent].sortId =
+              notes.byId[noteIdSameParent].sortId - 1;
+          }
+        });
+        notes.rootNoteIds = notes.rootNoteIds.filter((id) => id !== noteId);
+      }
+      // Add note to new parent
+      if (destinationParentId) {
+        notes.byId[destinationParentId].childPageIds.forEach(
+          (noteIdSameParent) => {
+            if (notes.byId[noteIdSameParent].sortId >= destinationSortId) {
+              notes.byId[noteIdSameParent].sortId =
+                notes.byId[noteIdSameParent].sortId + 1;
+            }
+          }
+        );
+        notes.byId[destinationParentId].childPageIds.push(note.id);
+      } else {
+        notes.rootNoteIds.forEach((noteIdSameParent) => {
+          if (notes.byId[noteIdSameParent].sortId >= destinationSortId) {
+            notes.byId[noteIdSameParent].sortId =
+              notes.byId[noteIdSameParent].sortId + 1;
+          }
+        });
+        notes.rootNoteIds.push(noteId);
+      }
+      notes.byId[note.id].sortId = destinationSortId;
+      notes.byId[note.id].parentId = destinationParentId;
+    },
   },
 
   extraReducers: {
@@ -45,6 +95,8 @@ const notesSlice = createSlice({
       };
       if (note.parentId) {
         notes.byId[note.parentId].childPageIds.push(note.id);
+      } else {
+        notes.rootNoteIds.push(note.id);
       }
       let noteToExpandId = note.parentId;
       while (noteToExpandId) {
@@ -55,7 +107,7 @@ const notesSlice = createSlice({
     },
 
     [getNotes.fulfilled]: (notes, action) => {
-      action.payload.forEach((note) => {
+      action.payload.notes.forEach((note) => {
         notes.byId[note.id] = {
           ...note,
           isExpanded: false,
@@ -63,6 +115,7 @@ const notesSlice = createSlice({
           isContentFresh: false,
         };
         notes.allIds.push(note.id);
+        notes.rootNoteIds = action.payload.rootNoteIds;
       });
     },
 
@@ -78,11 +131,28 @@ const notesSlice = createSlice({
         notes.byId[parentId].childPageIds = notes.byId[
           parentId
         ].childPageIds.filter((it) => it !== note.id);
+        notes.byId[parentId].childPageIds.forEach((id) => {
+          if (notes.byId[id].sortId > note.sortId) {
+            notes.byId[id].sortId = notes.byId[id].sortId - 1;
+          }
+        });
+      } else {
+        notes.rootNoteIds = notes.rootNoteIds.filter((it) => it !== note.id);
+        notes.rootNoteIds.forEach((id) => {
+          if (notes.byId[id].sortId > note.sortId) {
+            notes.byId[id].sortId = notes.byId[id].sortId - 1;
+          }
+        });
       }
     },
   },
 });
 
-export const { noteExpanded, noteCollapsed, updateNote } = notesSlice.actions;
+export const {
+  noteExpanded,
+  noteCollapsed,
+  updateNote,
+  moveNote,
+} = notesSlice.actions;
 
 export default notesSlice.reducer;

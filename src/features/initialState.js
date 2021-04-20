@@ -7,6 +7,7 @@ export const INITIAL_STATE_EMPTY = {
 
 export const INITIAL_STATE = {
   notes: {
+    rootNoteIds: [1, 5],
     byId: {
       1: {
         id: 1,
