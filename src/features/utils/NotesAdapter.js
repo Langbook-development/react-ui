@@ -21,7 +21,6 @@ export class NotesAdapter {
     const noteToPull = this.notes.byId[noteId];
     const noteParentOld = this.notes.byId[noteToPull.parentId];
     noteParentOld.childPageIds.forEach((id) => {
-      debugger;
       let noteToShift = this.notes.byId[id];
       noteToShift.sortId =
         noteToShift.sortId > noteToPull.sortId

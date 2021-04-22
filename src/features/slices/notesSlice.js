@@ -26,8 +26,6 @@ const notesSlice = createSlice({
     },
 
     moveNote(notes, action) {
-      debugger;
-      console.log("move reducer!");
       const { noteId, destination } = action.payload;
       const { sortId, parentId } = destination;
       const notesAdapter = new NotesAdapter(notes);
