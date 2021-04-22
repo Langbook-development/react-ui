@@ -14,49 +14,38 @@ export function useNoteDrop(ref, note) {
         };
       },
       hover({ noteDragged }, monitor) {
-        if (!ref.current) {
-          return;
-        }
-        if (noteDragged.id === note.id) {
+        if (!ref.current || noteDragged.id === note.id) {
           return;
         }
         if (!noteDragged.placeholderY) {
           noteDragged.placeholderY = monitor.getInitialClientOffset().y;
         }
 
-        const noteHoveredOnBoundingRect = ref.current?.getBoundingClientRect();
-        const noteHoveredOnMiddleY =
-          (noteHoveredOnBoundingRect.bottom - noteHoveredOnBoundingRect.top) /
-          2;
-        const mousePositionY = monitor.getClientOffset().y;
-        const noteHoveredOnMousePositionY =
-          mousePositionY - noteHoveredOnBoundingRect.top;
+        const hoveredRect = ref.current?.getBoundingClientRect();
+        const hoveredMiddleY = (hoveredRect.bottom - hoveredRect.top) / 2;
+        const mouseY = monitor.getClientOffset().y;
+        const mouseHoveredY = mouseY - hoveredRect.top;
 
-        if (
-          mousePositionY < noteDragged.placeholderY &&
-          noteHoveredOnMousePositionY > noteHoveredOnMiddleY
-        ) {
-          return; // Moving up and Y below hovered note middle Y
+        const isMovingUp = mouseY < noteDragged.placeholderY;
+        const isMovingDown = !isMovingUp;
+        const aboveMiddle = mouseHoveredY < hoveredMiddleY;
+        const belowMiddle = !aboveMiddle;
+        const absoluteHoveredMiddleY = hoveredRect.top + hoveredMiddleY;
+
+        if ((isMovingUp && aboveMiddle) || (isMovingDown && belowMiddle)) {
+          dispatch(
+            moveNote({
+              noteId: noteDragged.id,
+              destination: {
+                parentId: note.parentId,
+                sortId: note.sortId,
+              },
+            })
+          );
+          noteDragged.parentId = note.parentId;
+          noteDragged.sortId = note.sortId;
+          noteDragged.placeholderY = absoluteHoveredMiddleY;
         }
-        if (
-          mousePositionY > noteDragged.placeholderY &&
-          noteHoveredOnMousePositionY < noteHoveredOnMiddleY
-        ) {
-          return; // Moving down and Y above hovered note middle Y
-        }
-        dispatch(
-          moveNote({
-            noteId: noteDragged.id,
-            destination: {
-              parentId: note.parentId,
-              sortId: note.sortId,
-            },
-          })
-        );
-        noteDragged.parentId = note.parentId;
-        noteDragged.sortId = note.sortId;
-        noteDragged.placeholderY =
-          noteHoveredOnBoundingRect.top + noteHoveredOnMiddleY;
       },
     }),
     [note]
