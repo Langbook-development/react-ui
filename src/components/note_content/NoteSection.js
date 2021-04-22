@@ -17,10 +17,8 @@ function NoteSection() {
   const dispatch = useDispatch();
   const note = useSelector((state) => state.notes.byId[selectedNoteId]);
   const fallbackNoteId = useSelector((state) => {
-    const sameDeepnessLestSortId = Object.values(state.notes.byId)
-      .filter(
-        (it) => it.deepness === note.deepness && it.parentId === note.parentId
-      )
+    const sameDeepnessLestSortId = state.notes.byId[note.parentId].childPageIds
+      .map((id) => state.notes.byId[id])
       .filter((it) => it.id !== note.id)
       .reduce((prev, curr) => (prev.sortId < curr.sortId ? prev : curr), {}).id;
     if (sameDeepnessLestSortId) {

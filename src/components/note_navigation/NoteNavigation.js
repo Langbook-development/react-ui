@@ -13,11 +13,15 @@ function NoteNavigation(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const hasNoNotes = useSelector((state) => state.notes.allIds.length === 0);
-  const noteIds = useSelector((state) =>
-    Object.values(state.notes.byId)
-      .filter((it) => !it.parentId)
-      .map((it) => it.id)
-  );
+  const noteIds = useSelector((state) => {
+    const currentCategoryId = state.notes.categoryIds[0];
+    if (!currentCategoryId) {
+      return [];
+    }
+    return state.notes.byId[currentCategoryId].childPageIds
+      .map((id) => state.notes.byId[id])
+      .map((it) => it.id);
+  });
 
   useEffect(() => {
     if (isMouseOnItem) {

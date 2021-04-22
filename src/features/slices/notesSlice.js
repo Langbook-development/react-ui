@@ -15,8 +15,9 @@ const notesSlice = createSlice({
 
     noteCollapsed(notes, action) {
       function collapseNote(id, notes) {
-        notes.byId[id].isExpanded = false;
-        notes.byId[id].childPageIds.forEach((it) => collapseNote(it, notes));
+        const note = notes.byId[id];
+        note.isExpanded = false;
+        note.childPageIds.forEach((it) => collapseNote(it, notes));
       }
 
       collapseNote(action.payload, notes);
@@ -34,55 +35,34 @@ const notesSlice = createSlice({
     },
 
     moveNote(notes, action) {
+      const withoutMovedId = (id) => id !== noteMoved.id;
       const { noteId, destination } = action.payload;
       const noteMoved = notes.byId[noteId];
 
-      const withoutMovedId = (id) => id !== noteMoved.id;
-
-      function shiftPulledNotes(noteIds) {
-        noteIds.forEach((id) => {
-          let noteToShift = notes.byId[id];
-          noteToShift.sortId =
-            noteToShift.sortId > noteMoved.sortId
-              ? noteToShift.sortId - 1
-              : noteToShift.sortId;
-        });
-      }
-
-      function shiftPushedNotes(noteIds) {
-        noteIds.forEach((id) => {
-          let noteToShift = notes.byId[id];
-          noteToShift.sortId =
-            noteToShift.sortId >= destination.sortId
-              ? noteToShift.sortId + 1
-              : noteToShift.sortId;
-        });
-      }
-
       // Shift same deepness notes where note was removed
-      if (noteMoved.parentId) {
-        // Taken from parent note
-        const noteParentOld = notes.byId[noteMoved.parentId];
-        shiftPulledNotes(noteParentOld.childPageIds);
-        noteParentOld.childPageIds = noteParentOld.childPageIds.filter(
-          withoutMovedId
-        );
-      } else {
-        // Taken from root
-        shiftPulledNotes(notes.rootNoteIds);
-        notes.rootNoteIds = notes.rootNoteIds.filter(withoutMovedId);
-      }
+      const noteParentOld = notes.byId[noteMoved.parentId];
+      noteParentOld.childPageIds.forEach((id) => {
+        let noteToShift = notes.byId[id];
+        noteToShift.sortId =
+          noteToShift.sortId > noteMoved.sortId
+            ? noteToShift.sortId - 1
+            : noteToShift.sortId;
+      });
+      noteParentOld.childPageIds = noteParentOld.childPageIds.filter(
+        withoutMovedId
+      );
+
       // Shift same deepness notes where note will be placed
-      if (destination.parentId) {
-        // Placed to parent note
-        const noteParentNew = notes.byId[destination.parentId];
-        shiftPushedNotes(noteParentNew.childPageIds);
-        noteParentNew.childPageIds.push(noteMoved.id);
-      } else {
-        // Placed to root
-        shiftPushedNotes(notes.rootNoteIds);
-        notes.rootNoteIds.push(noteMoved.id);
-      }
+      const noteParentNew = notes.byId[destination.parentId];
+      noteParentNew.childPageIds.forEach((id) => {
+        let noteToShift = notes.byId[id];
+        noteToShift.sortId =
+          noteToShift.sortId >= destination.sortId
+            ? noteToShift.sortId + 1
+            : noteToShift.sortId;
+      });
+      noteParentNew.childPageIds.push(noteMoved.id);
+
       // Assign new coordinates no moved note
       noteMoved.sortId = destination.sortId;
       noteMoved.parentId = destination.parentId;
@@ -120,7 +100,7 @@ const notesSlice = createSlice({
           isContentFresh: false,
         };
         notes.allIds.push(note.id);
-        notes.rootNoteIds = action.payload.rootNoteIds;
+        notes.categoryIds = action.payload.categoryIds;
       });
     },
 
@@ -141,16 +121,17 @@ const notesSlice = createSlice({
       notes.allIds = notes.allIds.filter((id) => !deletedIds.includes(id));
       deletedIds.forEach((id) => delete notes.byId[id]);
 
+      const withoutMovedId = (id) => id !== note.id;
       const parentId = note.parentId;
       if (parentId) {
         let noteParent = notes.byId[parentId];
         pullFromNotes(noteParent.childPageIds);
         noteParent.childPageIds = noteParent.childPageIds.filter(
-          (it) => it !== note.id
+          withoutMovedId
         );
       } else {
         pullFromNotes(notes.rootNoteIds);
-        notes.rootNoteIds = notes.rootNoteIds.filter((it) => it !== note.id);
+        notes.rootNoteIds = notes.rootNoteIds.filter(withoutMovedId);
       }
     },
   },

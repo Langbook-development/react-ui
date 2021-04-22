@@ -6,8 +6,12 @@ import NoteNavigation from "./note_navigation/NoteNavigation";
 function NotePageEmpty() {
   const hasNotes = useSelector((state) => state.notes.allIds.length > 0);
   const firstToShowNoteId = useSelector((state) => {
-    return Object.values(state.notes.byId)
-      .filter((it) => it.deepness === 1)
+    const currentCategory = state.notes.categoryIds[0];
+    if (!currentCategory) {
+      return undefined;
+    }
+    return state.notes.byId[currentCategory].childPageIds
+      .map((id) => state.notes.byId[id])
       .reduce((prev, curr) => (prev.sortId < curr.sortId ? prev : curr), {}).id;
   });
 

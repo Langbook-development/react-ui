@@ -1,5 +1,6 @@
 export const INITIAL_STATE_EMPTY = {
   notes: {
+    categoryIds: [],
     byId: {},
     allIds: [],
   },
@@ -7,14 +8,26 @@ export const INITIAL_STATE_EMPTY = {
 
 export const INITIAL_STATE = {
   notes: {
-    rootNoteIds: [1, 5],
+    categoryIds: [1, 5],
     byId: {
+      0: {
+        id: 0,
+        sortId: 1,
+        title: "root",
+        content: "root",
+        parentId: undefined,
+        isCategory: true,
+        childPageIds: [1, 4, 5],
+        isExpanded: false,
+        isTitleFresh: false,
+        isContentFresh: false,
+      },
       1: {
         id: 1,
         sortId: 1,
-        deepness: 1,
         title: "Basic grammar",
         content: "This is some placeholder content!",
+        parentId: 0,
         childPageIds: [2, 3],
         isExpanded: false,
         isTitleFresh: false,
@@ -23,7 +36,6 @@ export const INITIAL_STATE = {
       2: {
         id: 2,
         sortId: 1,
-        deepness: 2,
         title: "Present simple",
         content: "Try to add some more text if you want to play with it",
         parentId: 1,
@@ -35,7 +47,6 @@ export const INITIAL_STATE = {
       3: {
         id: 3,
         sortId: 2,
-        deepness: 2,
         title: "Present continuous",
         parentId: 1,
         childPageIds: [6, 7],
@@ -46,8 +57,8 @@ export const INITIAL_STATE = {
       4: {
         id: 4,
         sortId: 2,
-        deepness: 1,
         title: "Vocabulary",
+        parentId: 0,
         childPageIds: [8],
         isExpanded: false,
         isTitleFresh: false,
@@ -56,9 +67,9 @@ export const INITIAL_STATE = {
       5: {
         id: 5,
         sortId: 3,
-        deepness: 1,
         title: "Russian Basic grammar",
         content: "In russian there is no basic grammar!",
+        parentId: 0,
         childPageIds: [],
         isExpanded: false,
         isTitleFresh: false,
@@ -67,7 +78,6 @@ export const INITIAL_STATE = {
       6: {
         id: 6,
         sortId: 1,
-        deepness: 3,
         title: "Examples",
         content: "Some examples",
         parentId: 3,
@@ -79,7 +89,6 @@ export const INITIAL_STATE = {
       7: {
         id: 7,
         sortId: 2,
-        deepness: 3,
         title: "Exercises",
         content: "Some exercises",
         parentId: 3,
@@ -91,7 +100,6 @@ export const INITIAL_STATE = {
       8: {
         id: 8,
         sortId: 1,
-        deepness: 2,
         title: "Nice to know words",
         content: "Words",
         parentId: 4,
@@ -103,7 +111,6 @@ export const INITIAL_STATE = {
       9: {
         id: 9,
         sortId: 1,
-        deepness: 4,
         title: "Long explanatory exaple caption",
         content: "Words",
         parentId: 6,
@@ -115,7 +122,6 @@ export const INITIAL_STATE = {
       10: {
         id: 10,
         sortId: 1,
-        deepness: 5,
         title: "Long explanatory exaple caption 2",
         content: "Words",
         parentId: 9,
