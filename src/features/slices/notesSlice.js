@@ -26,12 +26,14 @@ const notesSlice = createSlice({
     },
 
     moveNote(notes, action) {
+      debugger;
+      console.log("move reducer!");
       const { noteId, destination } = action.payload;
       const { sortId, parentId } = destination;
       const notesAdapter = new NotesAdapter(notes);
       notesAdapter.shiftPullOut(noteId);
       notesAdapter.shiftPush(noteId, sortId, parentId);
-      notesAdapter.changePositionOf(noteId, sortId, parentId)
+      notesAdapter.changePositionOf(noteId, sortId, parentId);
     },
   },
 
@@ -55,9 +57,8 @@ const notesSlice = createSlice({
     [deleteNote.fulfilled]: (notes, action) => {
       const noteIdDeleted = action.payload.note.id;
       const noteIdsDeleted = action.payload.deletedIds;
-      const noteDeleted = notes.byId[noteIdDeleted];
       const notesAdapter = new NotesAdapter(notes);
-      notesAdapter.pullOut(noteDeleted);
+      notesAdapter.shiftPullOut(noteIdDeleted);
       notesAdapter.deleteAll(noteIdsDeleted);
     },
   },

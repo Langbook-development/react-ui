@@ -21,6 +21,7 @@ export class NotesAdapter {
     const noteToPull = this.notes.byId[noteId];
     const noteParentOld = this.notes.byId[noteToPull.parentId];
     noteParentOld.childPageIds.forEach((id) => {
+      debugger;
       let noteToShift = this.notes.byId[id];
       noteToShift.sortId =
         noteToShift.sortId > noteToPull.sortId
@@ -33,7 +34,7 @@ export class NotesAdapter {
   }
 
   changePositionOf(noteId, sortId, parentId) {
-    const noteToMove = this.notes.byId[parentId];
+    const noteToMove = this.notes.byId[noteId];
     noteToMove.sortId = sortId;
     noteToMove.parentId = parentId;
   }

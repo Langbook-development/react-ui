@@ -1,16 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { ChevronDown, ChevronRight, Plus } from "react-bootstrap-icons";
-import {
-  noteExpanded,
-  noteCollapsed,
-  moveNote,
-} from "../../features/slices/notesSlice";
+import { noteExpanded, noteCollapsed } from "../../features/slices/notesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import NoteNavigationList from "./NoteNavigationList";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { createNote } from "../../features/slices/thunks";
-import { useDrag, useDrop } from "react-dnd";
+import { useNoteDrop } from "./drag_utils/useNoteDrop";
+import { useNoteDrag } from "./drag_utils/useNoteDrag";
 
 const LEVEL_PADDING_PX = 24;
 
@@ -34,78 +31,8 @@ function NoteNavigationItem(props) {
   }, [isMouseOnItem]);
 
   const ref = useRef(null);
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: "CARD",
-    item: {
-      noteDragged: { ...note },
-      noteInitial: { ...note },
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-      handlerId: monitor.getHandlerId(),
-    }),
-    end: ({ noteDragged, noteInitial }, monitor) => {
-      const didDrop = monitor.didDrop();
-      if (!didDrop) {
-        if (
-          noteDragged.sortId === noteInitial.sortId &&
-          noteDragged.parentId === noteInitial.parentId
-        ) {
-          return;
-        }
-        move(noteDragged.id, noteInitial.parentId, noteInitial.sortId);
-      }
-    },
-  }));
-  const [{ handlerId }, drop] = useDrop(
-    () => ({
-      accept: "CARD",
-      collect(monitor) {
-        return {
-          handlerId: monitor.getHandlerId(),
-        };
-      },
-      hover({ noteDragged }, monitor) {
-        if (!ref.current) {
-          return;
-        }
-        if (noteDragged.id === note.id) {
-          return;
-        }
-        if (!noteDragged.placeholderY) {
-          noteDragged.placeholderY = monitor.getInitialClientOffset().y;
-        }
-
-        const noteHoveredOnBoundingRect = ref.current?.getBoundingClientRect();
-        const noteHoveredOnMiddleY =
-          (noteHoveredOnBoundingRect.bottom - noteHoveredOnBoundingRect.top) /
-          2;
-        const mousePositionY = monitor.getClientOffset().y;
-        const noteHoveredOnMousePositionY =
-          mousePositionY - noteHoveredOnBoundingRect.top;
-
-        if (
-          mousePositionY < noteDragged.placeholderY &&
-          noteHoveredOnMousePositionY > noteHoveredOnMiddleY
-        ) {
-          return; // Moving up and Y below hovered note middle Y
-        }
-        if (
-          mousePositionY > noteDragged.placeholderY &&
-          noteHoveredOnMousePositionY < noteHoveredOnMiddleY
-        ) {
-          return; // Moving down and Y above hovered note middle Y
-        }
-
-        move(noteDragged.id, note.parentId, note.sortId);
-        noteDragged.parentId = note.parentId;
-        noteDragged.sortId = note.sortId;
-        noteDragged.placeholderY =
-          noteHoveredOnBoundingRect.top + noteHoveredOnMiddleY;
-      },
-    }),
-    [note]
-  );
+  const [isDragging, drag] = useNoteDrag(note);
+  const [handlerId, drop] = useNoteDrop(ref, note);
 
   if (note.isExpanded && isDragging) {
     dispatch(noteCollapsed(note.id));
@@ -115,18 +42,6 @@ function NoteNavigationItem(props) {
     paddingLeft: LEVEL_PADDING_PX * level,
     opacity: isDragging ? 0 : 1,
   };
-
-  function move(noteId, toSortId, toParentId) {
-    dispatch(
-      moveNote({
-        noteId,
-        destination: {
-          parentId: toSortId,
-          sortId: toParentId,
-        },
-      })
-    );
-  }
 
   function handleMouseLeave() {
     setIsPlusVisible(false);
