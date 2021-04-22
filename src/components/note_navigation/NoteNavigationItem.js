@@ -44,6 +44,26 @@ function NoteNavigationItem(props) {
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
+    end: (item, monitor) => {
+      const didDrop = monitor.didDrop();
+      if (!didDrop) {
+        if (
+          item.noteDragged.sortId === item.noteInitial.sortId &&
+          item.noteDragged.parentId === item.noteInitial.parentId
+        ) {
+          return;
+        }
+        dispatch(
+          moveNote({
+            noteId: item.noteDragged.id,
+            destination: {
+              parentId: item.noteInitial.parentId,
+              sortId: item.noteInitial.sortId,
+            },
+          })
+        );
+      }
+    },
   }));
   const [{ handlerId }, drop] = useDrop(
     () => ({
@@ -54,9 +74,37 @@ function NoteNavigationItem(props) {
         };
       },
       hover(item, monitor) {
+        if (!ref.current) {
+          return;
+        }
         if (item.noteDragged.id === note.id) {
           return;
         }
+        if (!item.noteDragged.placeholderY) {
+          item.noteDragged.placeholderY = monitor.getInitialClientOffset().y;
+        }
+
+        const noteHoveredOnBoundingRect = ref.current?.getBoundingClientRect();
+        const noteHoveredOnMiddleY =
+          (noteHoveredOnBoundingRect.bottom - noteHoveredOnBoundingRect.top) /
+          2;
+        const mousePositionY = monitor.getClientOffset().y;
+        const noteHoveredOnMousePositionY =
+          mousePositionY - noteHoveredOnBoundingRect.top;
+
+        if (
+          mousePositionY < item.noteDragged.placeholderY &&
+          noteHoveredOnMousePositionY > noteHoveredOnMiddleY
+        ) {
+          return; // Moving up and Y below note middle Y
+        }
+        if (
+          mousePositionY > item.noteDragged.placeholderY &&
+          noteHoveredOnMousePositionY < noteHoveredOnMiddleY
+        ) {
+          return; // Moving down and Y above note middle Y
+        }
+
         dispatch(
           moveNote({
             noteId: item.noteDragged.id,
@@ -68,6 +116,8 @@ function NoteNavigationItem(props) {
         );
         item.noteDragged.parentId = note.parentId;
         item.noteDragged.sortId = note.sortId;
+        item.noteDragged.placeholderY =
+          noteHoveredOnBoundingRect.top + noteHoveredOnMiddleY;
       },
     }),
     [note]
