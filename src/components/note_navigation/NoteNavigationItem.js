@@ -21,6 +21,10 @@ function NoteNavigationItem(props) {
   const [isPlusVisible, setIsPlusVisible] = useState(false);
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
 
+  const ref = useRef(null);
+  const [isDragging, drag] = useNoteDrag(note);
+  const [handlerId, drop] = useNoteDrop(ref, note);
+
   useEffect(() => {
     if (isMouseOnItem) {
       let timeoutId = setTimeout(() => {
@@ -34,11 +38,7 @@ function NoteNavigationItem(props) {
     if (note.isExpanded && isDragging) {
       dispatch(noteCollapsed(note.id));
     }
-  });
-
-  const ref = useRef(null);
-  const [isDragging, drag] = useNoteDrag(note);
-  const [handlerId, drop] = useNoteDrop(ref, note);
+  }, [note, isDragging, dispatch]);
 
   const navigationItemStyle = {
     paddingLeft: LEVEL_PADDING_PX * level,
