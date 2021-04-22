@@ -44,24 +44,16 @@ function NoteNavigationItem(props) {
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
-    end: (item, monitor) => {
+    end: ({ noteDragged, noteInitial }, monitor) => {
       const didDrop = monitor.didDrop();
       if (!didDrop) {
         if (
-          item.noteDragged.sortId === item.noteInitial.sortId &&
-          item.noteDragged.parentId === item.noteInitial.parentId
+          noteDragged.sortId === noteInitial.sortId &&
+          noteDragged.parentId === noteInitial.parentId
         ) {
           return;
         }
-        dispatch(
-          moveNote({
-            noteId: item.noteDragged.id,
-            destination: {
-              parentId: item.noteInitial.parentId,
-              sortId: item.noteInitial.sortId,
-            },
-          })
-        );
+        move(noteDragged.id, noteInitial.parentId, noteInitial.sortId);
       }
     },
   }));
@@ -73,15 +65,15 @@ function NoteNavigationItem(props) {
           handlerId: monitor.getHandlerId(),
         };
       },
-      hover(item, monitor) {
+      hover({ noteDragged }, monitor) {
         if (!ref.current) {
           return;
         }
-        if (item.noteDragged.id === note.id) {
+        if (noteDragged.id === note.id) {
           return;
         }
-        if (!item.noteDragged.placeholderY) {
-          item.noteDragged.placeholderY = monitor.getInitialClientOffset().y;
+        if (!noteDragged.placeholderY) {
+          noteDragged.placeholderY = monitor.getInitialClientOffset().y;
         }
 
         const noteHoveredOnBoundingRect = ref.current?.getBoundingClientRect();
@@ -93,30 +85,22 @@ function NoteNavigationItem(props) {
           mousePositionY - noteHoveredOnBoundingRect.top;
 
         if (
-          mousePositionY < item.noteDragged.placeholderY &&
+          mousePositionY < noteDragged.placeholderY &&
           noteHoveredOnMousePositionY > noteHoveredOnMiddleY
         ) {
-          return; // Moving up and Y below note middle Y
+          return; // Moving up and Y below hovered note middle Y
         }
         if (
-          mousePositionY > item.noteDragged.placeholderY &&
+          mousePositionY > noteDragged.placeholderY &&
           noteHoveredOnMousePositionY < noteHoveredOnMiddleY
         ) {
-          return; // Moving down and Y above note middle Y
+          return; // Moving down and Y above hovered note middle Y
         }
 
-        dispatch(
-          moveNote({
-            noteId: item.noteDragged.id,
-            destination: {
-              parentId: note.parentId,
-              sortId: note.sortId,
-            },
-          })
-        );
-        item.noteDragged.parentId = note.parentId;
-        item.noteDragged.sortId = note.sortId;
-        item.noteDragged.placeholderY =
+        move(noteDragged.id, note.parentId, note.sortId);
+        noteDragged.parentId = note.parentId;
+        noteDragged.sortId = note.sortId;
+        noteDragged.placeholderY =
           noteHoveredOnBoundingRect.top + noteHoveredOnMiddleY;
       },
     }),
@@ -131,6 +115,18 @@ function NoteNavigationItem(props) {
     paddingLeft: LEVEL_PADDING_PX * level,
     opacity: isDragging ? 0 : 1,
   };
+
+  function move(noteId, toSortId, toParentId) {
+    dispatch(
+      moveNote({
+        noteId,
+        destination: {
+          parentId: toSortId,
+          sortId: toParentId,
+        },
+      })
+    );
+  }
 
   function handleMouseLeave() {
     setIsPlusVisible(false);

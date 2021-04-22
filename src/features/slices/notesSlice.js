@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { INITIAL_STATE_EMPTY } from "../initialState";
 import { createNote, deleteNote, getNotes } from "./thunks";
+import { NotesAdapter } from "../utils/NotesAdapter";
 
 const initialState = INITIAL_STATE_EMPTY.notes;
 
@@ -9,116 +10,55 @@ const notesSlice = createSlice({
   initialState,
   reducers: {
     noteExpanded(notes, action) {
-      const noteId = action.payload;
-      notes.byId[noteId].isExpanded = true;
+      const notesAdapter = new NotesAdapter(notes);
+      notesAdapter.expand(action.payload);
     },
 
     noteCollapsed(notes, action) {
-      function collapseNote(id, notes) {
-        const note = notes.byId[id];
-        note.isExpanded = false;
-        note.childPageIds.forEach((it) => collapseNote(it, notes));
-      }
-
-      collapseNote(action.payload, notes);
+      const noteId = action.payload;
+      const notesAdapter = new NotesAdapter(notes);
+      notesAdapter.collapse(noteId);
     },
 
     updateNote(notes, action) {
-      const note = action.payload;
-      const noteOld = notes.byId[note.id];
-      notes.byId[note.id] = {
-        ...note,
-        isTitleFresh: noteOld.isTitleFresh && note.title === noteOld.title,
-        isContentFresh:
-          noteOld.isContentFresh && note.content === noteOld.content,
-      };
+      const noteAdapter = new NotesAdapter(notes);
+      noteAdapter.update(action.payload);
     },
 
     moveNote(notes, action) {
       const { noteId, destination } = action.payload;
-      const noteMoved = notes.byId[noteId];
-
-      // Shift notes on the level where moved note is removed
-      const noteParentOld = notes.byId[noteMoved.parentId];
-      noteParentOld.childPageIds.forEach((id) => {
-        let noteToShift = notes.byId[id];
-        noteToShift.sortId =
-          noteToShift.sortId > noteMoved.sortId
-            ? noteToShift.sortId - 1
-            : noteToShift.sortId;
-      });
-      noteParentOld.childPageIds = noteParentOld.childPageIds.filter(
-        (id) => id !== noteMoved.id
-      );
-
-      // Shift notes on the level where moved note is placed
-      const noteParentNew = notes.byId[destination.parentId];
-      noteParentNew.childPageIds.forEach((id) => {
-        let noteToShift = notes.byId[id];
-        noteToShift.sortId =
-          noteToShift.sortId >= destination.sortId
-            ? noteToShift.sortId + 1
-            : noteToShift.sortId;
-      });
-      noteParentNew.childPageIds.push(noteMoved.id);
-
-      // Assign new coordinates no moved note
-      noteMoved.sortId = destination.sortId;
-      noteMoved.parentId = destination.parentId;
+      const { sortId, parentId } = destination;
+      const notesAdapter = new NotesAdapter(notes);
+      notesAdapter.shiftPullOut(noteId);
+      notesAdapter.shiftPush(noteId, sortId, parentId);
+      notesAdapter.changePositionOf(noteId, sortId, parentId)
     },
   },
 
   extraReducers: {
     [createNote.fulfilled]: (notes, action) => {
-      const note = action.payload;
-      notes.allIds.push(note.id);
-      notes.byId[note.id] = {
-        ...note,
+      const note = {
+        ...action.payload,
         isTitleFresh: true,
         isContentFresh: true,
       };
-      notes.byId[note.parentId].childPageIds.push(note.id);
-      let noteToExpandId = note.parentId;
-      while (noteToExpandId) {
-        const noteToExpand = notes.byId[noteToExpandId];
-        noteToExpand.isExpanded = true;
-        noteToExpandId = noteToExpand.parentId;
-      }
+      const notesAdapter = new NotesAdapter(notes);
+      notesAdapter.put(note);
+      notesAdapter.expand(note.id);
     },
 
     [getNotes.fulfilled]: (notes, action) => {
-      action.payload.notes.forEach((note) => {
-        notes.byId[note.id] = {
-          ...note,
-          isExpanded: false,
-          isTitleFresh: false,
-          isContentFresh: false,
-        };
-        notes.allIds.push(note.id);
-        notes.categoryIds = action.payload.categoryIds;
-      });
+      const notesAdapter = new NotesAdapter(notes);
+      notesAdapter.putAll(action.payload);
     },
 
     [deleteNote.fulfilled]: (notes, action) => {
-      const note = notes.byId[action.payload.note.id];
-      const deletedIds = action.payload.deletedIds;
-
-      notes.allIds = notes.allIds.filter((id) => !deletedIds.includes(id));
-      deletedIds.forEach((id) => delete notes.byId[id]);
-
-      const parentId = note.parentId;
-      let noteParent = notes.byId[parentId];
-      // Shift notes on the level where moved note is removed
-      noteParent.childPageIds = noteParent.childPageIds.filter(
-        (id) => id !== note.id
-      );
-      noteParent.childPageIds.forEach((id) => {
-        let noteToShift = notes.byId[id];
-        noteToShift.sortId =
-          noteToShift.sortId > note.sortId
-            ? noteToShift.sortId - 1
-            : noteToShift.sortId;
-      });
+      const noteIdDeleted = action.payload.note.id;
+      const noteIdsDeleted = action.payload.deletedIds;
+      const noteDeleted = notes.byId[noteIdDeleted];
+      const notesAdapter = new NotesAdapter(notes);
+      notesAdapter.pullOut(noteDeleted);
+      notesAdapter.deleteAll(noteIdsDeleted);
     },
   },
 });
