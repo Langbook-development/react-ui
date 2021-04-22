@@ -35,11 +35,10 @@ const notesSlice = createSlice({
     },
 
     moveNote(notes, action) {
-      const withoutMovedId = (id) => id !== noteMoved.id;
       const { noteId, destination } = action.payload;
       const noteMoved = notes.byId[noteId];
 
-      // Shift same deepness notes where note was removed
+      // Shift notes on the level where moved note is removed
       const noteParentOld = notes.byId[noteMoved.parentId];
       noteParentOld.childPageIds.forEach((id) => {
         let noteToShift = notes.byId[id];
@@ -49,10 +48,10 @@ const notesSlice = createSlice({
             : noteToShift.sortId;
       });
       noteParentOld.childPageIds = noteParentOld.childPageIds.filter(
-        withoutMovedId
+        (id) => id !== noteMoved.id
       );
 
-      // Shift same deepness notes where note will be placed
+      // Shift notes on the level where moved note is placed
       const noteParentNew = notes.byId[destination.parentId];
       noteParentNew.childPageIds.forEach((id) => {
         let noteToShift = notes.byId[id];
@@ -78,11 +77,7 @@ const notesSlice = createSlice({
         isTitleFresh: true,
         isContentFresh: true,
       };
-      if (note.parentId) {
-        notes.byId[note.parentId].childPageIds.push(note.id);
-      } else {
-        notes.rootNoteIds.push(note.id);
-      }
+      notes.byId[note.parentId].childPageIds.push(note.id);
       let noteToExpandId = note.parentId;
       while (noteToExpandId) {
         const noteToExpand = notes.byId[noteToExpandId];
@@ -108,31 +103,22 @@ const notesSlice = createSlice({
       const note = notes.byId[action.payload.note.id];
       const deletedIds = action.payload.deletedIds;
 
-      function pullFromNotes(noteIds) {
-        noteIds.forEach((id) => {
-          let noteToShift = notes.byId[id];
-          noteToShift.sortId =
-            noteToShift.sortId > note.sortId
-              ? noteToShift.sortId - 1
-              : noteToShift.sortId;
-        });
-      }
-
       notes.allIds = notes.allIds.filter((id) => !deletedIds.includes(id));
       deletedIds.forEach((id) => delete notes.byId[id]);
 
-      const withoutMovedId = (id) => id !== note.id;
       const parentId = note.parentId;
-      if (parentId) {
-        let noteParent = notes.byId[parentId];
-        pullFromNotes(noteParent.childPageIds);
-        noteParent.childPageIds = noteParent.childPageIds.filter(
-          withoutMovedId
-        );
-      } else {
-        pullFromNotes(notes.rootNoteIds);
-        notes.rootNoteIds = notes.rootNoteIds.filter(withoutMovedId);
-      }
+      let noteParent = notes.byId[parentId];
+      // Shift notes on the level where moved note is removed
+      noteParent.childPageIds = noteParent.childPageIds.filter(
+        (id) => id !== note.id
+      );
+      noteParent.childPageIds.forEach((id) => {
+        let noteToShift = notes.byId[id];
+        noteToShift.sortId =
+          noteToShift.sortId > note.sortId
+            ? noteToShift.sortId - 1
+            : noteToShift.sortId;
+      });
     },
   },
 });
