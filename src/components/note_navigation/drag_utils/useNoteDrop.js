@@ -44,7 +44,6 @@ export function useNoteDrop(ref, note) {
         ) {
           return; // Moving down and Y above hovered note middle Y
         }
-        console.log("Before dispatch! useItemDrop");
         dispatch(
           moveNote({
             noteId: noteDragged.id,

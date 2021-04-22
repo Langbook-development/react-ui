@@ -23,7 +23,6 @@ export function useNoteDrag(note) {
         ) {
           return;
         }
-        console.log("Before dispatch! useItemDrag");
         dispatch(
           moveNote({
             noteId: noteDragged.id,
