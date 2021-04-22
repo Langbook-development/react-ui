@@ -30,13 +30,15 @@ function NoteNavigationItem(props) {
     }
   }, [isMouseOnItem]);
 
+  useEffect(() => {
+    if (note.isExpanded && isDragging) {
+      dispatch(noteCollapsed(note.id));
+    }
+  });
+
   const ref = useRef(null);
   const [isDragging, drag] = useNoteDrag(note);
   const [handlerId, drop] = useNoteDrop(ref, note);
-
-  if (note.isExpanded && isDragging) {
-    dispatch(noteCollapsed(note.id));
-  }
 
   const navigationItemStyle = {
     paddingLeft: LEVEL_PADDING_PX * level,
