@@ -4,14 +4,15 @@ import { useDispatch } from "react-redux";
 
 export function useNoteDrag(note) {
   const dispatch = useDispatch();
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isItemDragged, isDragInProgress }, drag] = useDrag(() => ({
     type: "CARD",
     item: {
       noteDragged: { ...note },
       noteInitial: { ...note },
     },
     collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
+      isDragInProgress: monitor.getItem() !== null,
+      isItemDragged: monitor.getItem()?.noteDragged?.id === note.id,
       handlerId: monitor.getHandlerId(),
     }),
     end: ({ noteDragged, noteInitial }, monitor) => {
@@ -35,5 +36,5 @@ export function useNoteDrag(note) {
       }
     },
   }));
-  return [isDragging, drag];
+  return [isItemDragged, isDragInProgress, drag];
 }

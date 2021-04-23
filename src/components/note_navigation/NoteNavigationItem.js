@@ -22,7 +22,7 @@ function NoteNavigationItem(props) {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
 
   const ref = useRef(null);
-  const [isDragging, drag] = useNoteDrag(note);
+  const [isItemDragged, isDragInProgress, drag] = useNoteDrag(note);
   const [handlerId, drop] = useNoteDrop(ref, note);
 
   useEffect(() => {
@@ -35,14 +35,14 @@ function NoteNavigationItem(props) {
   }, [isMouseOnItem]);
 
   useEffect(() => {
-    if (note.isExpanded && isDragging) {
+    if (note.isExpanded && isItemDragged) {
       dispatch(noteCollapsed(note.id));
     }
-  }, [note, isDragging, dispatch]);
+  }, [note, isItemDragged, dispatch]);
 
   const navigationItemStyle = {
     paddingLeft: LEVEL_PADDING_PX * level,
-    opacity: isDragging ? 0 : 1,
+    opacity: isItemDragged ? 0 : 1,
   };
 
   function handleMouseLeave() {
@@ -117,7 +117,10 @@ function NoteNavigationItem(props) {
         <button
           className="action-button"
           onClick={handlePlusButtonClick}
-          style={{ visibility: isPlusVisible ? "visible" : "hidden" }}
+          style={{
+            visibility:
+              isPlusVisible && !isDragInProgress ? "visible" : "hidden",
+          }}
         >
           <Plus className="icon" />
         </button>
