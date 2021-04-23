@@ -7,7 +7,7 @@ export function useNoteDrop(ref, note) {
 
   const [{ handlerId }, drop] = useDrop(
     () => ({
-      accept: "CARD",
+      accept: "NOTE",
       collect(monitor) {
         return {
           handlerId: monitor.getHandlerId(),
@@ -17,16 +17,13 @@ export function useNoteDrop(ref, note) {
         if (!ref.current || noteDragged.id === note.id) {
           return;
         }
-        if (!noteDragged.placeholderY) {
-          noteDragged.placeholderY = monitor.getInitialClientOffset().y;
-        }
 
         const hoveredRect = ref.current?.getBoundingClientRect();
         const hoveredMiddleY = (hoveredRect.bottom - hoveredRect.top) / 2;
         const mouseY = monitor.getClientOffset().y;
         const mouseHoveredY = mouseY - hoveredRect.top;
 
-        const isMovingUp = mouseY < noteDragged.placeholderY;
+        const isMovingUp = mouseY < noteDragged.middleY;
         const isMovingDown = !isMovingUp;
         const aboveMiddle = mouseHoveredY < hoveredMiddleY;
         const belowMiddle = !aboveMiddle;
@@ -44,7 +41,7 @@ export function useNoteDrop(ref, note) {
           );
           noteDragged.parentId = note.parentId;
           noteDragged.sortId = note.sortId;
-          noteDragged.placeholderY = absoluteHoveredMiddleY;
+          noteDragged.middleY = absoluteHoveredMiddleY;
         }
       },
     }),

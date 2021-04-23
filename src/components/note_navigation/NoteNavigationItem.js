@@ -22,7 +22,7 @@ function NoteNavigationItem(props) {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
 
   const ref = useRef(null);
-  const [isItemDragged, isDragInProgress, drag] = useNoteDrag(note);
+  const [isItemDragged, isDragInProgress, drag] = useNoteDrag(ref, note, level);
   const [handlerId, drop] = useNoteDrop(ref, note);
 
   useEffect(() => {

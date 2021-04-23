@@ -1,7 +1,6 @@
 import { useDragLayer } from "react-dnd";
-import NoteNavigationItem from "./note_navigation/NoteNavigationItem";
+import NoteDragPreview from "./NoteDragPreview";
 import React from "react";
-import NoteNavigationItemDraggable from "./note_navigation/NoteNavigationItemDraggable";
 
 const layerStyles = {
   position: "absolute",
@@ -27,7 +26,7 @@ function getItemStyles(initialOffset, currentOffset) {
   };
 }
 
-export const CustomDragLayer = (props) => {
+export const CustomDragLayer = () => {
   const {
     itemType,
     isDragging,
@@ -42,18 +41,14 @@ export const CustomDragLayer = (props) => {
     isDragging: monitor.isDragging(),
   }));
 
-  function getNavigationItemWidthPx() {
-    return document.getElementsByClassName("navigation-item")[0].clientWidth;
-  }
-
   function renderItem() {
     switch (itemType) {
       case "NOTE":
         return (
-          <NoteNavigationItemDraggable
-            noteId={item.note.id}
-            level={item.level}
-            width={getNavigationItemWidthPx()}
+          <NoteDragPreview
+            noteId={item.noteDragged.id}
+            width={item.noteWidth}
+            level={item.noteDragged.level}
           />
         );
       default:
@@ -61,9 +56,9 @@ export const CustomDragLayer = (props) => {
     }
   }
 
-  // if (!isDragging) {
-  //   return null;
-  // }
+  if (!isDragging) {
+    return null;
+  }
   return (
     <div className="custom-drag-layer" style={layerStyles}>
       <div style={getItemStyles(initialOffset, currentOffset)}>
