@@ -14,7 +14,6 @@ function App() {
 
   return (
     <Router>
-      <CustomDragLayer />
       <div className="App">
         <header />
         <Switch>
@@ -23,6 +22,7 @@ function App() {
           </Route>
           <Route path="/notes/:selectedNoteId">
             <NotePage />
+            <CustomDragLayer />
           </Route>
         </Switch>
       </div>

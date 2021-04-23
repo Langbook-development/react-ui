@@ -28,6 +28,11 @@ aside.note-navigation .navigation-no-item {
   grid-column-gap: 5px;
 }
 
+.navigation-item .drag-placeholder{
+  background-color: rgba(0,0,0,0.1); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+}
+
 .navigation-item .title-area {
   cursor: grab;
 }

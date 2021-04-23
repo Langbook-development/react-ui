@@ -13,7 +13,7 @@ const LEVEL_PADDING_PX = 24;
 
 function NoteNavigationItem(props) {
   const { selectedNoteId } = useParams();
-  const { level, noteId } = props;
+  const { level, noteId, forceShow } = props;
   const history = useHistory();
   const dispatch = useDispatch();
   const note = useSelector((state) => state.notes.byId[noteId]);
@@ -42,7 +42,7 @@ function NoteNavigationItem(props) {
 
   const navigationItemStyle = {
     paddingLeft: LEVEL_PADDING_PX * level,
-    opacity: isItemDragged ? 0 : 1,
+    opacity: isItemDragged && !forceShow ? 0 : 1,
   };
 
   function handleMouseLeave() {
