@@ -21,14 +21,17 @@ export function useNoteDrop(ref, note) {
         const hoveredMiddleY = (hoveredRect.bottom - hoveredRect.top) / 2;
         const mouseY = monitor.getClientOffset().y;
         const mouseHoveredY = mouseY - hoveredRect.top;
-
+        const absoluteHoveredMiddleY = hoveredRect.top + hoveredMiddleY;
+        const quarter = (hoveredRect.bottom - hoveredRect.top) / 4;
         const isMovingUp = mouseY < noteDragged.middleY;
         const isMovingDown = !isMovingUp;
-        const aboveMiddle = mouseHoveredY < hoveredMiddleY;
-        const belowMiddle = !aboveMiddle;
-        const absoluteHoveredMiddleY = hoveredRect.top + hoveredMiddleY;
+        const belowTopQuarter = mouseHoveredY > quarter;
+        const aboveBottomQuarter = mouseHoveredY < quarter * 3;
 
-        if ((isMovingUp && aboveMiddle) || (isMovingDown && belowMiddle)) {
+        if (
+          (isMovingUp && aboveBottomQuarter) ||
+          (isMovingDown && belowTopQuarter)
+        ) {
           dispatch(
             moveNote({
               noteId: noteDragged.id,
