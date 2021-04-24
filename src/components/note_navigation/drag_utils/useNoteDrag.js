@@ -7,6 +7,7 @@ import { synchronizeNoteMovement } from "../../../features/slices/thunks";
 
 export function useNoteDrag(ref, note, level, isNoteMovementLoading) {
   const dispatch = useDispatch();
+
   const [{ isItemDragged, isDragInProgress }, drag, preview] = useDrag(
     () => ({
       type: "NOTE",
@@ -23,31 +24,26 @@ export function useNoteDrag(ref, note, level, isNoteMovementLoading) {
       }),
       canDrag: () => !isNoteMovementLoading,
       end: ({ noteDragged, noteInitial }, monitor) => {
-        const didDrop = monitor.didDrop();
-        if (
-          noteDragged.sortId === noteInitial.sortId &&
-          noteDragged.parentId === noteInitial.parentId
-        ) {
-          return;
-        }
-        if (didDrop) {
-          dispatch(
-            synchronizeNoteMovement({
-              noteId: noteDragged.id,
-              destinationParentId: noteDragged.parentId,
-              destinationSortId: noteDragged.sortId,
-            })
-          );
-        } else {
-          dispatch(
-            moveNote({
-              noteId: noteDragged.id,
-              destination: {
-                parentId: noteInitial.parentId,
-                sortId: noteInitial.sortId,
-              },
-            })
-          );
+        if (isPositionChanged(noteDragged, noteInitial)) {
+          if (monitor.didDrop()) {
+            dispatch(
+              synchronizeNoteMovement({
+                noteId: noteDragged.id,
+                destinationParentId: noteDragged.parentId,
+                destinationSortId: noteDragged.sortId,
+              })
+            );
+          } else {
+            dispatch(
+              moveNote({
+                noteId: noteDragged.id,
+                destination: {
+                  parentId: noteInitial.parentId,
+                  sortId: noteInitial.sortId,
+                },
+              })
+            );
+          }
         }
       },
     }),
@@ -55,7 +51,7 @@ export function useNoteDrag(ref, note, level, isNoteMovementLoading) {
   );
   useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true });
-  }, []);
+  }, [preview]);
 
   function getMiddleY(ref) {
     if (ref.current) {
@@ -63,6 +59,13 @@ export function useNoteDrag(ref, note, level, isNoteMovementLoading) {
       const middleY = (rect.bottom - rect.top) / 2;
       return rect.top + middleY;
     }
+  }
+
+  function isPositionChanged(noteDragged, noteInitial) {
+    return (
+      noteDragged.sortId !== noteInitial.sortId ||
+      noteDragged.parentId !== noteInitial.parentId
+    );
   }
 
   return [isItemDragged, isDragInProgress, drag];

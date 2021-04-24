@@ -66,7 +66,6 @@ const notesSlice = createSlice({
     },
 
     [synchronizeNoteMovement.pending]: (notes) => {
-      console.log("Notes moved pending!");
       notes.isNoteMovementLoading = true;
     },
 

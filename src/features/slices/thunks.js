@@ -31,7 +31,6 @@ export const deleteNote = createAsyncThunk("notes/delete", async (note) => {
 export const synchronizeNoteMovement = createAsyncThunk(
   "notes/synchronizeMovement",
   async (request) => {
-    console.log("Calling note move!");
     return await NoteAPI.moveNote(request);
   }
 );
