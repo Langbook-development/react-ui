@@ -25,6 +25,7 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
   const ref = useRef(null);
   const [handlerId, drop] = useNoteDrop(ref, note);
   const [isItemDragged, isDragInProgress, drag] = useNoteDrag(ref, note, level);
+  const showPlaceholder = !forceShow && isItemDragged;
 
   useEffect(() => {
     if (isMouseOnItem && !isItemDragged) {
@@ -76,6 +77,57 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
     return "title" + (note.id.toString() === selectedNoteId ? " active" : "");
   }
 
+  function showIf(condition) {
+    return condition ? "visible" : "hidden";
+  }
+
+  return (
+    <>
+      <div ref={drag(drop(ref))} data-handler-id={handlerId}>
+        {showPlaceholder && <div className="navigation-item-placeholder" />}
+        {!showPlaceholder && getNoteContent()}
+      </div>
+      {note.isExpanded && (
+        <NoteNavigationList
+          parentNoteId={note.id}
+          level={level + 1}
+          key={note.id}
+        />
+      )}
+    </>
+  );
+
+  function getNoteContent() {
+    return (
+      <div
+        className="navigation-item"
+        style={{
+          paddingLeft: LEVEL_PADDING_PX * level,
+        }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {getIcon()}
+
+        <div className="title-area">
+          <Link className={getTitleClass()} to={"/notes/" + note.id}>
+            {note.title}
+          </Link>
+        </div>
+
+        <button
+          className="action-button"
+          onClick={handlePlusButtonClick}
+          style={{
+            visibility: showIf(isPlusVisible && !isDragInProgress),
+          }}
+        >
+          <Plus className="icon" />
+        </button>
+      </div>
+    );
+  }
+
   function getIcon() {
     if (hasSubNotes(note)) {
       if (note.isExpanded) {
@@ -95,49 +147,4 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
       return <div className="chevron-button-placeholder" />;
     }
   }
-
-  function showIf(condition) {
-    return condition ? "visible" : "hidden";
-  }
-
-  return (
-    <>
-      <div ref={drag(drop(ref))} data-handler-id={handlerId}>
-        <div
-          className="navigation-item"
-          style={{
-            paddingLeft: LEVEL_PADDING_PX * level,
-            visibility: showIf(forceShow || !isItemDragged),
-          }}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          {getIcon()}
-
-          <div className="title-area">
-            <Link className={getTitleClass()} to={"/notes/" + note.id}>
-              {note.title}
-            </Link>
-          </div>
-
-          <button
-            className="action-button"
-            onClick={handlePlusButtonClick}
-            style={{
-              visibility: showIf(isPlusVisible && !isDragInProgress),
-            }}
-          >
-            <Plus className="icon" />
-          </button>
-        </div>
-      </div>
-      {note.isExpanded && (
-        <NoteNavigationList
-          parentNoteId={note.id}
-          level={level + 1}
-          key={note.id}
-        />
-      )}
-    </>
-  );
 });
