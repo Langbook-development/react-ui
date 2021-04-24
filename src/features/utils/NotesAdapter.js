@@ -82,17 +82,23 @@ export class NotesAdapter {
 
   putAll(notesResponse) {
     notesResponse.notes.forEach((noteJson) => {
-      let note = {
-        ...noteJson,
-        isExpanded: false,
-        isTitleFresh: false,
-        isContentFresh: false,
-      };
+      let note = this.noteFrom(noteJson);
       this.notes.byId[note.id] = note;
       this.notes.allIds.push(note.id);
-      if (note.isCategory) {
-        this.notes.categoryIds.push(note.id);
-      }
     });
+    notesResponse.categories.forEach((categoryJson) => {
+      let category = this.noteFrom(categoryJson);
+      this.notes.byId[category.id] = category;
+      this.notes.categoryIds.push(category.id);
+    });
+  }
+
+  noteFrom(json) {
+    return {
+      ...json,
+      isExpanded: false,
+      isTitleFresh: false,
+      isContentFresh: false,
+    };
   }
 }
