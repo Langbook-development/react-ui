@@ -13,8 +13,8 @@ function NoteNavigation(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const hasNoNotes = useSelector((state) => state.notes.allIds.length === 0);
+  const currentCategoryId = useSelector((state) => state.notes.categoryIds[0]);
   const noteIds = useSelector((state) => {
-    const currentCategoryId = state.notes.categoryIds[0];
     if (!currentCategoryId) {
       return [];
     }
@@ -42,7 +42,7 @@ function NoteNavigation(props) {
   }
 
   function handlePlusButtonClick() {
-    dispatch(createNote({}))
+    dispatch(createNote({ parentId: currentCategoryId }))
       .then(unwrapResult)
       .then((note) => {
         history.push("/notes/" + note.id);
@@ -74,7 +74,7 @@ function NoteNavigation(props) {
               There are no pages to show. Try adding some!
             </div>
           ) : (
-            <NoteNavigationList noteIds={noteIds} level={0} />
+            <NoteNavigationList parentNoteId={currentCategoryId} level={0} />
           )}
         </Card.Body>
       </Card>

@@ -1,10 +1,12 @@
 import { useDrag } from "react-dnd";
 import { moveNote } from "../../../features/slices/notesSlice";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getEmptyImage } from "react-dnd-html5-backend";
 
 export function useNoteDrag(ref, note, level) {
   const dispatch = useDispatch();
-  const [{ isItemDragged, isDragInProgress }, drag] = useDrag(
+  const [{ isItemDragged, isDragInProgress }, drag, preview] = useDrag(
     () => ({
       type: "NOTE",
       item: {
@@ -41,6 +43,9 @@ export function useNoteDrag(ref, note, level) {
     }),
     [note, ref.current]
   );
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, []);
 
   function getMiddleY(ref) {
     if (ref.current) {

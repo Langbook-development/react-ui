@@ -11,7 +11,7 @@ import { useNoteDrag } from "./drag_utils/useNoteDrag";
 
 const LEVEL_PADDING_PX = 24;
 
-function NoteNavigationItem(props) {
+export function NoteNavigationItem(props) {
   const { selectedNoteId } = useParams();
   const { level, noteId, forceShow } = props;
   const history = useHistory();
@@ -39,11 +39,6 @@ function NoteNavigationItem(props) {
       dispatch(noteCollapsed(note.id));
     }
   }, [note, isItemDragged, dispatch]);
-
-  const navigationItemStyle = {
-    paddingLeft: LEVEL_PADDING_PX * level,
-    opacity: isItemDragged && !forceShow ? 0 : 1,
-  };
 
   function handleMouseLeave() {
     setIsPlusVisible(false);
@@ -98,6 +93,11 @@ function NoteNavigationItem(props) {
     }
   }
 
+  const navigationItemStyle = {
+    paddingLeft: LEVEL_PADDING_PX * level,
+    opacity: isItemDragged && !forceShow ? 0 : 1,
+  };
+
   return (
     <>
       <div
@@ -127,7 +127,7 @@ function NoteNavigationItem(props) {
       </div>
       {note.isExpanded && (
         <NoteNavigationList
-          noteIds={note.childPageIds}
+          parentNoteId={note.id}
           level={level + 1}
           key={note.id}
         />
@@ -135,5 +135,3 @@ function NoteNavigationItem(props) {
     </>
   );
 }
-
-export default NoteNavigationItem;

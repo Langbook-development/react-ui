@@ -1,12 +1,11 @@
-import React from "react";
-import NoteNavigationItem from "../NoteNavigationItem";
+import React, { memo } from "react";
+import { NoteNavigationItem } from "../NoteNavigationItem";
 
-export default function NoteDragPreview(props) {
+export const NoteDragPreview = memo(function (props) {
   const { noteId, level, width } = props;
-
   return (
-    <div style={{ width }} className="navigation-item-draggable">
+    <div style={{ width }} className="navigation-item-preview">
       <NoteNavigationItem noteId={noteId} level={level} forceShow={true} />
     </div>
   );
-}
+});
