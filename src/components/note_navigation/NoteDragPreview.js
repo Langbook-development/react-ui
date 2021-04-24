@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { NoteNavigationItem } from "../NoteNavigationItem";
+import { NoteNavigationItem } from "./NoteNavigationItem";
 
 export const NoteDragPreview = memo(function (props) {
   const { noteId, level, width } = props;

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { useNoteDrop } from "./useNoteDrop";
-import { useNoteDrag } from "./useNoteDrag";
+import { useNoteDrop } from "./drag_utils/useNoteDrop";
+import { useNoteDrag } from "./drag_utils/useNoteDrag";
 import { useDispatch, useSelector } from "react-redux";
-import { noteSelector } from "../../../features/slices/selectors";
-import { noteCollapsed } from "../../../features/slices/notesSlice";
+import { noteSelector } from "../../features/slices/selectors";
+import { noteCollapsed } from "../../features/slices/notesSlice";
 
 export const NoteDragWrapper = (props) => {
   const { noteId, level } = props;

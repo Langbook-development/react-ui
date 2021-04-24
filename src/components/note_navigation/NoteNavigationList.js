@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { useSelector } from "react-redux";
 import { childNotesSortedSelector } from "../../features/slices/selectors";
-import { NoteDragWrapper } from "./drag_utils/NoteDragWrapper";
+import { NoteDragWrapper } from "./NoteDragWrapper";
 import { NoteNavigationItem } from "./NoteNavigationItem";
 
 export const NoteNavigationList = memo(function (props) {

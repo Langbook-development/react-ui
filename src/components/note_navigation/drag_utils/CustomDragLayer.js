@@ -1,5 +1,5 @@
 import { useDragLayer } from "react-dnd";
-import { NoteDragPreview } from "./NoteDragPreview";
+import { NoteDragPreview } from "../NoteDragPreview";
 import React from "react";
 
 const layerStyles = {
