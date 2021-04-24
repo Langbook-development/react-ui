@@ -105,18 +105,22 @@ export function NoteNavigationItem(props) {
     }
   }
 
-  const navigationItemStyle = {
-    paddingLeft: LEVEL_PADDING_PX * level,
-    opacity: isItemDragged && !forceShow ? 0 : 1,
-  };
-
+  if (isItemDragged && !forceShow) {
+    return (
+      <div
+        ref={drag(drop(ref))}
+        data-handler-id={handlerId}
+        className="navigation-item-placeholder"
+      />
+    );
+  }
   return (
     <>
       <div
         ref={drag(drop(ref))}
         data-handler-id={handlerId}
         className="navigation-item"
-        style={navigationItemStyle}
+        style={{ paddingLeft: LEVEL_PADDING_PX * level }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >

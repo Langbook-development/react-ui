@@ -4,7 +4,7 @@ import React from "react";
 
 const layerStyles = {
   position: "absolute",
-  cursor: "move",
+  cursor: "grabbing",
   pointerEvents: "none",
   zIndex: 100,
   left: 0,
