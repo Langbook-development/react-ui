@@ -1,46 +1,31 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { ChevronDown, ChevronRight, Plus } from "react-bootstrap-icons";
 import { noteExpanded, noteCollapsed } from "../../features/slices/notesSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { NoteNavigationList } from "./NoteNavigationList";
+import { useDispatch } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { createNote } from "../../features/slices/thunks";
-import { useNoteDrop } from "./drag_utils/useNoteDrop";
-import { useNoteDrag } from "./drag_utils/useNoteDrag";
-import { noteSelector } from "../../features/slices/selectors";
 
 const LEVEL_PADDING_PX = 24;
 
 export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
   const { selectedNoteId } = useParams();
-  const { level, noteId, forceShow } = props;
+  const { level, note } = props;
+  const { isNoteDragged, isDragInProgress } = props;
   const history = useHistory();
   const dispatch = useDispatch();
-  const note = useSelector(noteSelector(noteId));
 
   const [isPlusVisible, setIsPlusVisible] = useState(false);
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
 
-  const ref = useRef(null);
-  const [handlerId, drop] = useNoteDrop(ref, note);
-  const [isItemDragged, isDragInProgress, drag] = useNoteDrag(ref, note, level);
-  const showPlaceholder = !forceShow && isItemDragged;
-
   useEffect(() => {
-    if (isMouseOnItem && !isItemDragged) {
+    if (isMouseOnItem && !isNoteDragged) {
       let timeoutId = setTimeout(() => {
         setIsPlusVisible(true);
       }, 280);
       return () => clearTimeout(timeoutId);
     }
-  }, [isMouseOnItem, isItemDragged]);
-
-  useEffect(() => {
-    if (note.isExpanded && isItemDragged) {
-      dispatch(noteCollapsed(note.id));
-    }
-  }, [note, isItemDragged, dispatch]);
+  }, [isMouseOnItem, isNoteDragged]);
 
   function handleMouseLeave() {
     setIsPlusVisible(false);
@@ -81,53 +66,6 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
     return condition ? "visible" : "hidden";
   }
 
-  return (
-    <>
-      <div ref={drag(drop(ref))} data-handler-id={handlerId}>
-        {showPlaceholder && <div className="navigation-item-placeholder" />}
-        {!showPlaceholder && getNoteContent()}
-      </div>
-      {note.isExpanded && (
-        <NoteNavigationList
-          parentNoteId={note.id}
-          level={level + 1}
-          key={note.id}
-        />
-      )}
-    </>
-  );
-
-  function getNoteContent() {
-    return (
-      <div
-        className="navigation-item"
-        style={{
-          paddingLeft: LEVEL_PADDING_PX * level,
-        }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        {getIcon()}
-
-        <div className="title-area">
-          <Link className={getTitleClass()} to={"/notes/" + note.id}>
-            {note.title}
-          </Link>
-        </div>
-
-        <button
-          className="action-button"
-          onClick={handlePlusButtonClick}
-          style={{
-            visibility: showIf(isPlusVisible && !isDragInProgress),
-          }}
-        >
-          <Plus className="icon" />
-        </button>
-      </div>
-    );
-  }
-
   function getIcon() {
     if (hasSubNotes(note)) {
       if (note.isExpanded) {
@@ -147,4 +85,33 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
       return <div className="chevron-button-placeholder" />;
     }
   }
+
+  return (
+    <div
+      className="navigation-item"
+      style={{
+        paddingLeft: LEVEL_PADDING_PX * level,
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {getIcon()}
+
+      <div className="title-area">
+        <Link className={getTitleClass()} to={"/notes/" + note.id}>
+          {note.title}
+        </Link>
+      </div>
+
+      <button
+        className="action-button"
+        onClick={handlePlusButtonClick}
+        style={{
+          visibility: showIf(isPlusVisible && !isDragInProgress),
+        }}
+      >
+        <Plus className="icon" />
+      </button>
+    </div>
+  );
 });
