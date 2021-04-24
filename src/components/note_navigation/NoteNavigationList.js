@@ -1,14 +1,11 @@
 import React from "react";
 import { NoteNavigationItem } from "./NoteNavigationItem";
 import { useSelector } from "react-redux";
+import { childNotesSelector } from "../../features/slices/selectors";
 
 function NoteNavigationList(props) {
   const { parentNoteId, level } = props;
-  const notes = useSelector((state) =>
-    state.notes.byId[parentNoteId].childPageIds.map(
-      (id) => state.notes.byId[id]
-    )
-  );
+  const notes = useSelector(childNotesSelector(parentNoteId));
   return (
     <>
       {[...notes]

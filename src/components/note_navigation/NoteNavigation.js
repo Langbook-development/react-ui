@@ -6,20 +6,18 @@ import { createNote } from "../../features/slices/thunks";
 import { useHistory } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Plus } from "react-bootstrap-icons";
+import {
+  currentCategorySelector,
+  hasNotesSelector,
+} from "../../features/slices/selectors";
 
 function NoteNavigation(props) {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
   const [isPlusVisible, setIsPlusVisible] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
-  const currentCategoryId = useSelector((state) => state.notes.categoryIds[0]);
-  const hasNotes = useSelector((state) => {
-    if (currentCategoryId) {
-      const currentCategoryId = state.notes.categoryIds[0];
-      return state.notes.byId[currentCategoryId].childPageIds.length > 0;
-    }
-    return false;
-  });
+  const currentCategory = useSelector(currentCategorySelector);
+  const hasNotes = useSelector(hasNotesSelector);
 
   useEffect(() => {
     if (isMouseOnItem) {
@@ -40,7 +38,7 @@ function NoteNavigation(props) {
   }
 
   function handlePlusButtonClick() {
-    dispatch(createNote({ parentId: currentCategoryId }))
+    dispatch(createNote({ parentId: currentCategory.id }))
       .then(unwrapResult)
       .then((note) => {
         history.push("/notes/" + note.id);
@@ -72,7 +70,7 @@ function NoteNavigation(props) {
               There are no pages to show. Try adding some!
             </div>
           ) : (
-            <NoteNavigationList parentNoteId={currentCategoryId} level={0} />
+            <NoteNavigationList parentNoteId={currentCategory.id} level={0} />
           )}
         </Card.Body>
       </Card>

@@ -9,32 +9,22 @@ import { updateNote } from "../../features/slices/notesSlice";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import useConstant from "use-constant";
 import NoteModal from "./NoteModal";
+import {
+  afterDeleteFallbackIdSelector,
+  noteSelector,
+} from "../../features/slices/selectors";
 
 function NoteSection() {
   const { selectedNoteId } = useParams();
   const [showModal, setShowModal] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
-  const note = useSelector((state) => state.notes.byId[selectedNoteId]);
-  const fallbackNoteId = useSelector((state) => {
-    const noteParent = state.notes.byId[note.parentId];
-    const sameParentLestSortId = noteParent.childPageIds
-      .map((id) => state.notes.byId[id])
-      .filter((it) => it.id !== note.id)
-      .reduce((prev, curr) => (prev.sortId < curr.sortId ? prev : curr), {}).id;
-    if (sameParentLestSortId !== note.id) {
-      return sameParentLestSortId;
-    } else {
-      if (!noteParent.isCategory) {
-        return noteParent.id;
-      }
-      return undefined;
-    }
-  });
-
+  const note = useSelector(noteSelector(selectedNoteId));
+  const fallbackNoteId = useSelector(
+    afterDeleteFallbackIdSelector(selectedNoteId)
+  );
   const titleTextArea = useRef(null);
   const contentTextArea = useRef(null);
-
   const handleTrashButtonClick = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
@@ -51,7 +41,7 @@ function NoteSection() {
   const triggerSynchronizeNoteDebounced = useConstant(() =>
     AwesomeDebouncePromise(
       (noteToSync) => dispatch(synchronizeNote(noteToSync)),
-      1000
+      200
     )
   );
 

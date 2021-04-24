@@ -8,6 +8,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { createNote } from "../../features/slices/thunks";
 import { useNoteDrop } from "./drag_utils/useNoteDrop";
 import { useNoteDrag } from "./drag_utils/useNoteDrag";
+import { noteSelector } from "../../features/slices/selectors";
 
 const LEVEL_PADDING_PX = 24;
 
@@ -16,7 +17,7 @@ export function NoteNavigationItem(props) {
   const { level, noteId, forceShow } = props;
   const history = useHistory();
   const dispatch = useDispatch();
-  const note = useSelector((state) => state.notes.byId[noteId]);
+  const note = useSelector(noteSelector(noteId));
 
   const [isPlusVisible, setIsPlusVisible] = useState(false);
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
