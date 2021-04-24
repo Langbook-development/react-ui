@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { synchronizeNoteMovement } from "../../../features/slices/thunks";
 import { isNoteMovementLoadingSelector } from "../../../features/slices/selectors";
+import { getMiddleY } from "./positionUtils";
 
 export function useNoteDrag(ref, note, level) {
   const dispatch = useDispatch();
@@ -54,14 +55,6 @@ export function useNoteDrag(ref, note, level) {
   useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true });
   }, [preview]);
-
-  function getMiddleY(ref) {
-    if (ref.current) {
-      const rect = ref.current?.getBoundingClientRect();
-      const middleY = (rect.bottom - rect.top) / 2;
-      return rect.top + middleY;
-    }
-  }
 
   function isPositionChanged(noteDragged, noteInitial) {
     return (

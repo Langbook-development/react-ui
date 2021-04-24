@@ -1,7 +1,7 @@
 import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
 import { moveNote } from "../../../features/slices/notesSlice";
-import { DragPositionAdapter } from "./DragPositionAdapter";
+import { computePosition } from "./positionUtils";
 
 export function useNoteDrop(ref, note, level) {
   const dispatch = useDispatch();
@@ -17,14 +17,14 @@ export function useNoteDrop(ref, note, level) {
         if (!ref.current || noteDragged.id === note.id) {
           return;
         }
-
-        const adapter = new DragPositionAdapter(ref, noteDragged, monitor);
-        const isMovingDown = adapter.isMovingDown();
-        const isMovingUp = adapter.isMovingUp();
-        const isAboveBottomQuarter = adapter.aboveBottomQuarter();
-        const isBelowBottomQuarter = adapter.belowBottomQuarter();
-        const isBelowTopQuarter = adapter.belowTopQuarter();
-        const absoluteHoveredMiddleY = adapter.absoluteMiddleY;
+        const {
+          isMovingUp,
+          isMovingDown,
+          isAboveBottomQuarter,
+          isBelowBottomQuarter,
+          isBelowTopQuarter,
+          absoluteMiddleY,
+        } = computePosition(ref, noteDragged, monitor);
 
         if (isMovingUp && isAboveBottomQuarter) {
           moveTo({ parentId: note.parentId, sortId: note.sortId });
@@ -48,7 +48,7 @@ export function useNoteDrop(ref, note, level) {
           );
           noteDragged.parentId = note.parentId;
           noteDragged.sortId = note.sortId;
-          noteDragged.middleY = absoluteHoveredMiddleY;
+          noteDragged.middleY = absoluteMiddleY;
         }
       },
     }),
