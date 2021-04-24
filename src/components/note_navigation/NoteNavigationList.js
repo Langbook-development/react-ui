@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { useSelector } from "react-redux";
 import { childNotesSortedSelector } from "../../features/slices/selectors";
 import { NoteDragWrapper } from "./drag_utils/NoteDragWrapper";
+import { NoteNavigationItem } from "./NoteNavigationItem";
 
 export const NoteNavigationList = memo(function (props) {
   const { parentNoteId, level } = props;
@@ -10,7 +11,9 @@ export const NoteNavigationList = memo(function (props) {
     <>
       {notes.map((note) => (
         <div key={note.id}>
-          <NoteDragWrapper noteId={note.id} level={level} />
+          <NoteDragWrapper noteId={note.id} level={level}>
+            <NoteNavigationItem noteId={note.id} level={level} />
+          </NoteDragWrapper>
           {note.isExpanded && (
             <NoteNavigationList parentNoteId={note.id} level={level + 1} />
           )}

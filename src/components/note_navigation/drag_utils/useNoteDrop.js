@@ -2,7 +2,7 @@ import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
 import { moveNote } from "../../../features/slices/notesSlice";
 
-export function useNoteDrop(ref, note) {
+export function useNoteDrop(ref, note, level) {
   const dispatch = useDispatch();
   const [{ handlerId }, drop] = useDrop(
     () => ({
@@ -16,7 +16,6 @@ export function useNoteDrop(ref, note) {
         if (!ref.current || noteDragged.id === note.id) {
           return;
         }
-
         const hoveredRect = ref.current?.getBoundingClientRect();
         const hoveredMiddleY = (hoveredRect.bottom - hoveredRect.top) / 2;
         const mouseY = monitor.getClientOffset().y;
@@ -26,19 +25,35 @@ export function useNoteDrop(ref, note) {
         const isMovingUp = mouseY < noteDragged.middleY;
         const isMovingDown = !isMovingUp;
         const belowTopQuarter = mouseHoveredY > quarter;
+        const belowBottomQuarter = mouseHoveredY > quarter * 3;
         const aboveBottomQuarter = mouseHoveredY < quarter * 3;
 
-        if (
-          (isMovingUp && aboveBottomQuarter) ||
-          (isMovingDown && belowTopQuarter)
-        ) {
+        if (isMovingUp && aboveBottomQuarter) {
+          moveTo({ parentId: note.parentId, sortId: note.sortId });
+        }
+        if (isMovingDown) {
+          let destination;
+          if (note.isExpanded) {
+            if (belowBottomQuarter) {
+              destination = { parentId: note.id, sortId: 1 };
+            } else {
+              return;
+            }
+          } else {
+            if (belowTopQuarter) {
+              destination = { parentId: note.parentId, sortId: note.sortId };
+            } else {
+              return;
+            }
+          }
+          moveTo(destination);
+        }
+
+        function moveTo(destination) {
           dispatch(
             moveNote({
               noteId: noteDragged.id,
-              destination: {
-                parentId: note.parentId,
-                sortId: note.sortId,
-              },
+              destination: destination,
             })
           );
           noteDragged.parentId = note.parentId;

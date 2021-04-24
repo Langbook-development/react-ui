@@ -2,16 +2,18 @@ import React, { memo, useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { ChevronDown, ChevronRight, Plus } from "react-bootstrap-icons";
 import { noteExpanded, noteCollapsed } from "../../features/slices/notesSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { createNote } from "../../features/slices/thunks";
+import { noteSelector } from "../../features/slices/selectors";
 
 const LEVEL_PADDING_PX = 24;
 
 export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
   const { selectedNoteId } = useParams();
-  const { level, note } = props;
+  const { level, noteId } = props;
   const { isNoteDragged, isDragInProgress } = props;
+  const note = useSelector(noteSelector(noteId));
   const history = useHistory();
   const dispatch = useDispatch();
 
