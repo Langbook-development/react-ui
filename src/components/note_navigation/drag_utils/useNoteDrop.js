@@ -1,6 +1,7 @@
 import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
 import { moveNote } from "../../../features/slices/notesSlice";
+import { DragPositionAdapter } from "./DragPositionAdapter";
 
 export function useNoteDrop(ref, note, level) {
   const dispatch = useDispatch();
@@ -16,37 +17,26 @@ export function useNoteDrop(ref, note, level) {
         if (!ref.current || noteDragged.id === note.id) {
           return;
         }
-        const hoveredRect = ref.current?.getBoundingClientRect();
-        const hoveredMiddleY = (hoveredRect.bottom - hoveredRect.top) / 2;
-        const mouseY = monitor.getClientOffset().y;
-        const mouseHoveredY = mouseY - hoveredRect.top;
-        const absoluteHoveredMiddleY = hoveredRect.top + hoveredMiddleY;
-        const quarter = (hoveredRect.bottom - hoveredRect.top) / 4;
-        const isMovingUp = mouseY < noteDragged.middleY;
-        const isMovingDown = !isMovingUp;
-        const belowTopQuarter = mouseHoveredY > quarter;
-        const belowBottomQuarter = mouseHoveredY > quarter * 3;
-        const aboveBottomQuarter = mouseHoveredY < quarter * 3;
 
-        if (isMovingUp && aboveBottomQuarter) {
+        const adapter = new DragPositionAdapter(ref, noteDragged, monitor);
+        const isMovingDown = adapter.isMovingDown();
+        const isMovingUp = adapter.isMovingUp();
+        const isAboveBottomQuarter = adapter.aboveBottomQuarter();
+        const isBelowBottomQuarter = adapter.belowBottomQuarter();
+        const isBelowTopQuarter = adapter.belowTopQuarter();
+        const absoluteHoveredMiddleY = adapter.absoluteMiddleY;
+
+        if (isMovingUp && isAboveBottomQuarter) {
           moveTo({ parentId: note.parentId, sortId: note.sortId });
         }
         if (isMovingDown) {
-          let destination;
-          if (note.isExpanded) {
-            if (belowBottomQuarter) {
-              destination = { parentId: note.id, sortId: 1 };
-            } else {
-              return;
-            }
+          if (note.isExpanded && isBelowBottomQuarter) {
+            moveTo({ parentId: note.id, sortId: 1 });
           } else {
-            if (belowTopQuarter) {
-              destination = { parentId: note.parentId, sortId: note.sortId };
-            } else {
-              return;
+            if (isBelowTopQuarter) {
+              moveTo({ parentId: note.parentId, sortId: note.sortId });
             }
           }
-          moveTo(destination);
         }
 
         function moveTo(destination) {
