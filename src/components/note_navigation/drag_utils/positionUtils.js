@@ -1,6 +1,5 @@
 export const computePosition = (ref, noteDragged, monitor) => {
   const hoveredRect = ref.current?.getBoundingClientRect();
-  const hoveredMiddleY = (hoveredRect.bottom - hoveredRect.top) / 2;
   const hoveredQuarterY = (hoveredRect.bottom - hoveredRect.top) / 4;
   const topQuarter = hoveredQuarterY;
   const bottomQuarter = hoveredQuarterY * 3;
@@ -13,7 +12,6 @@ export const computePosition = (ref, noteDragged, monitor) => {
     isAboveBottomQuarter: mouseHoveredY < bottomQuarter,
     isBelowBottomQuarter: mouseHoveredY > bottomQuarter,
     isBelowTopQuarter: mouseHoveredY > topQuarter,
-    absoluteMiddleY: hoveredRect.top + hoveredMiddleY,
   };
 };
 

@@ -1,7 +1,7 @@
 import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
 import { moveNote } from "../../../features/slices/notesSlice";
-import { computePosition } from "./positionUtils";
+import { computePosition, getMiddleY } from "./positionUtils";
 
 export function useNoteDrop(ref, note, level) {
   const dispatch = useDispatch();
@@ -23,7 +23,6 @@ export function useNoteDrop(ref, note, level) {
           isAboveBottomQuarter,
           isBelowBottomQuarter,
           isBelowTopQuarter,
-          absoluteMiddleY,
         } = computePosition(ref, noteDragged, monitor);
 
         if (isMovingUp && isAboveBottomQuarter) {
@@ -48,7 +47,7 @@ export function useNoteDrop(ref, note, level) {
           );
           noteDragged.parentId = note.parentId;
           noteDragged.sortId = note.sortId;
-          noteDragged.middleY = absoluteMiddleY;
+          noteDragged.middleY = getMiddleY(ref);
         }
       },
     }),
