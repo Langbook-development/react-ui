@@ -1,20 +1,16 @@
-import React from "react";
+import React, { memo } from "react";
 import { NoteNavigationItem } from "./NoteNavigationItem";
 import { useSelector } from "react-redux";
-import { childNotesSelector } from "../../features/slices/selectors";
+import { childNotesSortedSelector } from "../../features/slices/selectors";
 
-function NoteNavigationList(props) {
+export const NoteNavigationList = memo(function (props) {
   const { parentNoteId, level } = props;
-  const notes = useSelector(childNotesSelector(parentNoteId));
+  const notes = useSelector(childNotesSortedSelector(parentNoteId));
   return (
     <>
-      {[...notes]
-        .sort((a, b) => a.sortId - b.sortId)
-        .map((note) => (
-          <NoteNavigationItem noteId={note.id} level={level} key={note.id} />
-        ))}
+      {notes.map((note) => (
+        <NoteNavigationItem noteId={note.id} level={level} key={note.id} />
+      ))}
     </>
   );
-}
-
-export default NoteNavigationList;
+});

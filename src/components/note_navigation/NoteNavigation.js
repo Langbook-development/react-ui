@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
-import NoteNavigationList from "./NoteNavigationList";
+import { NoteNavigationList } from "./NoteNavigationList";
 import { createNote } from "../../features/slices/thunks";
 import { useHistory } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";

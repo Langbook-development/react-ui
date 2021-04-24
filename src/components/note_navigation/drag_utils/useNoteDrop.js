@@ -4,7 +4,6 @@ import { moveNote } from "../../../features/slices/notesSlice";
 
 export function useNoteDrop(ref, note) {
   const dispatch = useDispatch();
-
   const [{ handlerId }, drop] = useDrop(
     () => ({
       accept: "NOTE",

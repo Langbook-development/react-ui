@@ -15,9 +15,12 @@ export function noteSelector(noteId) {
   return (state) => state.notes.byId[noteId];
 }
 
-export function childNotesSelector(parentId) {
-  return (state) =>
-    state.notes.byId[parentId].childPageIds.map((id) => state.notes.byId[id]);
+export function childNotesSortedSelector(parentId) {
+  return (state) => {
+    return state.notes.byId[parentId].childPageIds
+      .map((id) => state.notes.byId[id])
+      .sort((a, b) => a.sortId - b.sortId);
+  };
 }
 
 export function firstToShowNoteSelector(state) {

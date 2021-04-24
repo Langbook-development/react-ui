@@ -1,12 +1,14 @@
 import { useDrag } from "react-dnd";
 import { moveNote } from "../../../features/slices/notesSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { synchronizeNoteMovement } from "../../../features/slices/thunks";
+import { isNoteMovementLoadingSelector } from "../../../features/slices/selectors";
 
-export function useNoteDrag(ref, note, level, isNoteMovementLoading) {
+export function useNoteDrag(ref, note, level) {
   const dispatch = useDispatch();
+  const isNoteMovementLoading = useSelector(isNoteMovementLoadingSelector);
 
   const [{ isItemDragged, isDragInProgress }, drag, preview] = useDrag(
     () => ({
