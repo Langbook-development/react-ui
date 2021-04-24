@@ -41,7 +41,7 @@ function NoteSection() {
   const triggerSynchronizeNoteDebounced = useConstant(() =>
     AwesomeDebouncePromise(
       (noteToSync) => dispatch(synchronizeNote(noteToSync)),
-      200
+      400
     )
   );
 
