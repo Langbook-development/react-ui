@@ -1,5 +1,6 @@
 export const INITIAL_STATE_EMPTY = {
   notes: {
+    isNoteMovementLoading: false,
     categoryIds: [],
     byId: {},
     allIds: [],
@@ -8,7 +9,9 @@ export const INITIAL_STATE_EMPTY = {
 
 export const INITIAL_STATE = {
   notes: {
+    isNoteMovementLoading: false,
     categoryIds: [1, 5],
+    allIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     byId: {
       0: {
         id: 0,
@@ -131,6 +134,5 @@ export const INITIAL_STATE = {
         isContentFresh: false,
       },
     },
-    allIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
   },
 };

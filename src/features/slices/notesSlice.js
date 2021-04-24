@@ -65,8 +65,13 @@ const notesSlice = createSlice({
       notesAdapter.deleteAll(noteIdsDeleted);
     },
 
-    [synchronizeNoteMovement.fulfilled]: (notes, action) => {
-      console.log("Notes moved on backend!");
+    [synchronizeNoteMovement.pending]: (notes) => {
+      console.log("Notes moved pending!");
+      notes.isNoteMovementLoading = true;
+    },
+
+    [synchronizeNoteMovement.fulfilled]: (notes) => {
+      notes.isNoteMovementLoading = false;
     },
   },
 });

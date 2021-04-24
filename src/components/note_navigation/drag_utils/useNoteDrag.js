@@ -3,9 +3,9 @@ import { moveNote } from "../../../features/slices/notesSlice";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getEmptyImage } from "react-dnd-html5-backend";
-import { move, synchronizeNoteMovement } from "../../../features/slices/thunks";
+import { synchronizeNoteMovement } from "../../../features/slices/thunks";
 
-export function useNoteDrag(ref, note, level) {
+export function useNoteDrag(ref, note, level, isNoteMovementLoading) {
   const dispatch = useDispatch();
   const [{ isItemDragged, isDragInProgress }, drag, preview] = useDrag(
     () => ({
@@ -21,6 +21,7 @@ export function useNoteDrag(ref, note, level) {
         isItemDragged: monitor.getItem()?.noteDragged?.id === note.id,
         handlerId: monitor.getHandlerId(),
       }),
+      canDrag: () => !isNoteMovementLoading,
       end: ({ noteDragged, noteInitial }, monitor) => {
         const didDrop = monitor.didDrop();
         if (
@@ -50,7 +51,7 @@ export function useNoteDrag(ref, note, level) {
         }
       },
     }),
-    [note, ref.current]
+    [note, ref.current, isNoteMovementLoading]
   );
   useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true });

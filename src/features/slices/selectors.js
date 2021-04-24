@@ -31,6 +31,10 @@ export function firstToShowNoteSelector(state) {
   }
 }
 
+export function isNoteMovementLoadingSelector(state) {
+  return state.notes.isNoteMovementLoading;
+}
+
 export function afterDeleteFallbackIdSelector(selectedNoteId) {
   return (state) => {
     const noteSelected = state.notes.byId[selectedNoteId];
