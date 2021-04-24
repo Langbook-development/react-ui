@@ -46,7 +46,9 @@ export function NoteNavigationItem(props) {
   }
 
   function handleMouseEnter() {
-    setIsMouseOnItem(true);
+    if (!isDragInProgress) {
+      setIsMouseOnItem(true);
+    }
   }
 
   function handleExpandClick() {
