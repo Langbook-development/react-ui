@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { INITIAL_STATE_EMPTY } from "../initialState";
-import { createNote, deleteNote, getNotes } from "./thunks";
+import {
+  createNote,
+  deleteNote,
+  getNotes,
+  synchronizeNoteMovement,
+} from "./thunks";
 import { NotesAdapter } from "../utils/NotesAdapter";
 
 const initialState = INITIAL_STATE_EMPTY.notes;
@@ -58,6 +63,10 @@ const notesSlice = createSlice({
       const notesAdapter = new NotesAdapter(notes);
       notesAdapter.shiftPullOut(noteIdDeleted);
       notesAdapter.deleteAll(noteIdsDeleted);
+    },
+
+    [synchronizeNoteMovement.fulfilled]: (notes, action) => {
+      console.log("Notes moved on backend!");
     },
   },
 });

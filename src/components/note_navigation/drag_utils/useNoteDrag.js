@@ -3,6 +3,7 @@ import { moveNote } from "../../../features/slices/notesSlice";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getEmptyImage } from "react-dnd-html5-backend";
+import { move, synchronizeNoteMovement } from "../../../features/slices/thunks";
 
 export function useNoteDrag(ref, note, level) {
   const dispatch = useDispatch();
@@ -22,13 +23,21 @@ export function useNoteDrag(ref, note, level) {
       }),
       end: ({ noteDragged, noteInitial }, monitor) => {
         const didDrop = monitor.didDrop();
-        if (!didDrop) {
-          if (
-            noteDragged.sortId === noteInitial.sortId &&
-            noteDragged.parentId === noteInitial.parentId
-          ) {
-            return;
-          }
+        if (
+          noteDragged.sortId === noteInitial.sortId &&
+          noteDragged.parentId === noteInitial.parentId
+        ) {
+          return;
+        }
+        if (didDrop) {
+          dispatch(
+            synchronizeNoteMovement({
+              noteId: noteDragged.id,
+              destinationParentId: noteDragged.parentId,
+              destinationSortId: noteDragged.sortId,
+            })
+          );
+        } else {
           dispatch(
             moveNote({
               noteId: noteDragged.id,

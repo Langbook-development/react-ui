@@ -17,18 +17,18 @@ function NoteSection() {
   const dispatch = useDispatch();
   const note = useSelector((state) => state.notes.byId[selectedNoteId]);
   const fallbackNoteId = useSelector((state) => {
-    const sameDeepnessLestSortId = state.notes.byId[note.parentId].childPageIds
+    const noteParent = state.notes.byId[note.parentId];
+    const sameParentLestSortId = noteParent.childPageIds
       .map((id) => state.notes.byId[id])
       .filter((it) => it.id !== note.id)
       .reduce((prev, curr) => (prev.sortId < curr.sortId ? prev : curr), {}).id;
-    if (sameDeepnessLestSortId) {
-      return sameDeepnessLestSortId;
+    if (sameParentLestSortId !== note.id) {
+      return sameParentLestSortId;
     } else {
-      if (note.parentId) {
-        return note.parentId;
-      } else {
-        return undefined;
+      if (!noteParent.isCategory) {
+        return noteParent.id;
       }
+      return undefined;
     }
   });
 

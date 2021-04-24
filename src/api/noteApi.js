@@ -19,3 +19,12 @@ NoteAPI.deleteNote = (note) =>
   fetch(baseUrl + "/" + note.id, { method: "DELETE" })
     .then(handleResponse)
     .catch(handleError);
+
+NoteAPI.moveNote = (moveRequest) =>
+  fetch(baseUrl + "/move", {
+    method: "PUT",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(moveRequest),
+  })
+    .then(handleResponse)
+    .catch(handleError);

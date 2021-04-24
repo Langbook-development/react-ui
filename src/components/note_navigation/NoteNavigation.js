@@ -12,15 +12,13 @@ function NoteNavigation(props) {
   const [isPlusVisible, setIsPlusVisible] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
-  const hasNoNotes = useSelector((state) => state.notes.allIds.length === 0);
   const currentCategoryId = useSelector((state) => state.notes.categoryIds[0]);
-  const noteIds = useSelector((state) => {
-    if (!currentCategoryId) {
-      return [];
+  const hasNotes = useSelector((state) => {
+    if (currentCategoryId) {
+      const currentCategoryId = state.notes.categoryIds[0];
+      return state.notes.byId[currentCategoryId].childPageIds.length > 0;
     }
-    return state.notes.byId[currentCategoryId].childPageIds
-      .map((id) => state.notes.byId[id])
-      .map((it) => it.id);
+    return false;
   });
 
   useEffect(() => {
@@ -62,14 +60,14 @@ function NoteNavigation(props) {
             onClick={handlePlusButtonClick}
             className="action-button"
             style={{
-              visibility: isPlusVisible || hasNoNotes ? "visible" : "hidden",
+              visibility: isPlusVisible || !hasNotes ? "visible" : "hidden",
             }}
           >
             <Plus className="icon" />
           </button>
         </Card.Header>
         <Card.Body>
-          {hasNoNotes ? (
+          {!hasNotes ? (
             <div className="navigation-no-item">
               There are no pages to show. Try adding some!
             </div>

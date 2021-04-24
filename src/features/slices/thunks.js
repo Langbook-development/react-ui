@@ -28,29 +28,10 @@ export const deleteNote = createAsyncThunk("notes/delete", async (note) => {
   return await NoteAPI.deleteNote(note);
 });
 
-export const moveNoteUp = createAsyncThunk(
-  "notes/moveUp",
-  async (payload, thunkAPI) => {
-    const { noteDragged, noteHoveredOn } = payload;
-    console.log(
-      "Note dragged. id:[" +
-        noteDragged.id +
-        "], sortId:[" +
-        noteDragged.sortId +
-        "], parentId:[" +
-        noteDragged.payload +
-        "]"
-    );
-    console.log(
-      "Note hovered. id:[" +
-        noteHoveredOn.id +
-        "], sortId:[" +
-        noteHoveredOn.sortId +
-        "], parentId:[" +
-        noteHoveredOn.payload +
-        "]"
-    );
-
-    // const notes = thunkAPI.getState();
+export const synchronizeNoteMovement = createAsyncThunk(
+  "notes/synchronizeMovement",
+  async (request) => {
+    console.log("Calling note move!");
+    return await NoteAPI.moveNote(request);
   }
 );
