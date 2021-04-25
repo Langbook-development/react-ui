@@ -2,12 +2,14 @@ import React, { useEffect } from "react";
 import NotePage from "./components/NotePage";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import NotePageEmpty from "./components/NotePageEmpty";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getNotes } from "./features/slices/thunks";
 import { CustomDragLayer } from "./components/note_navigation/drag_utils/CustomDragLayer";
+import { isNotesLoadedSelector } from "./features/slices/selectors";
 
 function App() {
   const dispatch = useDispatch();
+  const isNotesLoaded = useSelector(isNotesLoadedSelector);
   useEffect(() => {
     dispatch(getNotes());
   }, [dispatch]);
@@ -21,7 +23,7 @@ function App() {
             <NotePageEmpty />
           </Route>
           <Route path="/notes/:selectedNoteId">
-            <NotePage />
+            {isNotesLoaded ? <NotePage /> : <NotePageEmpty />}
             <CustomDragLayer />
           </Route>
         </Switch>

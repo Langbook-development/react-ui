@@ -52,9 +52,14 @@ const notesSlice = createSlice({
       notesAdapter.expand(note.id);
     },
 
+    [getNotes.pending]: (notes) => {
+      notes.isNotesLoaded = false;
+    },
+
     [getNotes.fulfilled]: (notes, action) => {
       const notesAdapter = new NotesAdapter(notes);
       notesAdapter.putAll(action.payload);
+      notes.isNotesLoaded = true;
     },
 
     [deleteNote.fulfilled]: (notes, action) => {

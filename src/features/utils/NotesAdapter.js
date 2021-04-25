@@ -88,7 +88,7 @@ export class NotesAdapter {
     });
     notesResponse.categories.forEach((categoryJson) => {
       let category = this.noteFrom(categoryJson);
-      this.notes.byId[category.id] = category;
+      this.notes.byId[category.id] = { ...category, isCategory: true };
       this.notes.categoryIds.push(category.id);
     });
   }

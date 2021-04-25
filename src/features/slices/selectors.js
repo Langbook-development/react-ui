@@ -12,7 +12,19 @@ export function currentCategorySelector(state) {
 }
 
 export function noteSelector(noteId) {
-  return (state) => state.notes.byId[noteId];
+  return (state) => {
+    let note = state.notes.byId[noteId];
+    if (!note?.isCategory) {
+      return note;
+    }
+  };
+}
+
+export function noteExistsSelector(noteId) {
+  return (state) => {
+    let note = state.notes.byId[noteId];
+    return note && !note.isCategory;
+  };
 }
 
 export function childNotesSortedSelector(parentId) {
@@ -52,6 +64,10 @@ export function afterDeleteFallbackIdSelector(selectedNoteId) {
       return undefined;
     }
   };
+}
+
+export function isNotesLoadedSelector(state) {
+  return state.notes.isNotesLoaded;
 }
 
 function getLestSortId(ids, state) {
