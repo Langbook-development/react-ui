@@ -11,8 +11,8 @@ export const NoteDragWrapper = (props) => {
   const dispatch = useDispatch();
 
   const ref = useRef(null);
-  const [handlerId, drop] = useNoteDrop(ref, note, level);
-  const [isNoteDragged, isDragInProgress, drag] = useNoteDrag(ref, note, level);
+  const [drop, handlerId] = useNoteDrop(ref, note, level);
+  const [drag, isNoteDragged, isDragInProgress] = useNoteDrag(ref, note, level);
 
   useEffect(() => {
     if (note.isExpanded && isNoteDragged) {
@@ -22,12 +22,14 @@ export const NoteDragWrapper = (props) => {
 
   return (
     <div ref={drag(drop(ref))} data-handler-id={handlerId}>
-      {isNoteDragged && <div className="navigation-item-placeholder" />}
-      {!isNoteDragged &&
+      {isNoteDragged ? (
+        <div className="navigation-item-placeholder" />
+      ) : (
         React.cloneElement(props.children, {
           isNoteDragged,
           isDragInProgress,
-        })}
+        })
+      )}
     </div>
   );
 };

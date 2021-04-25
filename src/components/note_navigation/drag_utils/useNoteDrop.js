@@ -53,5 +53,5 @@ export function useNoteDrop(ref, note, level) {
     }),
     [note]
   );
-  return [handlerId, drop];
+  return [drop, handlerId];
 }

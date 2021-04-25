@@ -63,5 +63,5 @@ export function useNoteDrag(ref, note, level) {
     );
   }
 
-  return [isItemDragged, isDragInProgress, drag];
+  return [drag, isItemDragged, isDragInProgress];
 }
