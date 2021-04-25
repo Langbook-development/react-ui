@@ -11,7 +11,7 @@ import {
   hasNotesSelector,
 } from "../../../state/notes/selectors";
 
-function NoteNavigation(props) {
+function NoteNavigation() {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
   const [isPlusVisible, setIsPlusVisible] = useState(false);
   const history = useHistory();
@@ -45,8 +45,14 @@ function NoteNavigation(props) {
       });
   }
 
+  function handlePlusButtonMouseOver() {
+    if (!isPlusVisible) {
+      setIsPlusVisible(true);
+    }
+  }
+
   function showIf(condition) {
-    return condition ? "visible" : "hidden";
+    return condition ? 1 : 0;
   }
 
   return (
@@ -60,9 +66,10 @@ function NoteNavigation(props) {
           <span>Table of contents</span>
           <button
             onClick={handlePlusButtonClick}
+            onMouseOver={handlePlusButtonMouseOver}
             className="action-button"
             style={{
-              visibility: showIf(isPlusVisible || !hasNotes),
+              opacity: showIf(isPlusVisible || !hasNotes),
             }}
           >
             <Plus className="icon" />
