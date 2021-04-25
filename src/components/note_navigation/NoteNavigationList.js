@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { useSelector } from "react-redux";
-import { childNotesSortedSelector } from "../../features/slices/selectors";
+import { childNotesSortedSelector } from "../../state/notes/selectors";
 import { NoteDragWrapper } from "./NoteDragWrapper";
 import { NoteNavigationItem } from "./NoteNavigationItem";
 

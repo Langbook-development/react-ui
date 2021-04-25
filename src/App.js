@@ -3,9 +3,9 @@ import NotePage from "./components/NotePage";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import NotePageEmpty from "./components/NotePageEmpty";
 import { useDispatch, useSelector } from "react-redux";
-import { getNotes } from "./features/slices/thunks";
+import { getNotes } from "./state/notes/thunks";
 import { CustomDragLayer } from "./components/note_navigation/drag_utils/CustomDragLayer";
-import { isNotesLoadedSelector } from "./features/slices/selectors";
+import { isNotesLoadedSelector } from "./state/notes/selectors";
 
 function App() {
   const dispatch = useDispatch();

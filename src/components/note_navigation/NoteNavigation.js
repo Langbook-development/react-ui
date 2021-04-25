@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
 import { NoteNavigationList } from "./NoteNavigationList";
-import { createNote } from "../../features/slices/thunks";
+import { createNote } from "../../state/notes/thunks";
 import { useHistory } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Plus } from "react-bootstrap-icons";
 import {
   currentCategorySelector,
   hasNotesSelector,
-} from "../../features/slices/selectors";
+} from "../../state/notes/selectors";
 
 function NoteNavigation(props) {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);

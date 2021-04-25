@@ -1,6 +1,6 @@
 import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
-import { moveNote } from "../../../features/slices/notesSlice";
+import { moveNote } from "../../../state/notes/notesSlice";
 import { computePosition, getMiddleY } from "./positionUtils";
 
 export function useNoteDrop(ref, note, level) {

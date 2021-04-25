@@ -6,7 +6,7 @@ import {
   getNotes,
   synchronizeNoteMovement,
 } from "./thunks";
-import { NotesAdapter } from "../utils/NotesAdapter";
+import { NotesAdapter } from "./utils/NotesAdapter";
 
 const initialState = INITIAL_STATE_EMPTY.notes;
 

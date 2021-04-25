@@ -5,7 +5,7 @@ import NoteNavigation from "./note_navigation/NoteNavigation";
 import {
   firstToShowNoteSelector,
   hasNotesSelector,
-} from "../features/slices/selectors";
+} from "../state/notes/selectors";
 
 function NotePageEmpty() {
   const hasNotes = useSelector(hasNotesSelector);
