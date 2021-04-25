@@ -20,13 +20,6 @@ export function noteSelector(noteId) {
   };
 }
 
-export function noteExistsSelector(noteId) {
-  return (state) => {
-    let note = state.notes.byId[noteId];
-    return note && !note.isCategory;
-  };
-}
-
 export function childNotesSortedSelector(parentId) {
   return (state) => {
     return state.notes.byId[parentId].childPageIds
