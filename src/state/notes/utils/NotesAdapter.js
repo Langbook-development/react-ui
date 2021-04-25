@@ -47,7 +47,9 @@ export class NotesAdapter {
     let noteToExpandId = noteId;
     while (noteToExpandId) {
       const noteToExpand = this.notes.byId[noteToExpandId];
-      noteToExpand.isExpanded = true;
+      if (noteToExpand.childPageIds.length > 0 && !noteToExpand.isCategory) {
+        noteToExpand.isExpanded = true;
+      }
       noteToExpandId = noteToExpand.parentId;
     }
   }

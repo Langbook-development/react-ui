@@ -7,7 +7,7 @@ import {
   firstToShowNoteSelector,
   hasNotesSelector,
   isNotesLoadedSelector,
-  noteExistsSelector,
+  noteSelector,
 } from "../../state/notes/selectors";
 import { noteExpanded } from "../../state/notes/notesSlice";
 
@@ -16,16 +16,17 @@ function NotePage() {
   const { selectedNoteId } = useParams();
   const isNotesLoaded = useSelector(isNotesLoadedSelector);
   const hasNotes = useSelector(hasNotesSelector);
-  const noteExists = useSelector(noteExistsSelector(selectedNoteId));
+  const note = useSelector(noteSelector(selectedNoteId));
   const firstToShowNoteId = useSelector(firstToShowNoteSelector);
   const dispatch = useDispatch();
   const hasLoadedNotes = isNotesLoaded && hasNotes;
+  const noteExists = note !== undefined;
 
   useEffect(() => {
     if (noteExists) {
-      dispatch(noteExpanded(selectedNoteId));
+      dispatch(noteExpanded(note.parentId));
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [noteExists]);
 
   if (pathname === "/") {
     if (isNotesLoaded && hasNotes) {
