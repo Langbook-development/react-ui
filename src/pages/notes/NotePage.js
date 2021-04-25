@@ -24,7 +24,7 @@ function NotePage() {
   useEffect(() => {
     if (noteExists) {
       dispatch(noteExpanded(selectedNoteId));
-    }
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (pathname === "/") {
