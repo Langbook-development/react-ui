@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import NotePage from "./components/NotePage";
+import NotePage from "./pages/notes/NotePage";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import NotePageEmpty from "./components/NotePageEmpty";
+import NoteEmptyPage from "./pages/notes/NoteEmptyPage";
 import { useDispatch, useSelector } from "react-redux";
 import { getNotes } from "./state/notes/thunks";
-import { CustomDragLayer } from "./components/note_navigation/drag_utils/CustomDragLayer";
+import { CustomDragLayer } from "./pages/notes/navigation/drag_utils/CustomDragLayer";
 import { isNotesLoadedSelector } from "./state/notes/selectors";
 
 function App() {
@@ -20,10 +20,10 @@ function App() {
         <header />
         <Switch>
           <Route exact path="/">
-            <NotePageEmpty />
+            <NoteEmptyPage />
           </Route>
           <Route path="/notes/:selectedNoteId">
-            {isNotesLoaded ? <NotePage /> : <NotePageEmpty />}
+            {isNotesLoaded ? <NotePage /> : <NoteEmptyPage />}
             <CustomDragLayer />
           </Route>
         </Switch>

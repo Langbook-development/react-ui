@@ -1,10 +1,10 @@
 import { useDrag } from "react-dnd";
-import { moveNote } from "../../../state/notes/notesSlice";
+import { moveNote } from "../../../../state/notes/notesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getEmptyImage } from "react-dnd-html5-backend";
-import { synchronizeNoteMovement } from "../../../state/notes/thunks";
-import { isNoteMovementLoadingSelector } from "../../../state/notes/selectors";
+import { synchronizeNoteMovement } from "../../../../state/notes/thunks";
+import { isNoteMovementLoadingSelector } from "../../../../state/notes/selectors";
 import { getMiddleY } from "./positionUtils";
 
 export function useNoteDrag(ref, note, level) {

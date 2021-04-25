@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import NoteNavigation from "./note_navigation/NoteNavigation";
-import NoteSection from "./note_content/NoteSection";
+import NoteNavigation from "./navigation/NoteNavigation";
+import NoteSection from "./content/NoteSection";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useParams } from "react-router-dom";
-import { noteExistsSelector } from "../state/notes/selectors";
-import { noteExpanded } from "../state/notes/notesSlice";
+import { noteExistsSelector } from "../../state/notes/selectors";
+import { noteExpanded } from "../../state/notes/notesSlice";
 
 function NotePage() {
   const { selectedNoteId } = useParams();

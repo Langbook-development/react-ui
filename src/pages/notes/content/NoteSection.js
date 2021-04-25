@@ -1,18 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteNote, synchronizeNote } from "../../state/notes/thunks";
+import { deleteNote, synchronizeNote } from "../../../state/notes/thunks";
 import TextareaAutosize from "react-textarea-autosize";
 import { Card } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
 import { useParams, useHistory } from "react-router-dom";
-import { updateNote } from "../../state/notes/notesSlice";
+import { updateNote } from "../../../state/notes/notesSlice";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import useConstant from "use-constant";
 import NoteModal from "./NoteModal";
 import {
   afterDeleteFallbackIdSelector,
   noteSelector,
-} from "../../state/notes/selectors";
+} from "../../../state/notes/selectors";
 
 function NoteSection() {
   const { selectedNoteId } = useParams();

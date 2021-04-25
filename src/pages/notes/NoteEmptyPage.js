@@ -1,13 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import NoteNavigation from "./note_navigation/NoteNavigation";
+import NoteNavigation from "./navigation/NoteNavigation";
 import {
   firstToShowNoteSelector,
   hasNotesSelector,
-} from "../state/notes/selectors";
+} from "../../state/notes/selectors";
 
-function NotePageEmpty() {
+function NoteEmptyPage() {
   const hasNotes = useSelector(hasNotesSelector);
   const firstToShowNoteId = useSelector(firstToShowNoteSelector);
 
@@ -22,4 +22,4 @@ function NotePageEmpty() {
   );
 }
 
-export default NotePageEmpty;
+export default NoteEmptyPage;
