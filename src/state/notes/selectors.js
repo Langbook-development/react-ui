@@ -51,18 +51,30 @@ export function isNoteMovementLoadingSelector(state) {
 }
 
 export function afterDeleteFallbackIdSelector(selectedNoteId) {
+  const sortAsc = (a, b) => a.sortId - b.sortId;
+  const sortDesc = (a, b) => b.sortId - a.sortId;
   return (state) => {
     const noteSelected = state.notes.byId[selectedNoteId];
     const noteParent = state.notes.byId[noteSelected.parentId];
-    const sameParentLestSortId = getLestSortId(noteParent.childPageIds, state);
-    if (sameParentLestSortId !== noteSelected.id) {
-      return sameParentLestSortId;
-    } else {
-      if (!noteParent.isCategory) {
-        return noteParent.id;
-      }
-      return undefined;
+    const notesSameParent = noteParent.childPageIds.map(
+      (id) => state.notes.byId[id]
+    );
+    const noteBelow = notesSameParent
+      .filter((it) => it.sortId > noteSelected.sortId)
+      .sort(sortAsc)[0];
+    if (noteBelow) {
+      return noteBelow.id;
     }
+    const noteAbove = notesSameParent
+      .filter((it) => it.sortId < noteSelected.sortId)
+      .sort(sortDesc)[0];
+    if (noteAbove) {
+      return noteAbove.id;
+    }
+    if (!noteParent.isCategory) {
+      return noteParent.id;
+    }
+    return undefined;
   };
 }
 
