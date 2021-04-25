@@ -23,22 +23,42 @@ export function useNoteDrop(ref, note, level) {
           isAboveBottomQuarter,
           isBelowBottomQuarter,
           isBelowTopQuarter,
+          middleY,
         } = computePosition(ref, noteDragged, monitor);
 
-        if (isMovingUp && isAboveBottomQuarter) {
-          moveTo({ parentId: note.parentId, sortId: note.sortId });
+        if (isMovingUp) {
+          console.log("isMovingUp");
         }
         if (isMovingDown) {
-          if (note.isExpanded && isBelowBottomQuarter) {
-            moveTo({ parentId: note.id, sortId: 1 });
+          console.log("isMovingDown");
+        }
+
+        if (isMovingUp && isAboveBottomQuarter) {
+          moveTo(
+            { parentId: note.parentId, sortId: note.sortId, movingUp: 0 },
+            middleY
+          );
+        }
+        if (isMovingDown) {
+          if (note.isExpanded) {
+            if (isBelowBottomQuarter) {
+              moveTo({ parentId: note.id, sortId: 1, movingDown: 1 }, middleY);
+            }
           } else {
             if (isBelowTopQuarter) {
-              moveTo({ parentId: note.parentId, sortId: note.sortId });
+              moveTo(
+                {
+                  parentId: note.parentId,
+                  sortId: note.sortId,
+                  movingDown: 2,
+                },
+                middleY
+              );
             }
           }
         }
 
-        function moveTo(destination) {
+        function moveTo(destination, middleY) {
           dispatch(
             moveNote({
               noteId: noteDragged.id,
@@ -47,7 +67,8 @@ export function useNoteDrop(ref, note, level) {
           );
           noteDragged.parentId = note.parentId;
           noteDragged.sortId = note.sortId;
-          noteDragged.middleY = getMiddleY(ref);
+          noteDragged.middleY = middleY;
+          console.log(noteDragged.middleY);
         }
       },
     }),
