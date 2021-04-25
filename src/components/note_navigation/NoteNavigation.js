@@ -45,6 +45,10 @@ function NoteNavigation(props) {
       });
   }
 
+  function showIf(condition) {
+    return condition ? "visible" : "hidden";
+  }
+
   return (
     <aside className="note-navigation">
       <Card>
@@ -58,7 +62,7 @@ function NoteNavigation(props) {
             onClick={handlePlusButtonClick}
             className="action-button"
             style={{
-              visibility: isPlusVisible || !hasNotes ? "visible" : "hidden",
+              visibility: showIf(isPlusVisible || !hasNotes),
             }}
           >
             <Plus className="icon" />

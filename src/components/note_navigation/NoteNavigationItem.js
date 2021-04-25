@@ -57,7 +57,7 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
   }
 
   function hasSubNotes(note) {
-    return note.childPageIds && note.childPageIds.length > 0;
+    return note.childPageIds?.length > 0;
   }
 
   function getTitleClass() {
