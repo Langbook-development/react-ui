@@ -17,48 +17,34 @@ export function useNoteDrop(ref, note, level) {
         if (!ref.current || noteDragged.id === note.id) {
           return;
         }
+        const middleY = getMiddleY(ref);
         const {
           isMovingUp,
           isMovingDown,
           isAboveBottomQuarter,
           isBelowBottomQuarter,
           isBelowTopQuarter,
-          middleY,
         } = computePosition(ref, noteDragged, monitor);
 
-        if (isMovingUp) {
-          console.log("isMovingUp");
-        }
-        if (isMovingDown) {
-          console.log("isMovingDown");
-        }
-
         if (isMovingUp && isAboveBottomQuarter) {
-          moveTo(
-            { parentId: note.parentId, sortId: note.sortId, movingUp: 0 },
-            middleY
-          );
+          moveTo({ parentId: note.parentId, sortId: note.sortId });
+          noteDragged.middleY = middleY;
         }
         if (isMovingDown) {
           if (note.isExpanded) {
             if (isBelowBottomQuarter) {
-              moveTo({ parentId: note.id, sortId: 1, movingDown: 1 }, middleY);
+              moveTo({ parentId: note.id, sortId: 1 });
+              noteDragged.middleY = middleY;
             }
           } else {
             if (isBelowTopQuarter) {
-              moveTo(
-                {
-                  parentId: note.parentId,
-                  sortId: note.sortId,
-                  movingDown: 2,
-                },
-                middleY
-              );
+              moveTo({ parentId: note.parentId, sortId: note.sortId });
+              noteDragged.middleY = middleY;
             }
           }
         }
 
-        function moveTo(destination, middleY) {
+        function moveTo(destination) {
           dispatch(
             moveNote({
               noteId: noteDragged.id,
@@ -67,8 +53,6 @@ export function useNoteDrop(ref, note, level) {
           );
           noteDragged.parentId = note.parentId;
           noteDragged.sortId = note.sortId;
-          noteDragged.middleY = middleY;
-          console.log(noteDragged.middleY);
         }
       },
     }),
