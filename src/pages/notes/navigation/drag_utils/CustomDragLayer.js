@@ -17,7 +17,7 @@ function getItemStyles(initialOffset, currentOffset) {
     return {};
   }
   let x = currentOffset.x;
-  let y = currentOffset.y;
+  let y = currentOffset.y + window.scrollY;
   const transform = `translate(${x}px, ${y}px)`;
   return {
     transform,
