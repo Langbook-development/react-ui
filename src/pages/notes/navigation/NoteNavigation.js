@@ -10,6 +10,7 @@ import {
   currentCategorySelector,
   hasNotesSelector,
 } from "../../../state/notes/selectors";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 function NoteNavigation() {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
