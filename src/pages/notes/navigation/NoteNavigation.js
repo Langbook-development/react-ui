@@ -10,6 +10,7 @@ import {
   currentCategorySelector,
   hasNotesSelector,
 } from "../../../state/notes/selectors";
+import { NoteNavigationTree } from "./NoteNavigationTree";
 
 function NoteNavigation() {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
@@ -81,7 +82,7 @@ function NoteNavigation() {
               There are no pages to show. Try adding some!
             </div>
           ) : (
-            <NoteNavigationList parentNoteId={currentCategory.id} level={0} />
+            <NoteNavigationTree />
           )}
         </Card.Body>
       </Card>

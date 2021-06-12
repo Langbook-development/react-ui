@@ -3,7 +3,6 @@ import NotePage from "./pages/notes/NotePage";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getNotes } from "./state/notes/thunks";
-import { CustomDragLayer } from "./pages/notes/navigation/drag_utils/CustomDragLayer";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,7 +17,6 @@ function App() {
         <Switch>
           <Route exact path={["/", "/notes/:selectedNoteId"]}>
             <NotePage />
-            <CustomDragLayer />
           </Route>
         </Switch>
       </div>
