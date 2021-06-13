@@ -1,38 +1,44 @@
-body, html, .App {
+body, html, .App, #root {
     height: 100%;
     margin: 0;
 }
 
 .App {
     display: grid;
-    grid-template-rows: 50px auto 50px;
+    grid-template-rows: 50px calc(100% - 100px) 50px;
     grid-gap: 25px;
+    padding-left: 25px;
+    padding-right: 25px;
 }
 
 main.note-page {
     display: grid;
-    grid-template-columns: minmax(290px, 20%) minmax(500px, calc(45% - 35px));
-    justify-content: center;
+    grid-template-columns: minmax(290px, 15%) minmax(500px, calc(80%));
     grid-column-gap: 25px;
+}
+
+aside.note-navigation {
+    overflow: hidden;
+}
+
+aside.note-navigation .card {
+    height: 100%;
+    overflow: hidden;
+}
+
+aside.note-navigation .card-body {
+    padding-right: 5px;
 }
 
 aside.note-navigation .navigation-no-item {
     color: rgba(0, 0, 0, .4);
 }
 
-.navigation-item {
-    display: grid;
-    width: 100%;
-    grid-template-columns: fit-content(25px) calc(100% - 60px) fit-content(25px);
-    grid-template-rows: fit-content(25px);
-    grid-column-gap: 5px;
-}
-
 aside.note-navigation .scrollbar {
-    height: 300px;
-    overflow: scroll;
-    padding-right: 6px;
+    overflow-x: hidden;
+    overflow-y: scroll;
     padding-bottom: 0 !important;
+    width: 100%;
 }
 
 #scroll-style::-webkit-scrollbar-track {
@@ -47,6 +53,14 @@ aside.note-navigation .scrollbar {
 
 #scroll-style::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, .06);
+}
+
+.navigation-item {
+    display: grid;
+    width: 100%;
+    grid-template-columns: fit-content(25px) calc(100% - 70px) fit-content(25px) 10px;
+    grid-template-rows: fit-content(25px);
+    grid-column-gap: 5px;
 }
 
 .navigation-item .title-area {
