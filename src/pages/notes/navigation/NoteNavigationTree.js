@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import Tree, { mutateTree } from "@atlaskit/tree";
+import React, { useState } from "react";
+import Tree, { moveItemOnTree, mutateTree } from "@atlaskit/tree";
 import { NoteNavigationItem } from "./NoteNavigationItem";
 
 const TREE = {
@@ -198,6 +198,13 @@ export function NoteNavigationTree() {
     setTree(mutateTree(tree, itemId, { isExpanded: false }));
   };
 
+  const onDragEnd = (source, destination) => {
+    if (!destination) {
+      return;
+    }
+    setTree(moveItemOnTree(tree, source, destination));
+  };
+
   let renderItem = ({ item, onExpand, onCollapse, provided, snapshot }) => {
     return (
       <div
@@ -222,6 +229,7 @@ export function NoteNavigationTree() {
         tree={tree}
         onExpand={onExpand}
         onCollapse={onCollapse}
+        onDragEnd={onDragEnd}
         offsetPerLevel={LEVEL_PADDING_PX}
         isDragEnabled
       />

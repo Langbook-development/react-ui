@@ -8,14 +8,6 @@ export const INITIAL_STATE_EMPTY = {
   },
 };
 
-
-
-
-
-
-
-
-
 export const INITIAL_STATE = {
   notes: {
     isNoteMovementLoading: false,
