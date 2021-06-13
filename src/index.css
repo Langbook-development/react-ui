@@ -1,161 +1,182 @@
 body, html, .App {
-  height: 100%;
-  margin: 0;
+    height: 100%;
+    margin: 0;
 }
 
 .App {
-  display: grid;
-  grid-template-rows: 50px auto 50px;
-  grid-gap: 25px;
+    display: grid;
+    grid-template-rows: 50px auto 50px;
+    grid-gap: 25px;
 }
 
 main.note-page {
-  display: grid;
-  grid-template-columns: minmax(290px, 20%) minmax(500px, calc(45% - 35px));
-  justify-content: center;
-  grid-column-gap: 25px;
+    display: grid;
+    grid-template-columns: minmax(290px, 20%) minmax(500px, calc(45% - 35px));
+    justify-content: center;
+    grid-column-gap: 25px;
 }
 
 aside.note-navigation .navigation-no-item {
-  color: rgba(0,0,0,.4);
+    color: rgba(0, 0, 0, .4);
 }
 
 .navigation-item {
-  display: grid;
-  width: 100%;
-  grid-template-columns: fit-content(25px) calc(100% - 60px) fit-content(25px);
-  grid-template-rows: fit-content(25px);
-  grid-column-gap: 5px;
+    display: grid;
+    width: 100%;
+    grid-template-columns: fit-content(25px) calc(100% - 60px) fit-content(25px);
+    grid-template-rows: fit-content(25px);
+    grid-column-gap: 5px;
+}
+
+aside.note-navigation .scrollbar {
+    height: 300px;
+    overflow: scroll;
+    padding-right: 6px;
+    padding-bottom: 0 !important;
+}
+
+#scroll-style::-webkit-scrollbar-track {
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);*/
+    border-radius: 6px;
+}
+
+#scroll-style::-webkit-scrollbar {
+    width: 5px;
+
+}
+
+#scroll-style::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, .06);
 }
 
 .navigation-item .title-area {
-  cursor: grab;
+    cursor: grab;
 }
 
 .navigation-item .title {
-  color: black;
+    color: black;
 }
 
 .navigation-item .title.active {
-  color: #0056b3;
+    color: #0056b3;
 }
 
 .navigation-item .title:hover {
-  color: #0056b3;
-  text-decoration: underline;
-  cursor: pointer;
+    color: #0056b3;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
-.navigation-item .chevron-button{
-  width: 25px;
-  height: 25px;
-  border: 0;
-  border-radius: 50%;
-  font-size: 10px;
-  background-color: transparent;
+.navigation-item .chevron-button {
+    width: 25px;
+    height: 25px;
+    border: 0;
+    border-radius: 50%;
+    font-size: 10px;
+    background-color: transparent;
 }
 
-.navigation-item .chevron-button-placeholder{
-  width: 25px;
-  height: 25px;
+.navigation-item .chevron-button-placeholder {
+    width: 25px;
+    height: 25px;
 }
 
-.navigation-item .action-button:hover{
-  background-color: rgba(0,0,0,.07);
+.navigation-item .action-button:hover {
+    background-color: rgba(0, 0, 0, .07);
 }
 
-.navigation-item .chevron-button:hover{
-  background-color: rgba(0,0,0,.03);
+.navigation-item .chevron-button:hover {
+    background-color: rgba(0, 0, 0, .03);
 }
 
-.navigation-item .action-button, aside.note-navigation .header .action-button{
-  width: 25px;
-  height: 25px;
-  background-color: transparent;
-  font-size: 9px;
-  border-radius: 6px;
-  border: 0;
-  padding: 4px;
+.navigation-item .action-button, aside.note-navigation .header .action-button {
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+    font-size: 9px;
+    border-radius: 6px;
+    border: 0;
+    padding: 4px;
 }
 
 .navigation-item .action-button {
-  background-color: rgba(0,0,0,.03);
+    background-color: rgba(0, 0, 0, .03);
 }
 
 aside.note-navigation .header {
-  display: grid;
-  grid-template-columns: auto fit-content(25px);
+    display: grid;
+    grid-template-columns: auto fit-content(25px);
 }
 
 aside.note-navigation .header .action-button:hover {
-  background-color: rgba(0,0,0,.07);
+    background-color: rgba(0, 0, 0, .07);
 }
 
 
 section.note-content .header {
-  display: grid;
-  grid-template-columns: auto fit-content(25px);
+    display: grid;
+    grid-template-columns: auto fit-content(25px);
 }
 
-section.note-content .header .title{
-  margin-right: 15px;
+section.note-content .header .title {
+    margin-right: 15px;
 }
 
-section.note-content .header .action-button{
-  width: 28px;
-  height: 28px;
-  background-color: transparent;
-  border-radius: 4px;
-  border: 0;
+section.note-content .header .action-button {
+    width: 28px;
+    height: 28px;
+    background-color: transparent;
+    border-radius: 4px;
+    border: 0;
 }
 
 section.note-content .header:last-child {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
-section.note-content .header .action-button:hover{
-  background-color: rgba(0,0,0,.03);
+section.note-content .header .action-button:hover {
+    background-color: rgba(0, 0, 0, .03);
 }
 
 section.note-content .header .title-area {
-  font-size: 1.25rem;
-  padding: 0;
-  font-weight: 500;
-  line-height: 1.2;
-  border: 0;
-  width: 100%;
-  resize: none;
-  overflow: hidden;
-  outline: none;
+    font-size: 1.25rem;
+    padding: 0;
+    font-weight: 500;
+    line-height: 1.2;
+    border: 0;
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+    outline: none;
 }
 
 section.note-content .text-area {
-  border: 0;
-  height:auto;
-  width: 100%;
-  resize: none;
-  outline: none;
-  overflow: hidden;
-  padding: 0;
+    border: 0;
+    height: auto;
+    width: 100%;
+    resize: none;
+    outline: none;
+    overflow: hidden;
+    padding: 0;
 }
 
 .icon {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .navigation-item-preview {
-  background-color: white;
-  border-radius: 4px;
-  border: 1px solid rgba(0,0,0,.1);
-  /* Shift right, Shift down, Spread, Blur, Opacity */
-  -webkit-box-shadow: -3px 3px 6px -8px rgba(0,0,0,0.2);
-  box-shadow: -3px 3px 6px -5px rgba(0,0,0,0.2);
+    background-color: white;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, .1);
+    /* Shift right, Shift down, Spread, Blur, Opacity */
+    -webkit-box-shadow: -3px 3px 6px -8px rgba(0, 0, 0, 0.2);
+    box-shadow: -3px 3px 6px -5px rgba(0, 0, 0, 0.2);
 }
 
 .navigation-item-placeholder {
-  width: 100%;
-  height: 25px;
-  border-radius: 4px;
-  background-color: rgba(0,0,0,.02)
+    width: 100%;
+    height: 25px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .02)
 }

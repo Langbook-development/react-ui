@@ -2,18 +2,14 @@ import React, { memo, useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { ChevronDown, ChevronRight, Plus } from "react-bootstrap-icons";
 import { noteExpanded, noteCollapsed } from "../../../state/notes/notesSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { createNote } from "../../../state/notes/thunks";
-import { noteSelector } from "../../../state/notes/selectors";
 
-const LEVEL_PADDING_PX = 24;
-
-export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
+export const NoteNavigationItem = (props) => {
   const { selectedNoteId } = useParams();
-  const { level, noteId } = props;
-  const { isNoteDragged, isDragInProgress } = props;
-  const note = useSelector(noteSelector(noteId));
+  const { note, isDragging } = props;
+  const { onExpand, onCollapse } = props;
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -21,13 +17,13 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
 
   useEffect(() => {
-    if (isMouseOnItem && !isNoteDragged) {
+    if (isMouseOnItem && !isDragging) {
       let timeoutId = setTimeout(() => {
         setIsPlusVisible(true);
       }, 280);
       return () => clearTimeout(timeoutId);
     }
-  }, [isMouseOnItem, isNoteDragged]);
+  }, [isMouseOnItem, isDragging]);
 
   function handleMouseLeave() {
     setIsPlusVisible(false);
@@ -35,7 +31,7 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
   }
 
   function handleMouseEnter() {
-    if (!isDragInProgress) {
+    if (!isDragging) {
       setIsMouseOnItem(true);
     }
   }
@@ -57,7 +53,7 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
   }
 
   function hasSubNotes(note) {
-    return note.childPageIds?.length > 0;
+    return note.children?.length > 0;
   }
 
   function getTitleClass() {
@@ -72,13 +68,16 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
     if (hasSubNotes(note)) {
       if (note.isExpanded) {
         return (
-          <button className="chevron-button" onClick={handleCollapseClick}>
+          <button
+            className="chevron-button"
+            onClick={() => onCollapse(note.id)}
+          >
             <ChevronDown className="icon" />
           </button>
         );
       } else {
         return (
-          <button className="chevron-button" onClick={handleExpandClick}>
+          <button className="chevron-button" onClick={() => onExpand(note.id)}>
             <ChevronRight className="icon" />
           </button>
         );
@@ -91,9 +90,6 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
   return (
     <div
       className="navigation-item"
-      style={{
-        paddingLeft: LEVEL_PADDING_PX * level,
-      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -101,7 +97,7 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
 
       <div className="title-area">
         <Link className={getTitleClass()} to={"/notes/" + note.id}>
-          {note.title}
+          {note.data.title}
         </Link>
       </div>
 
@@ -109,11 +105,11 @@ export const NoteNavigationItem = memo(function NoteNavigationItem(props) {
         className="action-button"
         onClick={handlePlusButtonClick}
         style={{
-          visibility: showIf(isPlusVisible && !isDragInProgress),
+          visibility: showIf(isPlusVisible && !isDragging),
         }}
       >
         <Plus className="icon" />
       </button>
     </div>
   );
-});
+};
