@@ -222,6 +222,7 @@ export function NoteNavigationTree() {
     );
   };
 
+  // https://atlaskit.atlassian.com/packages/confluence/tree
   return (
     <div className="scrollbar" id="scroll-style">
       <Tree
