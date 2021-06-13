@@ -35,6 +35,7 @@ aside.note-navigation .navigation-no-item {
 }
 
 aside.note-navigation .scrollbar {
+    height: 100%;
     overflow-x: hidden;
     overflow-y: scroll;
     padding-bottom: 0 !important;
