@@ -1,13 +1,15 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { ChevronDown, ChevronRight, Plus } from "react-bootstrap-icons";
-import { noteExpanded, noteCollapsed } from "../../../state/notes/notesSlice";
+import {
+  noteExpanded,
+  noteCollapsed,
+  createNote,
+} from "../../../state/notes/notesSlice";
 import { useDispatch } from "react-redux";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { createNote } from "../../../state/notes/thunks";
 
 export const NoteNavigationItem = (props) => {
-  const { selectedNoteId } = useParams();
+  const { selectedCategoryId, selectedNoteId } = useParams();
   const { note, isDragging } = props;
   const { onExpand, onCollapse } = props;
   const history = useHistory();
@@ -45,11 +47,12 @@ export const NoteNavigationItem = (props) => {
   }
 
   function handlePlusButtonClick() {
-    dispatch(createNote({ parentId: note.id }))
-      .then(unwrapResult)
-      .then((note) => {
-        history.push("/notes/" + note.id);
-      });
+    dispatch(createNote({ parentId: note.id }));
+    // dispatch(createNote({ parentId: note.id }))
+    //   .then(unwrapResult)
+    //   .then((note) => {
+    //     history.push("/notes/" + note.id);
+    //   });
   }
 
   function hasSubNotes(note) {
@@ -96,7 +99,10 @@ export const NoteNavigationItem = (props) => {
       {getIcon()}
 
       <div className="title-area">
-        <Link className={getTitleClass()} to={"/notes/" + note.id}>
+        <Link
+          className={getTitleClass()}
+          to={"/categories/" + selectedCategoryId + "/notes/" + note.id}
+        >
           {note.data.title}
         </Link>
       </div>

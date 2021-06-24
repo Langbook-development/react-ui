@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteNote, synchronizeNote } from "../../../state/notes/thunks";
 import TextareaAutosize from "react-textarea-autosize";
 import { Card } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
 import { useParams, useHistory } from "react-router-dom";
-import { updateNote } from "../../../state/notes/notesSlice";
+import { deleteNote, updateNote } from "../../../state/notes/notesSlice";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import useConstant from "use-constant";
 import NoteModal from "./NoteModal";
@@ -29,31 +28,30 @@ function NoteSection() {
   const handleClose = () => setShowModal(false);
 
   useEffect(() => {
-    if (note.isTitleFresh) {
+    if (note.data.isTitleFresh) {
       titleTextArea.current.select();
     } else {
-      if (note.isContentFresh) {
+      if (note.data.isContentFresh) {
         contentTextArea.current.select();
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [note.id]);
 
   const triggerSynchronizeNoteDebounced = useConstant(() =>
-    AwesomeDebouncePromise(
-      (noteToSync) => dispatch(synchronizeNote(noteToSync)),
-      400
-    )
+    AwesomeDebouncePromise((noteToSync) => {
+      // dispatch(synchronizeNote(noteToSync))
+    }, 400)
   );
 
   function handleTitleClick({ target }) {
-    if (note.isTitleFresh) {
+    if (note.data.isTitleFresh) {
       target.select();
     }
   }
 
   function handleDelete() {
     setShowModal(false);
-    dispatch(deleteNote(note));
+    dispatch(deleteNote(note.id));
     if (fallbackNoteId) {
       history.push("/notes/" + fallbackNoteId);
     } else {
@@ -62,19 +60,19 @@ function NoteSection() {
   }
 
   function handleContentClick({ target }) {
-    if (note.isContentFresh) {
+    if (note.data.isContentFresh) {
       target.select();
     }
   }
 
   function handleContentChange({ target }) {
-    const nextNote = { ...note, content: target.value };
+    const nextNote = { ...note, data: { ...note.data, content: target.value } };
     dispatch(updateNote(nextNote));
     triggerSynchronizeNoteDebounced(nextNote);
   }
 
   function handleTitleChange({ target }) {
-    const nextNote = { ...note, title: target.value };
+    const nextNote = { ...note, data: { ...note.data, title: target.value } };
     dispatch(updateNote(nextNote));
     triggerSynchronizeNoteDebounced(nextNote);
   }
@@ -88,7 +86,7 @@ function NoteSection() {
               tabIndex="1"
               ref={titleTextArea}
               className="title-area"
-              value={note.title}
+              value={note.data.title}
               onFocus={handleTitleClick}
               onChange={handleTitleChange}
             />
@@ -101,7 +99,7 @@ function NoteSection() {
             tabIndex="2"
             ref={contentTextArea}
             className="text-area"
-            value={note.content}
+            value={note.data.content}
             onFocus={handleContentClick}
             onChange={handleContentChange}
           />
@@ -109,7 +107,7 @@ function NoteSection() {
       </Card>
       <NoteModal
         shouldShow={showModal}
-        title={note.title}
+        title={note.data.title}
         onClose={handleClose}
         onDelete={handleDelete}
       />

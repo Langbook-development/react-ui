@@ -4,6 +4,7 @@ import NoteSection from "./content/NoteSection";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useParams, useLocation } from "react-router-dom";
 import {
+  firstToShowCategorySelector,
   firstToShowNoteSelector,
   hasNotesSelector,
   isNotesLoadedSelector,
@@ -17,20 +18,30 @@ function NotePage() {
   const isNotesLoaded = useSelector(isNotesLoadedSelector);
   const hasNotes = useSelector(hasNotesSelector);
   const note = useSelector(noteSelector(selectedNoteId));
+  const firstToShowCategoryId = useSelector(firstToShowCategorySelector);
   const firstToShowNoteId = useSelector(firstToShowNoteSelector);
   const dispatch = useDispatch();
   const hasLoadedNotes = isNotesLoaded && hasNotes;
   const noteExists = note !== undefined;
 
   useEffect(() => {
-    if (noteExists) {
-      dispatch(noteExpanded(note.parentId));
+    if (isNotesLoaded && noteExists) {
+      dispatch(noteExpanded({ itemId: selectedNoteId }));
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [noteExists]);
+  }, [noteExists, isNotesLoaded]);
 
   if (pathname === "/") {
     if (isNotesLoaded && hasNotes) {
-      return <Redirect to={"/notes/" + firstToShowNoteId} />;
+      return (
+        <Redirect
+          to={
+            "/categories/" +
+            firstToShowCategoryId +
+            "/notes/" +
+            firstToShowNoteId
+          }
+        />
+      );
     }
   } else {
     if (isNotesLoaded && (!noteExists || !hasNotes)) {

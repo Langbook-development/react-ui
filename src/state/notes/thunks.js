@@ -1,34 +1,31 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { NoteAPI } from "../../api/noteApi";
 
-export const getNotes = createAsyncThunk("notes/get", async () => {
+const getNotes = createAsyncThunk("notes/get", async () => {
   return await NoteAPI.getNotes();
 });
 
-export const createNote = createAsyncThunk(
-  "notes/upsert",
-  async ({ parentId }) => {
-    const note = {
-      parentId: parentId,
-      title: "Enter title here",
-      content: "Enter text here",
-    };
-    return await NoteAPI.putNote(note);
-  }
-);
+const createNote = createAsyncThunk("notes/upsert", async ({ parentId }) => {
+  const note = {
+    parentId: parentId,
+    title: "Enter title here",
+    content: "Enter text here",
+  };
+  return await NoteAPI.putNote(note);
+});
 
-export const synchronizeNote = createAsyncThunk(
+const synchronizeNote = createAsyncThunk(
   "notes/synchronize",
   async (note, _) => {
     return await NoteAPI.putNote(note);
   }
 );
 
-export const deleteNote = createAsyncThunk("notes/delete", async (note) => {
+const deleteNote = createAsyncThunk("notes/delete", async (note) => {
   return await NoteAPI.deleteNote(note);
 });
 
-export const synchronizeNoteMovement = createAsyncThunk(
+const synchronizeNoteMovement = createAsyncThunk(
   "notes/synchronizeMovement",
   async (request) => {
     return await NoteAPI.moveNote(request);
