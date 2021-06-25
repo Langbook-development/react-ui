@@ -12,7 +12,7 @@ export function firstToShowNoteSelector(state) {
 }
 
 export function firstToShowCategorySelector(state) {
-  return state.notes.categories.byId["category-1"].id;
+  return Object.keys(state.notes.categories.byId)[0];
 }
 
 export function isNoteMovementLoadingSelector(state) {
@@ -20,14 +20,16 @@ export function isNoteMovementLoadingSelector(state) {
 }
 
 export function noteTreeSelector(state) {
-  return state.notes.tree
+  return state.notes.tree;
 }
 
 export function afterDeleteFallbackIdSelector(selectedNoteId) {
   return (state) => {
     const noteSelected = state.notes.tree.items[selectedNoteId];
     const noteParent = state.notes.tree.items[noteSelected.data.parentId];
-    const noteIndex = noteParent.children.indexOf(selectedNoteId);
+    const noteIndex = noteParent.children
+      .map((it) => it.toString())
+      .indexOf(selectedNoteId);
     const noteBelowId = noteParent.children[noteIndex + 1];
     if (noteBelowId) {
       return noteBelowId;

@@ -7,7 +7,7 @@ import {
   noteCollapsed,
   noteExpanded,
 } from "../../../state/notes/notesSlice";
-import {noteTreeSelector} from "../../../state/notes/selectors";
+import { noteTreeSelector } from "../../../state/notes/selectors";
 
 const LEVEL_PADDING_PX = 24;
 
@@ -16,11 +16,11 @@ export function NoteNavigationTree() {
   const tree = useSelector(noteTreeSelector);
 
   const onExpand = (itemId) => {
-    dispatch(noteExpanded({ itemId }));
+    dispatch(noteExpanded(itemId));
   };
 
   const onCollapse = (itemId) => {
-    dispatch(noteCollapsed({ itemId }));
+    dispatch(noteCollapsed(itemId));
   };
 
   const onDragEnd = (source, destination) => {

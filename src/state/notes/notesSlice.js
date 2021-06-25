@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { INITIAL_STATE_TREE } from "../initialState";
+import { INITIAL_STATE_EMPTY } from "../initialState";
 
 import { moveItemOnTree, mutateTree } from "@atlaskit/tree";
+import { getNotes } from "./thunks";
 
-const initialState = INITIAL_STATE_TREE.notes;
+const initialState = INITIAL_STATE_EMPTY.notes;
 
 const notesSlice = createSlice({
   name: "notes",
   initialState,
   reducers: {
     noteExpanded(notes, action) {
-      const itemId = action.payload.itemId;
+      const itemId = action.payload;
       let noteNoExpand = notes.tree.items[itemId];
       while (noteNoExpand && noteNoExpand.id !== "root") {
         noteNoExpand.isExpanded = true;
@@ -19,7 +20,7 @@ const notesSlice = createSlice({
     },
 
     noteCollapsed(notes, action) {
-      const itemId = action.payload.itemId;
+      const itemId = action.payload;
       notes.tree = mutateTree(notes.tree, itemId, { isExpanded: false });
     },
 
@@ -81,44 +82,63 @@ const notesSlice = createSlice({
     },
   },
 
-  // extraReducers: {
-  //   [createNote.fulfilled]: (notes, action) => {
-  //     const note = {
-  //       ...action.payload,
-  //       isTitleFresh: true,
-  //       isContentFresh: true,
-  //     };
-  //     const notesAdapter = new NotesAdapter(notes);
-  //     notesAdapter.put(note);
-  //     notesAdapter.expand(note.id);
-  //   },
-  //
-  //   [getNotes.pending]: (notes) => {
-  //     notes.isNotesLoaded = false;
-  //   },
-  //
-  //   [getNotes.fulfilled]: (notes, action) => {
-  //     const notesAdapter = new NotesAdapter(notes);
-  //     notesAdapter.putAll(action.payload);
-  //     notes.isNotesLoaded = true;
-  //   },
-  //
-  //   [deleteNote.fulfilled]: (notes, action) => {
-  //     const noteIdDeleted = action.payload.note.id;
-  //     const noteIdsDeleted = action.payload.deletedIds;
-  //     const notesAdapter = new NotesAdapter(notes);
-  //     notesAdapter.shiftPullOut(noteIdDeleted);
-  //     notesAdapter.deleteAll(noteIdsDeleted);
-  //   },
-  //
-  //   [synchronizeNoteMovement.pending]: (notes) => {
-  //     notes.isNoteMovementLoading = true;
-  //   },
-  //
-  //   [synchronizeNoteMovement.fulfilled]: (notes) => {
-  //     notes.isNoteMovementLoading = false;
-  //   },
-  // },
+  extraReducers: {
+    // [createNote.fulfilled]: (notes, action) => {
+    //   const note = {
+    //     ...action.payload,
+    //     isTitleFresh: true,
+    //     isContentFresh: true,
+    //   };
+    //   const notesAdapter = new NotesAdapter(notes);
+    //   notesAdapter.put(note);
+    //   notesAdapter.expand(note.id);
+    // },
+
+    [getNotes.pending]: (notes) => {
+      notes.isNotesLoaded = false;
+    },
+
+    [getNotes.fulfilled]: (notes, action) => {
+      notes.isNotesLoaded = true;
+
+      action.payload.notes.forEach((it) => {
+        notes.tree.items[it.id] = {
+          id: it.id,
+          children: it.childPageIds,
+          hasChildren: it.childPageIds.length > 0,
+          isExpanded: false,
+          data: {
+            parentId: it.parentId ? it.parentId : "root",
+            title: it.title,
+            content: it.content,
+            isTitleFresh: false,
+            isContentFresh: false,
+          },
+        };
+      });
+      notes.tree.items["root"].children = Object.values(notes.tree.items)
+        .filter((it) => it.data.parentId === "root")
+        .map((it) => it.id);
+      notes.tree.items["root"].hasChildren =
+        notes.tree.items["root"].children.length > 0;
+    },
+    //
+    //   [deleteNote.fulfilled]: (notes, action) => {
+    //     const noteIdDeleted = action.payload.note.id;
+    //     const noteIdsDeleted = action.payload.deletedIds;
+    //     const notesAdapter = new NotesAdapter(notes);
+    //     notesAdapter.shiftPullOut(noteIdDeleted);
+    //     notesAdapter.deleteAll(noteIdsDeleted);
+    //   },
+    //
+    //   [synchronizeNoteMovement.pending]: (notes) => {
+    //     notes.isNoteMovementLoading = true;
+    //   },
+    //
+    //   [synchronizeNoteMovement.fulfilled]: (notes) => {
+    //     notes.isNoteMovementLoading = false;
+    //   },
+  },
 });
 
 export const {

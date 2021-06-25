@@ -14,7 +14,7 @@ import {
 } from "../../../state/notes/selectors";
 
 function NoteSection() {
-  const { selectedNoteId } = useParams();
+  const { selectedNoteId, selectedCategoryId } = useParams();
   const [showModal, setShowModal] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -53,7 +53,9 @@ function NoteSection() {
     setShowModal(false);
     dispatch(deleteNote(note.id));
     if (fallbackNoteId) {
-      history.push("/notes/" + fallbackNoteId);
+      history.push(
+        "/categories/" + selectedCategoryId + "/notes/" + fallbackNoteId
+      );
     } else {
       history.push("/");
     }

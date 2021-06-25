@@ -5,11 +5,6 @@ import { useDispatch } from "react-redux";
 // import { getNotes } from "./state/notes/thunks";
 
 function App() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    // dispatch(getNotes());
-  }, [dispatch]);
-
   return (
     <Router>
       <div className="App">

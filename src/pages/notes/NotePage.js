@@ -11,10 +11,11 @@ import {
   noteSelector,
 } from "../../state/notes/selectors";
 import { noteExpanded } from "../../state/notes/notesSlice";
+import { getNotes } from "../../state/notes/thunks";
 
 function NotePage() {
   const { pathname } = useLocation();
-  const { selectedNoteId } = useParams();
+  const { selectedNoteId, selectedCategoryId } = useParams();
   const isNotesLoaded = useSelector(isNotesLoadedSelector);
   const hasNotes = useSelector(hasNotesSelector);
   const note = useSelector(noteSelector(selectedNoteId));
@@ -26,9 +27,15 @@ function NotePage() {
 
   useEffect(() => {
     if (isNotesLoaded && noteExists) {
-      dispatch(noteExpanded({ itemId: selectedNoteId }));
+      dispatch(noteExpanded(note.data.parentId));
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [noteExists, isNotesLoaded]);
+
+  useEffect(() => {
+    if (firstToShowCategoryId) {
+      dispatch(getNotes(firstToShowCategoryId));
+    }
+  }, [dispatch, selectedCategoryId]);
 
   if (pathname === "/") {
     if (isNotesLoaded && hasNotes) {

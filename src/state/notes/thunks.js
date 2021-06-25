@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { NoteAPI } from "../../api/noteApi";
 
-const getNotes = createAsyncThunk("notes/get", async () => {
-  return await NoteAPI.getNotes();
+export const getNotes = createAsyncThunk("notes/get", async (categoryId) => {
+  return await NoteAPI.getNotes(categoryId);
 });
 
 const createNote = createAsyncThunk("notes/upsert", async ({ parentId }) => {
