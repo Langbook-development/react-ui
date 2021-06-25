@@ -6,10 +6,10 @@ import {
   moveNote,
   noteCollapsed,
   noteExpanded,
-} from "../../../state/notes/notesSlice";
-import { noteTreeSelector } from "../../../state/notes/selectors";
+} from "../../../state/notesSlice";
+import { noteTreeSelector } from "../../../state/selectors";
 import { useParams } from "react-router-dom";
-import { synchronizeNoteMovement } from "../../../state/notes/thunks";
+import { synchronizeNoteMovement } from "../../../state/thunks";
 
 const LEVEL_PADDING_PX = 24;
 

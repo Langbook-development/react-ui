@@ -9,9 +9,9 @@ import {
   hasNotesSelector,
   isNotesLoadedSelector,
   noteSelector,
-} from "../../state/notes/selectors";
-import { noteExpanded } from "../../state/notes/notesSlice";
-import { getNotes } from "../../state/notes/thunks";
+} from "../../state/selectors";
+import { noteExpanded } from "../../state/notesSlice";
+import { getNotes } from "../../state/thunks";
 
 function NotePage() {
   const { pathname } = useLocation();

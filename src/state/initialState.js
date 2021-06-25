@@ -26,7 +26,7 @@ export const INITIAL_STATE_EMPTY = {
   },
 };
 
-export const INITIAL_STATE_TREE = {
+export const INITIAL_STATE_MOCK_TREE = {
   notes: {
     isNoteMovementLoading: false,
     isNotesLoaded: false,

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { NoteAPI } from "../../api/noteApi";
+import { NoteAPI } from "../api/noteApi";
 
 export const getNotes = createAsyncThunk("notes/get", async (categoryId) => {
   return await NoteAPI.getNotes(categoryId);

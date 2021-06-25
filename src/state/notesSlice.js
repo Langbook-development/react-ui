@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { INITIAL_STATE_EMPTY } from "../initialState";
+import { INITIAL_STATE_EMPTY } from "./initialState";
 
 import { moveItemOnTree, mutateTree } from "@atlaskit/tree";
 import { getNotes, synchronizeNoteMovement } from "./thunks";

@@ -5,7 +5,7 @@ import {
   noteExpanded,
   noteCollapsed,
   createNote,
-} from "../../../state/notes/notesSlice";
+} from "../../../state/notesSlice";
 import { useDispatch } from "react-redux";
 
 export const NoteNavigationItem = (props) => {

@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { Plus } from "react-bootstrap-icons";
-import { hasNotesSelector } from "../../../state/notes/selectors";
+import { hasNotesSelector } from "../../../state/selectors";
 import { NoteNavigationTree } from "./NoteNavigationTree";
-import { createNote } from "../../../state/notes/notesSlice";
+import { createNote } from "../../../state/notesSlice";
 
 function NoteNavigation() {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
