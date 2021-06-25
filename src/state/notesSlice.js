@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { INITIAL_STATE_EMPTY } from "./initialState";
 
 import { moveItemOnTree, mutateTree } from "@atlaskit/tree";
-import { getNotes, synchronizeNoteMovement } from "./thunks";
+import { getNotes, synchronizeNoteMovement, deleteNote } from "./thunks";
 
 const initialState = INITIAL_STATE_EMPTY.notes;
 
@@ -43,24 +43,6 @@ const notesSlice = createSlice({
           isContentFresh: true,
         },
       };
-    },
-
-    deleteNote(notes, action) {
-      function deleteChildNotes(note, tree) {
-        const childIds = note.children;
-        const childNotes = childIds.map((it) => tree.items[it]);
-        childNotes.forEach((childNote) => deleteChildNotes(childNote, tree));
-        childNotes.forEach((childNote) => delete tree.items[childNote.id]);
-      }
-
-      const noteId = action.payload;
-      const note = notes.tree.items[noteId];
-      const parentNote = notes.tree.items[note.data.parentId];
-
-      parentNote.children = parentNote.children.filter((it) => it !== noteId);
-      parentNote.hasChildren = parentNote.children.length > 0;
-      deleteChildNotes(note, notes.tree);
-      delete notes.tree.items[noteId];
     },
 
     updateNote(notes, action) {
@@ -112,15 +94,23 @@ const notesSlice = createSlice({
         };
       });
     },
-    //
-    //   [deleteNote.fulfilled]: (notes, action) => {
-    //     const noteIdDeleted = action.payload.note.id;
-    //     const noteIdsDeleted = action.payload.deletedIds;
-    //     const notesAdapter = new NotesAdapter(notes);
-    //     notesAdapter.shiftPullOut(noteIdDeleted);
-    //     notesAdapter.deleteAll(noteIdsDeleted);
-    //   },
-    //
+
+    [deleteNote.fulfilled]: (notes, action) => {
+      debugger;
+      const noteId = action.payload.note.id;
+      const note = notes.tree.items[noteId];
+      const parentNote = notes.tree.items[note.data.parentId];
+      const noteIdsDeleted = action.payload.deletedIds;
+      parentNote.children = parentNote.children.filter(
+        (it) => it.toString() !== noteId
+      );
+      parentNote.hasChildren = parentNote.children.length > 0;
+      noteIdsDeleted.forEach((id) => {
+        delete notes.tree.items[id.toString()];
+      });
+      debugger;
+    },
+
     [synchronizeNoteMovement.pending]: (notes, action) => {
       const { source, destination } = action.meta.arg;
       notes.tree = moveItemOnTree(notes.tree, source, destination);
@@ -133,13 +123,7 @@ const notesSlice = createSlice({
   },
 });
 
-export const {
-  noteExpanded,
-  noteCollapsed,
-  updateNote,
-  moveNote,
-  createNote,
-  deleteNote,
-} = notesSlice.actions;
+export const { noteExpanded, noteCollapsed, updateNote, moveNote, createNote } =
+  notesSlice.actions;
 
 export default notesSlice.reducer;

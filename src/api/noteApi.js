@@ -21,8 +21,10 @@ NoteAPI.getNotes = (categoryId) =>
     .then(handleResponse)
     .catch(handleError);
 
-NoteAPI.deleteNote = (note) =>
-  fetch(baseUrl + "/" + note.id, { method: "DELETE" })
+NoteAPI.deleteNote = (categoryId, noteId) =>
+  fetch(baseUrl + "/categories/" + categoryId + "/notes/" + noteId, {
+    method: "DELETE",
+  })
     .then(handleResponse)
     .catch(handleError);
 

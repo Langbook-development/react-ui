@@ -21,9 +21,12 @@ export const synchronizeNote = createAsyncThunk(
   }
 );
 
-const deleteNote = createAsyncThunk("notes/delete", async (note) => {
-  return await NoteAPI.deleteNote(note);
-});
+export const deleteNote = createAsyncThunk(
+  "notes/delete",
+  async ({ categoryId, noteId }) => {
+    return await NoteAPI.deleteNote(categoryId, noteId);
+  }
+);
 
 export const synchronizeNoteMovement = createAsyncThunk(
   "notes/synchronizeMovement",

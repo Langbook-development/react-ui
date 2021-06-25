@@ -4,7 +4,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import { Card } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
 import { useParams, useHistory } from "react-router-dom";
-import { deleteNote, updateNote } from "../../../state/notesSlice";
+import { updateNote } from "../../../state/notesSlice";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import useConstant from "use-constant";
 import NoteModal from "./NoteModal";
@@ -12,7 +12,7 @@ import {
   afterDeleteFallbackIdSelector,
   noteSelector,
 } from "../../../state/selectors";
-import { synchronizeNote } from "../../../state/thunks";
+import { deleteNote, synchronizeNote } from "../../../state/thunks";
 
 function NoteSection() {
   const { selectedNoteId, selectedCategoryId } = useParams();
@@ -54,7 +54,7 @@ function NoteSection() {
 
   function handleDelete() {
     setShowModal(false);
-    dispatch(deleteNote(note.id));
+    dispatch(deleteNote({ categoryId: selectedCategoryId, noteId: note.id }));
     if (fallbackNoteId) {
       history.push(
         "/categories/" + selectedCategoryId + "/notes/" + fallbackNoteId
