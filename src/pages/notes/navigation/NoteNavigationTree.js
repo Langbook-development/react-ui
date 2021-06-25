@@ -8,12 +8,18 @@ import {
   noteExpanded,
 } from "../../../state/notes/notesSlice";
 import { noteTreeSelector } from "../../../state/notes/selectors";
+import { useParams } from "react-router-dom";
+import { synchronizeNoteMovement } from "../../../state/notes/thunks";
 
 const LEVEL_PADDING_PX = 24;
 
 export function NoteNavigationTree() {
   const dispatch = useDispatch();
+  const { selectedCategoryId } = useParams();
   const tree = useSelector(noteTreeSelector);
+  const isNoteMovementLoading = useSelector(
+    (state) => state.notes.isNoteMovementLoading
+  );
 
   const onExpand = (itemId) => {
     dispatch(noteExpanded(itemId));
@@ -27,7 +33,13 @@ export function NoteNavigationTree() {
     if (!destination) {
       return;
     }
-    dispatch(moveNote({ source, destination }));
+    dispatch(
+      synchronizeNoteMovement({
+        categoryId: selectedCategoryId,
+        source,
+        destination,
+      })
+    );
   };
 
   let renderItem = ({ item, onExpand, onCollapse, provided, snapshot }) => {
@@ -57,7 +69,7 @@ export function NoteNavigationTree() {
         onCollapse={onCollapse}
         onDragEnd={onDragEnd}
         offsetPerLevel={LEVEL_PADDING_PX}
-        isDragEnabled
+        isDragEnabled={!isNoteMovementLoading}
       />
     </div>
   );

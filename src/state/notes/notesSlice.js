@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { INITIAL_STATE_EMPTY } from "../initialState";
 
 import { moveItemOnTree, mutateTree } from "@atlaskit/tree";
-import { getNotes } from "./thunks";
+import { getNotes, synchronizeNoteMovement } from "./thunks";
 
 const initialState = INITIAL_STATE_EMPTY.notes;
 
@@ -22,11 +22,6 @@ const notesSlice = createSlice({
     noteCollapsed(notes, action) {
       const itemId = action.payload;
       notes.tree = mutateTree(notes.tree, itemId, { isExpanded: false });
-    },
-
-    moveNote(notes, action) {
-      const { source, destination } = action.payload;
-      notes.tree = moveItemOnTree(notes.tree, source, destination);
     },
 
     createNote(notes, action) {
@@ -108,7 +103,7 @@ const notesSlice = createSlice({
           hasChildren: it.childPageIds.length > 0,
           isExpanded: false,
           data: {
-            parentId: it.parentId ? it.parentId : "root",
+            parentId: it.parentId,
             title: it.title,
             content: it.content,
             isTitleFresh: false,
@@ -116,11 +111,6 @@ const notesSlice = createSlice({
           },
         };
       });
-      notes.tree.items["root"].children = Object.values(notes.tree.items)
-        .filter((it) => it.data.parentId === "root")
-        .map((it) => it.id);
-      notes.tree.items["root"].hasChildren =
-        notes.tree.items["root"].children.length > 0;
     },
     //
     //   [deleteNote.fulfilled]: (notes, action) => {
@@ -131,13 +121,15 @@ const notesSlice = createSlice({
     //     notesAdapter.deleteAll(noteIdsDeleted);
     //   },
     //
-    //   [synchronizeNoteMovement.pending]: (notes) => {
-    //     notes.isNoteMovementLoading = true;
-    //   },
-    //
-    //   [synchronizeNoteMovement.fulfilled]: (notes) => {
-    //     notes.isNoteMovementLoading = false;
-    //   },
+    [synchronizeNoteMovement.pending]: (notes, action) => {
+      const { source, destination } = action.meta.arg;
+      notes.tree = moveItemOnTree(notes.tree, source, destination);
+      notes.isNoteMovementLoading = true;
+    },
+
+    [synchronizeNoteMovement.fulfilled]: (notes, action) => {
+      notes.isNoteMovementLoading = false;
+    },
   },
 });
 
