@@ -4,11 +4,14 @@ const baseUrl = "http://localhost:8080/ui-gateway";
 
 export const NoteAPI = {};
 
-NoteAPI.putNote = (note) =>
-  fetch(baseUrl, {
+NoteAPI.putNote = (categoryId, note) =>
+  fetch(baseUrl + "/categories/" + categoryId + "/notes/", {
     method: "PUT",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify(note),
+    body: JSON.stringify({
+      id: note.id,
+      ...note.data,
+    }),
   })
     .then(handleResponse)
     .catch(handleError);

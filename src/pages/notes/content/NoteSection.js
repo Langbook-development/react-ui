@@ -12,6 +12,7 @@ import {
   afterDeleteFallbackIdSelector,
   noteSelector,
 } from "../../../state/selectors";
+import { synchronizeNote } from "../../../state/thunks";
 
 function NoteSection() {
   const { selectedNoteId, selectedCategoryId } = useParams();
@@ -39,7 +40,9 @@ function NoteSection() {
 
   const triggerSynchronizeNoteDebounced = useConstant(() =>
     AwesomeDebouncePromise((noteToSync) => {
-      // dispatch(synchronizeNote(noteToSync))
+      dispatch(
+        synchronizeNote({ categoryId: selectedCategoryId, note: noteToSync })
+      );
     }, 400)
   );
 
@@ -70,13 +73,17 @@ function NoteSection() {
   function handleContentChange({ target }) {
     const nextNote = { ...note, data: { ...note.data, content: target.value } };
     dispatch(updateNote(nextNote));
-    triggerSynchronizeNoteDebounced(nextNote);
+    if (nextNote.data.content) {
+      triggerSynchronizeNoteDebounced(nextNote);
+    }
   }
 
   function handleTitleChange({ target }) {
     const nextNote = { ...note, data: { ...note.data, title: target.value } };
     dispatch(updateNote(nextNote));
-    triggerSynchronizeNoteDebounced(nextNote);
+    if (nextNote.data.title) {
+      triggerSynchronizeNoteDebounced(nextNote);
+    }
   }
 
   return (

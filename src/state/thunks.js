@@ -14,10 +14,10 @@ const createNote = createAsyncThunk("notes/upsert", async ({ parentId }) => {
   return await NoteAPI.putNote(note);
 });
 
-const synchronizeNote = createAsyncThunk(
+export const synchronizeNote = createAsyncThunk(
   "notes/synchronize",
-  async (note, _) => {
-    return await NoteAPI.putNote(note);
+  async ({ categoryId, note }, _) => {
+    return await NoteAPI.putNote(categoryId, note);
   }
 );
 
