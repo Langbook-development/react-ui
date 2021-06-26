@@ -48,8 +48,8 @@ export class NotesAdapter {
 
   setChildren(noteDto) {
     const note = this.notes.tree.items[noteDto.id];
-    note.children = noteDto.childPageIds;
-    note.hasChildren = noteDto.childPageIds.length > 0;
+    note.children = noteDto.children;
+    note.hasChildren = noteDto.children.length > 0;
   }
 
   makeFresh(noteId) {
