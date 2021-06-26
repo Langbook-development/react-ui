@@ -1,5 +1,7 @@
+import { ROOT_ID } from "./initialState";
+
 export function hasNotesSelector(state) {
-  return state.notes.tree.items["root"].hasChildren;
+  return state.notes.tree.items[ROOT_ID].hasChildren;
 }
 
 export function noteSelector(noteId) {
@@ -8,7 +10,7 @@ export function noteSelector(noteId) {
 
 export function firstToShowNoteSelector(state) {
   const hasNotes = hasNotesSelector(state);
-  return hasNotes ? state.notes.tree.items["root"].children[0] : undefined;
+  return hasNotes ? state.notes.tree.items[ROOT_ID].children[0] : undefined;
 }
 
 export function firstToShowCategorySelector(state) {
@@ -38,7 +40,7 @@ export function afterDeleteFallbackIdSelector(selectedNoteId) {
     if (noteAboveId) {
       return noteAboveId;
     }
-    if (noteParent.id !== "root") {
+    if (noteParent.id !== ROOT_ID) {
       return noteParent.id;
     }
     return undefined;

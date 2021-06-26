@@ -1,4 +1,5 @@
 import { moveItemOnTree } from "@atlaskit/tree";
+import { ROOT_ID } from "../initialState";
 
 export class NotesAdapter {
   constructor(notes) {
@@ -7,7 +8,7 @@ export class NotesAdapter {
 
   expand(noteId) {
     let noteToExpand = this.notes.tree.items[noteId];
-    while (noteToExpand.id !== "root" && noteToExpand.children.length > 0) {
+    while (noteToExpand.id !== ROOT_ID && noteToExpand.children.length > 0) {
       noteToExpand.isExpanded = true;
       noteToExpand = this.notes.tree.items[noteToExpand.data.parentId];
     }

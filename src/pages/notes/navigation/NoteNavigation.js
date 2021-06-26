@@ -7,6 +7,7 @@ import { hasNotesSelector } from "../../../state/selectors";
 import { NoteNavigationTree } from "./NoteNavigationTree";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { createNote } from "../../../state/thunks";
+import { ROOT_ID } from "../../../state/initialState";
 
 function NoteNavigation() {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
@@ -35,7 +36,7 @@ function NoteNavigation() {
   }
 
   function handlePlusButtonClick() {
-    dispatch(createNote({ categoryId: selectedCategoryId, parentId: "root" }))
+    dispatch(createNote({ categoryId: selectedCategoryId, parentId: ROOT_ID }))
       .then(unwrapResult)
       .then(({ note }) => {
         history.push("/categories/" + selectedCategoryId + "/notes/" + note.id);

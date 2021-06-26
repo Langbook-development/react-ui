@@ -1,3 +1,5 @@
+export const ROOT_ID = "root";
+
 export const INITIAL_STATE_EMPTY = {
   notes: {
     isNoteMovementLoading: false,
@@ -12,10 +14,10 @@ export const INITIAL_STATE_EMPTY = {
       },
     },
     tree: {
-      rootId: "root",
+      rootId: ROOT_ID,
       items: {
         root: {
-          id: "root",
+          id: ROOT_ID,
           children: [],
           hasChildren: false,
           isExpanded: false,
@@ -40,10 +42,10 @@ export const INITIAL_STATE_MOCK_TREE = {
       },
     },
     tree: {
-      rootId: "root",
+      rootId: ROOT_ID,
       items: {
         root: {
-          id: "root",
+          id: ROOT_ID,
           children: ["note-1", "note-2", "note-10"],
           hasChildren: true,
           isExpanded: false,
@@ -55,7 +57,7 @@ export const INITIAL_STATE_MOCK_TREE = {
           isExpanded: false,
           data: {
             categoryId: "category-1",
-            parentId: "root",
+            parentId: ROOT_ID,
             title: "Parent 1",
             content: "",
             isTitleFresh: false,
@@ -69,7 +71,7 @@ export const INITIAL_STATE_MOCK_TREE = {
           isExpanded: false,
           data: {
             categoryId: "category-1",
-            parentId: "root",
+            parentId: ROOT_ID,
             title: "Parent 2",
             content: "",
             isTitleFresh: false,
@@ -188,7 +190,7 @@ export const INITIAL_STATE_MOCK_TREE = {
           isExpanded: false,
           data: {
             categoryId: "category-1",
-            parentId: "root",
+            parentId: ROOT_ID,
             title: "Parent 3",
             content: "",
             isTitleFresh: false,
