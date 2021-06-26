@@ -179,19 +179,3 @@ section.note-content .text-area {
     width: 100%;
     height: 100%;
 }
-
-.navigation-item-preview {
-    background-color: white;
-    border-radius: 4px;
-    border: 1px solid rgba(0, 0, 0, .1);
-    /* Shift right, Shift down, Spread, Blur, Opacity */
-    -webkit-box-shadow: -3px 3px 6px -8px rgba(0, 0, 0, 0.2);
-    box-shadow: -3px 3px 6px -5px rgba(0, 0, 0, 0.2);
-}
-
-.navigation-item-placeholder {
-    width: 100%;
-    height: 25px;
-    border-radius: 4px;
-    background-color: rgba(0, 0, 0, .02)
-}
