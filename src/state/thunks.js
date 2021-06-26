@@ -5,14 +5,19 @@ export const getNotes = createAsyncThunk("notes/get", async (categoryId) => {
   return await NoteAPI.getNotes(categoryId);
 });
 
-const createNote = createAsyncThunk("notes/upsert", async ({ parentId }) => {
-  const note = {
-    parentId: parentId,
-    title: "Enter title here",
-    content: "Enter text here",
-  };
-  return await NoteAPI.putNote(note);
-});
+export const createNote = createAsyncThunk(
+  "notes/upsert",
+  async ({ categoryId, parentId }) => {
+    const note = {
+      data: {
+        parentId: parentId,
+        title: "Enter title here",
+        content: "Enter text here",
+      },
+    };
+    return await NoteAPI.putNote(categoryId, note);
+  }
+);
 
 export const synchronizeNote = createAsyncThunk(
   "notes/synchronize",

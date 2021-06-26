@@ -29,7 +29,7 @@ function NotePage() {
     if (isNotesLoaded && noteExists) {
       dispatch(noteExpanded(note.data.parentId));
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [noteExists, isNotesLoaded]);
+  }, [noteExists, isNotesLoaded, note?.data?.parentId]);
 
   useEffect(() => {
     if (firstToShowCategoryId) {

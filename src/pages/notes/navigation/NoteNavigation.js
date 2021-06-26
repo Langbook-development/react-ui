@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Plus } from "react-bootstrap-icons";
 import { hasNotesSelector } from "../../../state/selectors";
 import { NoteNavigationTree } from "./NoteNavigationTree";
-import { createNote } from "../../../state/notesSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { createNote } from "../../../state/thunks";
 
 function NoteNavigation() {
   const [isMouseOnItem, setIsMouseOnItem] = useState(false);
   const [isPlusVisible, setIsPlusVisible] = useState(false);
+  const { selectedCategoryId } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
   const hasNotes = useSelector(hasNotesSelector);
@@ -33,12 +35,11 @@ function NoteNavigation() {
   }
 
   function handlePlusButtonClick() {
-    dispatch(createNote({ parentId: "root" }));
-    // dispatch(createNote({ parentId: "root" }))
-    //   .then(unwrapResult)
-    //   .then((note) => {
-    //     history.push("/notes/" + note.id);
-    //   });
+    dispatch(createNote({ categoryId: selectedCategoryId, parentId: "root" }))
+      .then(unwrapResult)
+      .then(({ note }) => {
+        history.push("/categories/" + selectedCategoryId + "/notes/" + note.id);
+      });
   }
 
   function handlePlusButtonMouseOver() {

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { ChevronDown, ChevronRight, Plus } from "react-bootstrap-icons";
-import {
-  noteExpanded,
-  noteCollapsed,
-  createNote,
-} from "../../../state/notesSlice";
+import { noteExpanded, noteCollapsed } from "../../../state/notesSlice";
 import { useDispatch } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { createNote } from "../../../state/thunks";
 
 export const NoteNavigationItem = (props) => {
   const { selectedCategoryId, selectedNoteId } = useParams();
@@ -38,21 +36,12 @@ export const NoteNavigationItem = (props) => {
     }
   }
 
-  function handleExpandClick() {
-    dispatch(noteExpanded(note.id));
-  }
-
-  function handleCollapseClick() {
-    dispatch(noteCollapsed(note.id));
-  }
-
   function handlePlusButtonClick() {
-    dispatch(createNote({ parentId: note.id }));
-    // dispatch(createNote({ parentId: note.id }))
-    //   .then(unwrapResult)
-    //   .then((note) => {
-    //     history.push("/notes/" + note.id);
-    //   });
+    dispatch(createNote({ categoryId: selectedCategoryId, parentId: note.id }))
+      .then(unwrapResult)
+      .then(({ note }) => {
+        history.push("/categories/" + selectedCategoryId + "/notes/" + note.id);
+      });
   }
 
   function hasSubNotes(note) {
