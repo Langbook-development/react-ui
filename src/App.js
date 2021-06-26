@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import NotePage from "./pages/notes/NotePage";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { useDispatch } from "react-redux";
-// import { getNotes } from "./state/notes/thunks";
 
 function App() {
   return (

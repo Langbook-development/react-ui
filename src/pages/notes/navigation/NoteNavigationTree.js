@@ -2,11 +2,7 @@ import React from "react";
 import Tree from "@atlaskit/tree";
 import { NoteNavigationItem } from "./NoteNavigationItem";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  moveNote,
-  noteCollapsed,
-  noteExpanded,
-} from "../../../state/notesSlice";
+import { noteCollapsed, noteExpanded } from "../../../state/notesSlice";
 import { noteTreeSelector } from "../../../state/selectors";
 import { useParams } from "react-router-dom";
 import { synchronizeNoteMovement } from "../../../state/thunks";

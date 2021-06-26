@@ -35,7 +35,7 @@ function NotePage() {
     if (firstToShowCategoryId) {
       dispatch(getNotes(firstToShowCategoryId));
     }
-  }, [dispatch, selectedCategoryId]);
+  }, [dispatch, selectedCategoryId, firstToShowCategoryId]);
 
   if (pathname === "/") {
     if (isNotesLoaded && hasNotes) {

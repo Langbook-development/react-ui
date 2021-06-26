@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { ChevronDown, ChevronRight, Plus } from "react-bootstrap-icons";
-import { noteExpanded, noteCollapsed } from "../../../state/notesSlice";
 import { useDispatch } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { createNote } from "../../../state/thunks";
@@ -49,7 +48,7 @@ export const NoteNavigationItem = (props) => {
   }
 
   function getTitleClass() {
-    return "title" + (note.id.toString() === selectedNoteId ? " active" : "");
+    return "title" + (note.id === selectedNoteId ? " active" : "");
   }
 
   function showIf(condition) {

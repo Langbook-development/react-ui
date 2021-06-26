@@ -28,7 +28,7 @@ export function afterDeleteFallbackIdSelector(selectedNoteId) {
     const noteSelected = state.notes.tree.items[selectedNoteId];
     const noteParent = state.notes.tree.items[noteSelected.data.parentId];
     const noteIndex = noteParent.children
-      .map((it) => it.toString())
+      .map((it) => it)
       .indexOf(selectedNoteId);
     const noteBelowId = noteParent.children[noteIndex + 1];
     if (noteBelowId) {
